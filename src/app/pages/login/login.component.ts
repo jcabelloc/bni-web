@@ -8,8 +8,10 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  //TO-DO
   usuario: string = "jcabelloc"
   contraseña: string = "123456"
+
   usuarioForm: string = ""
   contraseniaForm: string = ""
   progressSnipper = false;
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
     setTimeout(() => {
       this.progressSnipper = false;
       if (this.usuarioForm === this.usuario && this.contraseña === this.contraseniaForm) {
-         //TO-DO
+         this.router.navigate(["main"])
       }
     }, 3000);
   }

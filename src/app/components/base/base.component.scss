@@ -1,0 +1,67 @@
+.sidenav-container {
+    height: 100%;
+  }
+
+  .sidenav {
+    width: 250px;
+    background: var(--color-primary);
+    > div{
+        background: inherit;
+    }
+  }
+  
+  .mat-toolbar{
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;  
+  }
+   .image-profile
+   {
+    width:30px;
+    border-radius:45%;
+   }
+
+  .container-logo
+  {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 15px;
+    width: 100%; 
+    > div {
+        font-size: 1.5rem;
+        color: white;   
+    }
+  }
+  .logo-bni{
+    width: 45px;  
+    border-radius: 50%; 
+    margin: 0 10px 0 20px;
+  }
+  .title-nav{
+      color: white; 
+  }
+
+    .button-toggle
+    {
+    flex: 1 1 auto;
+    }
+
+ ::ng-deep .expansion-header > .mat-expansion-indicator:after {
+        color: white;
+    }
+  .expansion-panel
+  {
+    background: var(--color-primary);
+    box-shadow: none;
+    margin-top: 15px ;
+  }
+  mat-icon
+  {
+      cursor: pointer;
+      color: black;
+      margin-right: 15px;
+  }
+
+

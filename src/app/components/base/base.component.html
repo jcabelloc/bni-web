@@ -1,0 +1,53 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="false">
+        <div>
+            <div class="container-logo">
+                <img class="logo-bni" src="../../../assets/bni-logo.png" alt="logo" />
+                <div> Perú</div>
+            </div>
+        </div>
+        <mat-nav-list>
+            <mat-expansion-panel class="expansion-panel">
+                <mat-expansion-panel-header class="expansion-header">
+                    <mat-panel-title class="title-nav">
+                        <span class="material-icons" style="padding-right:15px;">
+                            library_books
+                        </span> <span>Gestión</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <span><a mat-list-item class="title-nav">Adm. General</a></span>
+            </mat-expansion-panel>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <mat-toolbar-row>
+
+                <mat-icon class="button-toggle" (click)="drawer.toggle()">menu</mat-icon>
+
+                <span></span>
+
+                <mat-icon mat-button>
+                    <!--TO-DO-->
+                    <img class="image-profile"
+                        src="https://pbs.twimg.com/profile_images/1037283860705370113/nXtSVr_L_400x400.jpg"
+                        [matMenuTriggerFor]="menu" />
+                </mat-icon>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>
+                        <mat-icon>account_box</mat-icon>Mi Perfil
+                    </button>
+                    <button mat-menu-item>
+                        <mat-icon>settings</mat-icon>Configuración
+                    </button>
+                    <button mat-menu-item>
+                        <mat-icon>input</mat-icon>Sing Out
+                    </button>
+                </mat-menu>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <router-outlet></router-outlet>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>
