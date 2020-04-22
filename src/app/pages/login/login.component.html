@@ -1,0 +1,52 @@
+<div class="container_register">
+    <div class="container-image"></div>
+    <div class="container-form">
+        <div class="container-header">
+            <div class="text-header">
+                <div style="font-weight:bold;"> Empecemos!</div>
+                <div style="font-weight:normal;">Ingresa con tu cuenta</div>
+            </div>
+            <div class="image-header">
+                <img
+                    src="../../../assets/login-animation.jpg" />
+            </div>
+        </div>
+        <div class="cotainer-form-content">
+            <form >
+                <mat-form-field class="full-mat-form-field" appearance="outline">
+                    <mat-label>Usuario</mat-label>
+                    <input matInput [(ngModel)]="usuarioForm" name="usuarioForm">
+                </mat-form-field>
+
+                <mat-form-field class="full-mat-form-field" appearance="outline">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [(ngModel)]="contraseniaForm" name="contraseniaForm">
+                </mat-form-field>
+
+                <div class="check-box">
+                    <mat-checkbox>Recordar contraseña</mat-checkbox>
+                </div>
+
+            </form>
+            <div class="container-buttons">
+                <button mat-raised-button color="primary" (click)="logIn()">Ingresar</button>
+            </div>
+
+            <div class="container-register-link" >
+                <div class="space-margin">
+                    ¿No tienes una cuenta?
+                </div>
+                <div class="space-margin">
+                    <a href="#" >Click aquí para poder registrarte </a>
+                </div>
+                <div style="height: 50px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="progressSnipper" class="content-spinner">
+    <mat-spinner></mat-spinner>
+</div>
