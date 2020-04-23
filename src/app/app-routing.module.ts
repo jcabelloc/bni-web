@@ -7,7 +7,9 @@ import { BaseComponent } from './components/base/base.component';
 const routes: Routes = [
   { path: '', redirectTo: 'seguridad/login', pathMatch: 'full'},
   { path:'seguridad/login', component:LoginComponent},
-  { path:'main', component:BaseComponent},
+  { path:'main', component:BaseComponent, children:[
+  
+  ]},
 
 ];
 

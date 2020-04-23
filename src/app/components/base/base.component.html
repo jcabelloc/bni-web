@@ -7,15 +7,15 @@
             </div>
         </div>
         <mat-nav-list>
-            <mat-expansion-panel class="expansion-panel">
-                <mat-expansion-panel-header class="expansion-header">
+            <mat-expansion-panel *ngFor="let opcion of opciones" class="expansion-panel">
+                <mat-expansion-panel-header  class="expansion-header">
                     <mat-panel-title class="title-nav">
                         <span class="material-icons" style="padding-right:15px;">
                             library_books
-                        </span> <span>Gestión</span>
+                        </span> <span>{{opcion.nombre}}</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <span><a mat-list-item class="title-nav">Adm. General</a></span>
+                <span *ngFor="let subOpcion of opcion.opciones"><a mat-list-item class="title-nav" [routerLink]="subOpcion.ruta">{{subOpcion.nombre}}</a></span>
             </mat-expansion-panel>
         </mat-nav-list>
     </mat-sidenav>
