@@ -48,3 +48,9 @@ export const environment = {
   }
 };
 ```
+
+
+### Creacion de la base de datos en Firebase console
+* Cloud Firestore / Multi region / nam5 (us-central)
+* mode: Test Mode
+
