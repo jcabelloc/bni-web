@@ -24,7 +24,12 @@ import { BaseComponent } from './components/base/base.component';
 import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
+import { environment } from 'src/environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 @NgModule({
   declarations: [
@@ -53,7 +58,11 @@ import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.compone
     MatTableModule,
     MatCardModule,
     MatSnackBarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSlideToggleModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

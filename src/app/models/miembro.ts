@@ -1,5 +1,5 @@
 export class Miembro {
-    idMiembro: number;
+    idMiembro: string;
     nombres: string;
     apellidos: string;
     telefono: string;
@@ -8,5 +8,9 @@ export class Miembro {
     email: string;
     idGrupo: string;
     nombreGrupo: string;
-    lider: boolean;
+    avatarUrl?: string;
+    esLider: boolean;
+    constructor() {
+        this.esLider = false;
+    }
 }
