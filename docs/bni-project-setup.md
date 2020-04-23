@@ -54,3 +54,9 @@ export const environment = {
 * Cloud Firestore / Multi region / nam5 (us-central)
 * mode: Test Mode
 
+
+### Habilitacion del Firebase storage
+* Firestore /Storage 
+* Permission:     allow read, write: if request.time < timestamp.date(2020, 5, 23);
+
+
