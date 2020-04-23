@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "bni-dev": {
+      "hosting": {
+        "bni-web": [
+          "bni-dev"
+        ]
+      }
+    }
+  }
+}

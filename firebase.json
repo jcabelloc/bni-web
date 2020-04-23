@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "bni-web",
+      "public": "dist/bni-web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
