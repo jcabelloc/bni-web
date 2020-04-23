@@ -1,0 +1,46 @@
+<mat-card class="card">
+    <mat-card-header class ="card-header">
+        <mat-card-title>
+            Nuevo Miembro
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content style="margin-top: 30px;">
+        <form class="example-form">
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Nombres</mat-label>
+                <input matInput  [(ngModel)]="miembro.nombres" name="foto">
+            </mat-form-field>
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Apellidos</mat-label>
+                <input matInput [(ngModel)]="miembro.apellidos" name="nombre">
+            </mat-form-field>
+
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Profesion</mat-label>
+                <input matInput  [(ngModel)]="miembro.profesion" name="profesion">
+            </mat-form-field>
+             
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Teléfono</mat-label>
+                <input matInput  [(ngModel)]="miembro.telefono" name="telefono">
+            </mat-form-field>
+            
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Email</mat-label>
+                <input matInput [(ngModel)]="miembro.email" name="email">
+            </mat-form-field>
+            
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Compañia</mat-label>
+                <input matInput [(ngModel)]="miembro.nombreCompania" name="nombreCompania" >
+            </mat-form-field>
+
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions class="mat-actions">
+        <button mat-raised-button color="primary" class="button_save" (click)="agregarMiembro()"> Guardar</button>
+        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
+    </mat-card-actions>
+</mat-card>

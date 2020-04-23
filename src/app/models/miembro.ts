@@ -4,6 +4,7 @@ export class Miembro {
     apellidos: string;
     telefono: string;
     nombreCompania: string;
+    profesion: string;
     email: string;
     idGrupo: string;
     nombreGrupo: string;

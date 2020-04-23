@@ -22,6 +22,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './pages/login/login.component';
 import { BaseComponent } from './components/base/base.component';
 import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.component';
 
 
 @NgModule({
@@ -29,7 +31,8 @@ import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.componen
     AppComponent,
     LoginComponent,
     BaseComponent,
-    AdmMiembrosComponent
+    AdmMiembrosComponent,
+    SaveMiembroComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.componen
     MatIconModule,
     MatTableModule,
     MatCardModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
