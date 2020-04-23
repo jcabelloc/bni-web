@@ -13,20 +13,23 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-
-
+import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './pages/login/login.component';
 import { BaseComponent } from './components/base/base.component';
+import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    BaseComponent
+    BaseComponent,
+    AdmMiembrosComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,10 @@ import { BaseComponent } from './components/base/base.component';
     MatListModule,
     MatExpansionModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule,
+    MatCardModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
