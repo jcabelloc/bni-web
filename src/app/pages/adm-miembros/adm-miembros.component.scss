@@ -1,0 +1,47 @@
+.container{
+    height: 100%; 
+    width: 100%;
+}
+
+.mat-table
+{
+    width: 100%;
+    min-width: 800px; 
+}
+.scroll{
+    overflow: hidden;
+}
+.button-align
+{
+    color: white;
+    margin-right:20px;
+}
+mat-icon:hover
+{
+    cursor: pointer;
+}
+.img-miembro
+{
+    width:40px; 
+    border-radius:45%;
+    margin-right: 20px;
+}
+.container-table
+{
+    width: 80%; 
+    min-width: 800px;
+    margin: 0 auto;
+}
+.container-btn
+{
+    width:80%; 
+    text-align:end; 
+    margin: 10px auto;
+    min-width:800px
+}
+
+@media only screen and (max-width: 800px) {
+    .scroll {
+        overflow-x: scroll;
+    }
+}
