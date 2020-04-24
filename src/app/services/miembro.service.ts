@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, finalize } from 'rxjs/operators';
 import { Miembro } from '../models/miembro';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/public_api';
@@ -29,6 +29,7 @@ export class MiembroService {
     return idMiembro;
 
   }
+
   deleteMiembro(id: string) : Observable<void>{
     return from(this.miembrosCollection.doc(id).delete());
   }
@@ -38,10 +39,17 @@ export class MiembroService {
     return ref.getDownloadURL();
   }
 
-  uploadAvatar(idMiembro: string, file: File) {
-    //TODO Pendiente, revisar lka devolución de un observable
+  uploadAvatar(idMiembro: string, file: File): Observable<any> {
+    
     const filePath = "avatar_miembros/"+ idMiembro;
     this.storage.ref(filePath);
-    this.storage.upload(filePath,file);
+    const task = this.storage.upload(filePath,file);
+    return from(task.then())
+ 
+  }
+  
+  updateMiembro(miembro: Miembro): Observable<void>
+  {
+    return from(this.miembrosCollection.doc(miembro.idMiembro).update({... miembro}));
   }
 }

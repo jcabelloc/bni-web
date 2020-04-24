@@ -43,7 +43,7 @@
                 <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element;let i=index">
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon (click)="editMiembro(element)">edit</mat-icon>
                         <mat-icon (click)="deleteMiembro(element.idMiembro)">delete</mat-icon>
                     </td>
                 </ng-container>
