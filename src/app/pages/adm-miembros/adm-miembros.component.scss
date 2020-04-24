@@ -39,7 +39,51 @@ mat-icon:hover
     margin: 10px auto;
     min-width:800px
 }
+.filter-mat-form-field
+{
+    width: 70%;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.hidden-container-filters
+{
+    width: 0; 
+    transition: all 0.5s;
+    background: white;
 
+}
+.show-container-filters
+{
+    height: 100%; 
+    width: 320px; 
+    position: fixed;
+    right: 0;
+    top: 0; 
+    transition: all 0.5s;
+    z-index: 2;
+}
+.content-sub-titles
+{
+    color: var(--color-accent); 
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+    text-align: start;
+    margin-left: 20px; 
+    margin-top: 20px;
+}
+
+.content-inputs-filters
+{
+    width: 100; 
+    margin-top: 50px; 
+    text-align: start;
+}
+.content-button-close
+{
+    width: 100%;
+    margin: 10px 0 0 10px; 
+    color: var(--color-accent);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 @media only screen and (max-width: 800px) {
     .scroll {
         overflow-x: scroll;

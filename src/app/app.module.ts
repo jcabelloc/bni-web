@@ -25,6 +25,7 @@ import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.componen
 import { MatDialogModule } from '@angular/material/dialog';
 import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatChipsModule} from '@angular/material/chips';
 
 import { environment } from 'src/environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -60,6 +61,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     MatSnackBarModule,
     MatDialogModule,
     MatSlideToggleModule,
+    MatChipsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule
