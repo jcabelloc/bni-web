@@ -1,6 +1,9 @@
 <div class="container">
     <div class="scroll">
         <div class="container-btn">
+            <button mat-button mat-icon-button color="accent" style="margin-right: 20px;" (click)="showFilters = true">
+                <mat-icon>filter_list</mat-icon>
+            </button>
             <button mat-raised-button color="primary" class="button-align" (click)="addMiembro()">Agregar</button>
         </div>
         <mat-card class="container-table">
@@ -53,4 +56,47 @@
             </table>
         </mat-card>
     </div>
+</div>
+<div class="hidden-container-filters" [class.show-container-filters]="showFilters">
+    <div class="content-button-close">
+        <button mat-button mat-icon-button color="accent" (click)="showFilters = false">
+            <mat-icon>arrow_right_alt</mat-icon>
+        </button>
+        Filtros
+    </div>
+    <div>
+        <div class="content-inputs-filters">
+            <div class="content-sub-titles">
+                Búsquedas Personalizadas
+            </div>
+            <mat-form-field class="filter-mat-form-field">
+                <mat-label>Nombre</mat-label>
+                <input matInput>
+            </mat-form-field>
+
+            <mat-form-field class="filter-mat-form-field">
+                <mat-label>Empresa</mat-label>
+                <input matInput>
+            </mat-form-field>
+
+            <mat-form-field class="filter-mat-form-field">
+                <mat-label>Profesion</mat-label>
+                <input matInput>
+            </mat-form-field>   
+
+            <div class="content-sub-titles">
+                Seleccionados :
+                <div style="margin-top: 25px;">
+
+                    <mat-chip-list>
+                        <mat-chip removable>Guillermo
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>

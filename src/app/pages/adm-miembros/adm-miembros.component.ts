@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBarConfig, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition, MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Miembro } from 'src/app/models/miembro';
 import { SaveMiembroComponent } from 'src/app/dialog/save-miembro/save-miembro.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ export class AdmMiembrosComponent implements OnInit {
   displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreCompania', 'acciones'];
 
   miembros: Miembro[]
+  showFilters: boolean = true;
   constructor(private miembroService: MiembroService, private dialog: MatDialog, public snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
