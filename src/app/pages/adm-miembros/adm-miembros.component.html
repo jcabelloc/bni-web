@@ -58,45 +58,49 @@
     </div>
 </div>
 <div class="hidden-container-filters" [class.show-container-filters]="showFilters">
-    <div class="content-button-close">
-        <button mat-button mat-icon-button color="accent" (click)="showFilters = false">
-            <mat-icon>arrow_right_alt</mat-icon>
-        </button>
-        Filtros
-    </div>
-    <div>
-        <div class="content-inputs-filters">
-            <div class="content-sub-titles">
-                Búsquedas Personalizadas
-            </div>
-            <mat-form-field class="filter-mat-form-field">
-                <mat-label>Nombre</mat-label>
-                <input matInput>
-            </mat-form-field>
+    <div [style.display]="showFilters ? 'block': 'none'">
+        <div class="content-button-close">
+            <button mat-button mat-icon-button color="accent" (click)="showFilters = false">
+                <mat-icon>arrow_right_alt</mat-icon>
+            </button>
+            Filtros
+        </div>
+        <div>
+            <div class="content-inputs-filters">
+                <div class="content-sub-titles">
+                    Búsquedas Personalizadas
+                </div>
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput (keyup.enter)="addFiltroNombre()" [(ngModel)]="nombreFiltro" name="nombreFiltro">
+                </mat-form-field>
 
-            <mat-form-field class="filter-mat-form-field">
-                <mat-label>Empresa</mat-label>
-                <input matInput>
-            </mat-form-field>
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Compañia</mat-label>
+                    <input matInput (keyup.enter)="addFiltroCompania()" [(ngModel)]="companiaFiltro"
+                        name="companiaFiltro">
+                </mat-form-field>
 
-            <mat-form-field class="filter-mat-form-field">
-                <mat-label>Profesion</mat-label>
-                <input matInput>
-            </mat-form-field>   
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Profesion</mat-label>
+                    <input matInput (keyup.enter)="addFiltroProfesion()" [(ngModel)]="profesionFiltro"
+                        name="profesionFiltro">
+                </mat-form-field>
 
-            <div class="content-sub-titles">
-                Seleccionados :
-                <div style="margin-top: 25px;">
+                <div class="content-sub-titles">
+                    Seleccionados :
+                    <div style="margin-top: 25px;">
 
-                    <mat-chip-list>
-                        <mat-chip removable>Guillermo
-                            <mat-icon matChipRemove>cancel</mat-icon>
-                        </mat-chip>
-                    </mat-chip-list>
+                        <mat-chip-list>
+                            <mat-chip removable *ngFor="let filtro of filtros; let i=index" title="{{filtro.key}}">
+                                {{filtro.value}}
+                                <mat-icon matChipRemove (click)="removeFilter(i)">cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
                 </div>
             </div>
+
         </div>
-
     </div>
-
 </div>
