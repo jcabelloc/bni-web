@@ -31,6 +31,7 @@ import { environment } from 'src/environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     LoginComponent,
     BaseComponent,
     AdmMiembrosComponent,
-    SaveMiembroComponent
+    SaveMiembroComponent,
+    AdmGruposComponent
   ],
   imports: [
     BrowserModule,
