@@ -26,12 +26,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatChipsModule} from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
+
+import { AgmCoreModule } from '@agm/core';
 
 import { environment } from 'src/environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
+import { SaveGrupoComponent } from './dialog/save-grupo/save-grupo.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,8 @@ import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
     BaseComponent,
     AdmMiembrosComponent,
     SaveMiembroComponent,
-    AdmGruposComponent
+    AdmGruposComponent,
+    SaveGrupoComponent
   ],
   imports: [
     BrowserModule,
@@ -64,9 +69,13 @@ import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
     MatDialogModule,
     MatSlideToggleModule,
     MatChipsModule,
+    MatSelectModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDkY0z8ZHx7crWrDDONgwibUns7ogcppoc'
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
