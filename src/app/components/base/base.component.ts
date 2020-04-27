@@ -16,7 +16,8 @@ export class BaseComponent implements OnInit, OnDestroy {
       opciones: [
         { nombre: 'Adm. General'},
         { nombre: 'Adm. Miembros', ruta:'/main/miembros'},
-        { nombre: 'Adm. Grupos', ruta:'/main/grupos'}
+        { nombre: 'Adm. Grupos', ruta:'/main/grupos'},
+        { nombre: 'Adm. Sesiones', ruta:'/main/sesiones'}
       ]
     },
 
