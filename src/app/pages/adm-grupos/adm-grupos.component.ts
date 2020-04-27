@@ -51,4 +51,11 @@ export class AdmGruposComponent implements OnInit {
       }
     });
   }
+
+  deleteGrupo(idGrupo: string) {
+    this.grupoService.deleteGrupo(idGrupo).subscribe(
+      () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
+  }
 }
