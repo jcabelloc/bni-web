@@ -15,6 +15,10 @@ export class GrupoService {
   constructor(private afs: AngularFirestore) {
     this.gruposCollection = afs.collection<Grupo>('grupos');
   }
+  getGrupos()
+  {
+    return this.gruposCollection.valueChanges({ idField: 'idGrupo' });
+  }
 
   createGrupo(grupo: Grupo): Observable<string> {
 
