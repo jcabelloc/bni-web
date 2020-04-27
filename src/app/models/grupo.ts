@@ -9,16 +9,16 @@ export class Grupo {
     horaSesion: string;
 
     public static readonly diasSemana: DiasSemana[] = [
-        {key: 1, viewValue: 'Lunes'},
-        {key: 2, viewValue: 'Martes'},
-        {key: 3, viewValue: 'Miercoles'},
-        {key: 4, viewValue: 'Jueves'},
-        {key: 5, viewValue: 'Viernes'},
+        {key: 'LUNES', viewValue: 'Lunes'},
+        {key: 'MARTES', viewValue: 'Martes'},
+        {key: 'MIERCOLES', viewValue: 'Miercoles'},
+        {key: 'JUEVES', viewValue: 'Jueves'},
+        {key: 'VIERNES', viewValue: 'Viernes'},
     ];
 }
 
 export class DiasSemana{
-    key: number;
+    key: string;
     viewValue: string;
 }
 
