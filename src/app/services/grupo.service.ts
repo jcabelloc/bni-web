@@ -15,8 +15,8 @@ export class GrupoService {
   constructor(private afs: AngularFirestore) {
     this.gruposCollection = afs.collection<Grupo>('grupos');
   }
-  getGrupos()
-  {
+
+  getGrupos() : Observable<Grupo[]> {
     return this.gruposCollection.valueChanges({ idField: 'idGrupo' });
   }
 
@@ -25,5 +25,10 @@ export class GrupoService {
     let idGrupo: Observable<string>;
     idGrupo = from(this.gruposCollection.add({... grupo})).pipe(map(document => document.id));
     return idGrupo;
+  }
+
+  updateGrupo(grupo: Grupo): Observable<void>
+  {
+    return from(this.gruposCollection.doc(grupo.idGrupo).update({... grupo}));
   }
 }
