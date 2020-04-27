@@ -27,7 +27,7 @@ export class SaveGrupoComponent implements OnInit {
   ngOnInit(): void {
     this.opcion = this.data.opcion;
     if (this.data.grupo?.idGrupo) {
-      this.grupo = this.data.grupo;
+      this.grupo = {...this.data.grupo};
     }
   }
 

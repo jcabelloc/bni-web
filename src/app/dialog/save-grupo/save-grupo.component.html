@@ -52,7 +52,7 @@
     <mat-card-actions class="mat-actions">
         <button mat-raised-button color="primary" class="button_save" (click)="agregarGrupo()"
             [disabled]="!saveForm.form.valid"> Guardar</button>
-        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
+        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]="{grup:data.grupo}">Cancelar</button>
     </mat-card-actions>
 </mat-card>
 

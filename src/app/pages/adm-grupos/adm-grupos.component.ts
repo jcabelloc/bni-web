@@ -39,4 +39,16 @@ export class AdmGruposComponent implements OnInit {
       }
     });
   }
+
+  editGrupo(grupo: Grupo) {
+    const dialogRef = this.dialog.open(SaveGrupoComponent, { width: '800px', data: { grupo: grupo, opcion: "Editar" } });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.grupo) {
+        this.grupoService.updateGrupo(data?.grupo).subscribe(
+          () => this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 }),
+          err => this.snackBar.open(err, '', { duration: 2000 })
+        );
+      }
+    });
+  }
 }
