@@ -31,4 +31,8 @@ export class GrupoService {
   {
     return from(this.gruposCollection.doc(grupo.idGrupo).update({... grupo}));
   }
+
+  deleteGrupo(idGrupo: string) : Observable<void>{
+    return from(this.gruposCollection.doc(idGrupo).delete());
+  }
 }
