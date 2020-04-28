@@ -37,6 +37,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
 import { SaveGrupoComponent } from './dialog/save-grupo/save-grupo.component';
 import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.component';
+import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesiones.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.componen
     SaveMiembroComponent,
     AdmGruposComponent,
     SaveGrupoComponent,
-    AdmSesionesComponent
+    AdmSesionesComponent,
+    GenerarSesionesComponent
   ],
   imports: [
     BrowserModule,

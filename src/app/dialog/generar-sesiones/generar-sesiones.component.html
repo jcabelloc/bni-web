@@ -1,0 +1,28 @@
+<mat-card class="card">
+    <mat-card-header class="card-header">
+        <mat-card-title>
+            Generar Sesiones
+        </mat-card-title>
+    </mat-card-header>
+    <div class="mat-actions actiosn-query">
+
+        <mat-form-field>
+            <mat-label>Año</mat-label>
+            <mat-select [(ngModel)]="optionYear" name="optionYear">
+                <mat-option *ngFor="let year of selectYear" [value]="year">
+                    {{year}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" style="margin: 10px 10px 10px 0;">Generar</button>
+    </div>
+    <mat-card-content style="margin-top: 30px;">
+        <div style="text-align: center;">No tiene Sesiones programadas</div>
+    </mat-card-content>
+
+    <mat-card-actions class="mat-actions">
+        <button mat-raised-button color="primary" class="button_save"> Grabar</button>
+        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
+    </mat-card-actions>
+</mat-card>

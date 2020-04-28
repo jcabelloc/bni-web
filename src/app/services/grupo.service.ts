@@ -16,23 +16,27 @@ export class GrupoService {
     this.gruposCollection = afs.collection<Grupo>('grupos');
   }
 
-  getGrupos() : Observable<Grupo[]> {
+  getGrupos(): Observable<Grupo[]> {
     return this.gruposCollection.valueChanges({ idField: 'idGrupo' });
   }
 
   createGrupo(grupo: Grupo): Observable<string> {
 
     let idGrupo: Observable<string>;
-    idGrupo = from(this.gruposCollection.add({... grupo})).pipe(map(document => document.id));
+    idGrupo = from(this.gruposCollection.add({ ...grupo })).pipe(map(document => document.id));
     return idGrupo;
   }
 
-  updateGrupo(grupo: Grupo): Observable<void>
-  {
-    return from(this.gruposCollection.doc(grupo.idGrupo).update({... grupo}));
+  updateGrupo(grupo: Grupo): Observable<void> {
+    return from(this.gruposCollection.doc(grupo.idGrupo).update({ ...grupo }));
   }
 
-  deleteGrupo(idGrupo: string) : Observable<void>{
+  deleteGrupo(idGrupo: string): Observable<void> {
     return from(this.gruposCollection.doc(idGrupo).delete());
+  }
+
+  findById(idGrupo: string):Observable<Grupo> {
+
+    return this.gruposCollection.doc<Grupo>(idGrupo).valueChanges();
   }
 }

@@ -1,0 +1,48 @@
+.full-mat-form-field {
+    width: 40%;
+    padding-left: 5%;
+    margin: 0 auto
+}
+.card{
+    padding: 0%;
+}
+.mat-actions
+{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto 10px auto ;
+}
+.button_save
+{
+    color: white;
+    margin-bottom: 15px;
+}
+
+.button_cancel
+{
+    color: black;
+    margin-bottom: 15px;
+}
+.card-header
+{
+    background-color: var(--color-accent); 
+    width: 100%;
+    padding: 0; 
+    margin: 0;
+    height: 70px; 
+    color: white;
+    border-radius: 15px 0 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media only screen and (max-width: 800px) {
+    .full-mat-form-field {
+        width:90%;
+    }
+    .actiosn-query
+    {
+        flex-direction: column;
+    }   
+}
