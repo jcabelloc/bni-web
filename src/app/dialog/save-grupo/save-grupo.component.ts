@@ -28,6 +28,8 @@ export class SaveGrupoComponent implements OnInit {
     this.opcion = this.data.opcion;
     if (this.data.grupo?.idGrupo) {
       this.grupo = {...this.data.grupo};
+      this.latSesion = this.data.grupo.ubicacionSesion.latitude;
+      this.lngSesion = this.data.grupo.ubicacionSesion.longitude;
     }
   }
 
@@ -40,7 +42,7 @@ export class SaveGrupoComponent implements OnInit {
     this.lngSesion = $event.coords.lng;
   }
   comfirmUbicacion() {
-    this.grupo.lugarSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
+    this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
     this.showCoordenadas = false;
   }
 }

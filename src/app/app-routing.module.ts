@@ -4,6 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { BaseComponent } from './components/base/base.component';
 import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.component';
 import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
+import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.component';
 
 
 const routes: Routes = [
@@ -11,7 +12,8 @@ const routes: Routes = [
   { path:'seguridad/login', component:LoginComponent},
   { path:'main', component:BaseComponent, children:[
     {path:'miembros', component: AdmMiembrosComponent},
-    {path:'grupos', component: AdmGruposComponent }
+    {path:'grupos', component: AdmGruposComponent },
+    {path:'sesiones', component: AdmSesionesComponent }
   ]},
 
 ];
