@@ -37,6 +37,23 @@
     justify-content: center;
     align-items: center;
 }
+
+.mat-table
+{
+    width: 100%;
+    min-width: 400px;
+} 
+.container-table{
+    width: 80%;
+    max-height: 300px;
+    margin: 10px auto;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+.container-mat-content
+{
+    width: 100%;
+}
 @media only screen and (max-width: 800px) {
     .full-mat-form-field {
         width:90%;

@@ -35,8 +35,11 @@ export class GrupoService {
     return from(this.gruposCollection.doc(idGrupo).delete());
   }
 
-  findById(idGrupo: string):Observable<Grupo> {
+  findById(idGrupo: string): Observable<Grupo> {
 
-    return this.gruposCollection.doc<Grupo>(idGrupo).valueChanges();
+    return this.gruposCollection.doc<Grupo>(idGrupo).valueChanges().pipe(map(document => {
+      document.idGrupo = idGrupo;
+      return document;
+    }));
   }
 }

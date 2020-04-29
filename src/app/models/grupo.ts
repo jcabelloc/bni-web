@@ -1,12 +1,14 @@
 import { FirebaseApp } from '@angular/fire';
 
 export class Grupo {
-    idGrupo: string;
+    idGrupo?: string;
     nombre: string;
     diaSesion: string;
-    lugarSesion: firebase.firestore.GeoPoint;
+    ubicacionSesion: firebase.firestore.GeoPoint;
     direccionSesion: string;
+    lugarSesion: string;
     horaSesion: string;
+    ultimaGeneracion: number;
 
     public static readonly diasSemana: DiasSemana[] = [
         {key: 'LUNES', viewValue: 'Lunes'},
