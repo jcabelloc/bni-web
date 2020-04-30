@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sesion } from '../../models/sesion';
 import { Grupo } from 'src/app/models/grupo';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { firestore } from 'firebase';
 @Component({
   selector: 'app-generar-sesiones',
   templateUrl: './generar-sesiones.component.html',
@@ -70,7 +71,7 @@ export class GenerarSesionesComponent implements OnInit {
       sesion.idGrupo = this.data.grupo.idGrupo;
       sesion.lugar = this.data.grupo.lugarSesion;
       sesion.ubicacion = this.data.grupo.ubicacionSesion;
-      sesion.fechaHora = this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio)
+      sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
       fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
       this.sesiones.push(sesion);
     }

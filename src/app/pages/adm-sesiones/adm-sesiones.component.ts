@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { GenerarSesionesComponent } from 'src/app/dialog/generar-sesiones/generar-sesiones.component';
 import { SesionService } from 'src/app/services/sesion.service';
+import { Sesion } from 'src/app/models/sesion';
 
 @Component({
   selector: 'app-adm-sesiones',
@@ -15,10 +16,22 @@ export class AdmSesionesComponent implements OnInit {
 
   idGrupo: string = 'btJ5XSkYP9lwqZPJxJnj';
   grupo: Grupo = new Grupo();
+  sesiones: Sesion[];
+  sesionesDataTable: Sesion[];
+  yearFilter: number;
+  selectYear: number[] = Array<number>();
+  displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   constructor(private grupoService: GrupoService, private sesionService: SesionService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getGrupo();
+    this.getSesionesByIdGrupoAndAscendingByFechaHora();
+  }
+
+  getSesionesByIdGrupo() {
+    this.sesionService.getSesionesByIdGrupo(this.idGrupo).subscribe(
+      sesiones => this.sesiones = sesiones,
+      err => this.snackBar.open(err, '', { duration: 2000 }));
   }
 
   getGrupo() {
@@ -26,6 +39,12 @@ export class AdmSesionesComponent implements OnInit {
       grupo => { this.grupo = grupo },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
+  }
+
+  updateSesionesDataTable() {
+    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter);
+    this.sesionesDataTable = [].concat(this.sesionesDataTable);
+    console.log(this.sesionesDataTable)
   }
 
   generateSesions() {
@@ -40,5 +59,22 @@ export class AdmSesionesComponent implements OnInit {
           }, err => this.snackBar.open(err, '', { duration: 2000 }));
       }
     });
+  }
+  getSesionesByIdGrupoAndAscendingByFechaHora() {
+    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(this.idGrupo).subscribe(
+      sesiones => {
+        this.sesiones = sesiones;
+        this.generateSelectYears();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 }))
+  }
+
+  generateSelectYears() {
+    let initYear = this.sesiones[0].fechaHora.toDate().getFullYear();
+    console.log(initYear);
+    while (initYear <= this.grupo.ultimaGeneracion) {
+      this.selectYear.push(initYear);
+      initYear++;
+    }
   }
 }

@@ -30,26 +30,23 @@ export class MiembroService {
 
   }
 
-  deleteMiembro(id: string) : Observable<void>{
+  deleteMiembro(id: string): Observable<void> {
     return from(this.miembrosCollection.doc(id).delete());
   }
 
-  getAvatarImgUrl(rutaImageProfile: string): Observable<any>{
+  getAvatarImgUrl(rutaImageProfile: string): Observable<any> {
     const ref = this.storage.ref('avatar_miembros/' + rutaImageProfile);
     return ref.getDownloadURL();
   }
 
   uploadAvatar(idMiembro: string, file: File): Observable<any> {
-    
-    const filePath = "avatar_miembros/"+ idMiembro;
+
+    const filePath = "avatar_miembros/" + idMiembro;
     this.storage.ref(filePath);
-    const task = this.storage.upload(filePath,file);
-    return from(task.then())
- 
+    const task = this.storage.upload(filePath, file);
+    return from(task);
   }
-  
-  updateMiembro(miembro: Miembro): Observable<void>
-  {
-    return from(this.miembrosCollection.doc(miembro.idMiembro).update({... miembro}));
+  updateMiembro(miembro: Miembro): Observable<void> {
+    return from(this.miembrosCollection.doc(miembro.idMiembro).update({ ...miembro }));
   }
 }
