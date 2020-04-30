@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GenerarSesionesComponent } from 'src/app/dialog/generar-sesiones/generar-sesiones.component';
 import { SesionService } from 'src/app/services/sesion.service';
 import { Sesion } from 'src/app/models/sesion';
+import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.component';
 
 @Component({
   selector: 'app-adm-sesiones',
@@ -14,7 +15,7 @@ import { Sesion } from 'src/app/models/sesion';
 })
 export class AdmSesionesComponent implements OnInit {
 
-  idGrupo: string = 'btJ5XSkYP9lwqZPJxJnj';
+  idGrupo: string = '81uhFghXoitJqwdckubT';
   grupo: Grupo = new Grupo();
   sesiones: Sesion[];
   sesionesDataTable: Sesion[];
@@ -29,12 +30,6 @@ export class AdmSesionesComponent implements OnInit {
     this.getSesionesByIdGrupoAndAscendingByFechaHora();
   }
 
-  getSesionesByIdGrupo() {
-    this.sesionService.getSesionesByIdGrupo(this.idGrupo).subscribe(
-      sesiones => this.sesiones = sesiones,
-      err => this.snackBar.open(err, '', { duration: 2000 }));
-  }
-
   getGrupo() {
     this.grupoService.findById(this.idGrupo).subscribe(
       grupo => { this.grupo = grupo },
@@ -42,10 +37,26 @@ export class AdmSesionesComponent implements OnInit {
     );
   }
 
+  editSesion(sesion: Sesion) {
+    const dialogRef = this.dialog.open(EditSesionComponent, { width: '800px', data: { sesion: sesion} });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.sesion) {
+        this.sesionService.updateSesion(data?.sesion).subscribe(
+          () => {
+            this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 }),
+            this.updateSesionesDataTable();
+          },
+          err => this.snackBar.open(err, '', { duration: 2000 })
+        );
+      }
+    });
+
+  }
+
   updateSesionesDataTable() {
     this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter);
     this.sesionesDataTable = [].concat(this.sesionesDataTable);
-    console.log(this.sesionesDataTable)
+
   }
 
   generateSesions() {
@@ -71,8 +82,8 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   generateSelectYears() {
-    let initYear = this.sesiones[0].fechaHora.toDate().getFullYear();
-    console.log(initYear);
+    this.selectYear = [];
+    let initYear = this.sesiones[0]?.fechaHora.toDate().getFullYear();
     while (initYear <= this.grupo.ultimaGeneracion) {
       this.selectYear.push(initYear);
       initYear++;

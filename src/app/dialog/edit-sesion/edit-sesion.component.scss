@@ -1,0 +1,86 @@
+.full-mat-form-field {
+    width: 40%;
+    padding-left: 5%;
+    margin: 0 auto
+}
+.card{
+    padding: 0%;
+}
+.mat-actions
+{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto 10px auto ;
+}
+@media only screen and (max-width: 800px) {
+    .full-mat-form-field {
+        width:90%;
+    }
+}
+.button_save
+{
+    color: white;
+    margin-bottom: 15px;
+}
+
+.button_cancel
+{
+    color: black;
+    margin-bottom: 15px;
+}
+.card-header
+{
+    background-color: var(--color-accent); 
+    width: 100%;
+    padding: 0; 
+    margin: 0;
+    height: 70px; 
+    color: white;
+    border-radius: 15px 0 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-mapa-and-buttons{
+    width: 100%;
+    height: 100%; 
+    position:absolute;
+    left: 0;
+    top: 0; 
+    transition: all 1s;
+    z-index: 1;
+}
+.sub-container-center
+{
+    width: 90%; 
+    height: 90%;
+    margin: auto; 
+    position: relative;
+    z-index: 2; 
+    margin-top: 30px;
+}
+.container-mapa
+{
+    width: 100% ;
+    height: 91%;
+}
+.mapa{
+    height:100%;
+    min-height: 500px;
+}
+.container-buttons{
+    width: 100%;
+    height: 9%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
+    background: white;
+    ;border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.container-mapa-and-buttons{
+    height:100%;
+    min-height: 500px;
+}

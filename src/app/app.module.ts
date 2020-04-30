@@ -27,7 +27,7 @@ import { SaveMiembroComponent } from './dialog/save-miembro/save-miembro.compone
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatChipsModule} from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatDatepickerModule  } from '@angular/material/datepicker';
 import { AgmCoreModule } from '@agm/core';
 
 import { environment } from 'src/environments/environment';
@@ -38,6 +38,8 @@ import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
 import { SaveGrupoComponent } from './dialog/save-grupo/save-grupo.component';
 import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.component';
 import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesiones.component';
+import { EditSesionComponent } from './dialog/edit-sesion/edit-sesion.component';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,8 @@ import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesi
     AdmGruposComponent,
     SaveGrupoComponent,
     AdmSesionesComponent,
-    GenerarSesionesComponent
+    GenerarSesionesComponent,
+    EditSesionComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +77,8 @@ import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesi
     MatSlideToggleModule,
     MatChipsModule,
     MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,

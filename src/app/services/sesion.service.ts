@@ -17,13 +17,9 @@ export class SesionService {
 
   getSesionesByIdGrupoAndAscendingByFechaHora(idGrupo: string): Observable<Sesion[]> {
 
-    return this.afs.collection<Sesion>('sesiones', ref => ref.where('idGrupo', '==', idGrupo).orderBy('fechaHora')).valueChanges();
+    return this.afs.collection<Sesion>('sesiones', ref => ref.where('idGrupo', '==', idGrupo).orderBy('fechaHora')).valueChanges({idField: 'idSesion'});
   }
 
-  getSesionesByIdGrupo(idGrupo: string): Observable<Sesion[]> {
-
-    return this.afs.collection<Sesion>('sesiones', ref => ref.where('idGrupo', '==', idGrupo)).valueChanges({ idField: 'idSesion' });
-  }
   createSesiones(sesiones: Sesion[]): Observable<void> {
     let sesionRef;
     let idSesion: string;
@@ -37,4 +33,7 @@ export class SesionService {
     return from(batch.commit());
   }
 
+  updateSesion(sesion: Sesion): Observable<void> {
+    return from(this.sesionesCollection.doc(sesion.idSesion).update({ ...sesion }));
+  }
 }

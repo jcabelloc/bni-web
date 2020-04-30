@@ -1,0 +1,71 @@
+<mat-card class="card">
+    <mat-card-header class="card-header">
+        <mat-card-title>
+            Editar Sesion
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content style="margin-top: 30px;">
+        <form id="saveForm" #saveForm="ngForm">
+            
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Fecha</mat-label>
+                <input matInput [matDatepicker]="picker1" placeholder="Fecha" [(ngModel)]="fechaForm" name="fechaForm" required>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker color="accent" #picker1></mat-datepicker>
+              </mat-form-field>
+            
+              <mat-form-field class="full-mat-form-field">  
+                <mat-label>Hora </mat-label>
+                <input type="time" matInput [(ngModel)]="horaForm" name="horaForm" required>
+            </mat-form-field>
+
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Dirección</mat-label>
+                <input matInput [(ngModel)]="sesion.direccion" name="direccion" required>
+            </mat-form-field>
+
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Lugar</mat-label>
+                <input type="text" matInput [(ngModel)]="sesion.lugar" name="lugar" required>
+            </mat-form-field>
+
+            <mat-form-field class="full-mat-form-field">
+                <input matInput type="text" placeholder="Latitud" readonly [value]="sesion.ubicacion?.latitude" required>
+                <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
+                    <mat-icon style="font-size: 20px;">room</mat-icon>
+                 </button>
+            </mat-form-field>
+            
+            
+            <mat-form-field class="full-mat-form-field">
+                <input matInput type="text" placeholder="Longitud" readonly [value]="sesion.ubicacion?.longitude" required>
+                <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
+                    <mat-icon style="font-size: 20px;">room</mat-icon>
+                 </button>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+
+    <mat-card-actions class="mat-actions">
+        <button mat-raised-button color="primary" class="button_save" (click)="editarSesion()"
+            [disabled]="!saveForm.form.valid"> Guardar</button>
+        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
+    </mat-card-actions>
+</mat-card>
+
+<div *ngIf="showCoordenadas" class="container-mapa-and-buttons">
+    <div class="sub-container-center">
+        <div class="container-mapa"> 
+            <agm-map class="mapa" [latitude]="latPeru" [longitude]="lngPeru" [zoom]="zoom" (mapClick)="mapClicked($event)">
+                <agm-marker [latitude]="latSesion" [longitude]="lngSesion">
+                </agm-marker>
+            </agm-map>
+        </div>
+        <div class="container-buttons" >
+            <button mat-raised-button color="primary" class="button_save" style="margin: 5px;" (click)="comfirmUbicacion()">Confirmar</button>
+            <button mat-raised-button color="white" class="button_cancel" style="margin: 5px;" (click)="showCoordenadas = false">Cancelar</button>
+        </div>
+    </div>
+
+</div>
