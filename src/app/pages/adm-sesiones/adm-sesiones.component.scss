@@ -54,6 +54,15 @@ mat-icon:hover
     flex-direction: row;
     min-width:900px;
 }
+.element-row
+{
+    background-color: lightgrey;
+    mat-icon{
+        cursor: none;
+        pointer-events: none;
+    }
+    
+}
 @media only screen and (max-width: 800px) {
     .scroll {
         overflow-x: scroll;

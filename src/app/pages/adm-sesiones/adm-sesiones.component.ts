@@ -21,6 +21,7 @@ export class AdmSesionesComponent implements OnInit {
   yearFilter: number;
   selectYear: number[] = Array<number>();
   displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
+  fechaActual: Date = new Date();
   constructor(private grupoService: GrupoService, private sesionService: SesionService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -75,6 +76,11 @@ export class AdmSesionesComponent implements OnInit {
     while (initYear <= this.grupo.ultimaGeneracion) {
       this.selectYear.push(initYear);
       initYear++;
+    }
+  }
+  getValidacionFechaPasada(sesion: Sesion): boolean {
+    if (sesion.fechaHora.toDate() < this.fechaActual) {
+      return true;
     }
   }
 }
