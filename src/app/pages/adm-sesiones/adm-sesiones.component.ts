@@ -15,7 +15,7 @@ import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.comp
 })
 export class AdmSesionesComponent implements OnInit {
 
-  idGrupo: string = 'btJ5XSkYP9lwqZPJxJnj';
+  idGrupo: string = '81uhFghXoitJqwdckubT';
   grupo: Grupo = new Grupo();
   sesiones: Sesion[];
   sesionesDataTable: Sesion[];
@@ -38,7 +38,7 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   editSesion(sesion: Sesion) {
-    const dialogRef = this.dialog.open(EditSesionComponent, { width: '800px', data: { sesion: sesion } });
+    const dialogRef = this.dialog.open(EditSesionComponent, { width: '800px', data: { sesion: sesion} });
     dialogRef.afterClosed().subscribe(data => {
       if (data?.sesion) {
         this.sesionService.updateSesion(data?.sesion).subscribe(
@@ -82,7 +82,8 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   generateSelectYears() {
-    let initYear = this.sesiones[0].fechaHora.toDate().getFullYear();
+    this.selectYear = [];
+    let initYear = this.sesiones[0]?.fechaHora.toDate().getFullYear();
     while (initYear <= this.grupo.ultimaGeneracion) {
       this.selectYear.push(initYear);
       initYear++;

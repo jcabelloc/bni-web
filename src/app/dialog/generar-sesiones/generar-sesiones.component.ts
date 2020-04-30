@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Sesion } from '../../models/sesion';
 import { Grupo } from 'src/app/models/grupo';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firestore } from 'firebase';
+import { EditSesionComponent } from '../edit-sesion/edit-sesion.component';
 @Component({
   selector: 'app-generar-sesiones',
   templateUrl: './generar-sesiones.component.html',
@@ -16,7 +17,10 @@ export class GenerarSesionesComponent implements OnInit {
   sesiones: Sesion[] = new Array<Sesion>();
   displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   yearActual: number = new Date().getFullYear();
-  constructor(private snackBar: MatSnackBar, private dialogRef: MatDialogRef<GenerarSesionesComponent>, @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo }) { }
+  constructor(private snackBar: MatSnackBar,
+    private dialogRef: MatDialogRef<GenerarSesionesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo },
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.buildSelectOptions();
@@ -34,7 +38,7 @@ export class GenerarSesionesComponent implements OnInit {
 
   getFechaInicio(): Date {
     let fechaInicio: Date = new Date();
-    let dayActual: number= new Date().getDay();
+    let dayActual: number = new Date().getDay();
     let numeroDiaSesion: number = Sesion.valueDia.get(this.data.grupo.diaSesion);  // Número que identifica al día de la Sesion (LUNES - 1 | MARTES - 2 )
     if (fechaInicio.getFullYear() < this.optionYear) {
       fechaInicio = new Date(this.optionYear, 0, 0)
@@ -75,11 +79,26 @@ export class GenerarSesionesComponent implements OnInit {
       fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
       this.sesiones.push(sesion);
     }
-    this.data.grupo.ultimaGeneracion = fechaInicio.getFullYear()-1;
     this.sesiones = [].concat(this.sesiones);
   }
 
   grabarSesiones() {
+    this.data.grupo.ultimaGeneracion = this.sesiones[0].fechaHora.toDate().getFullYear();
     this.dialogRef.close({ sesiones: this.sesiones, grupo: this.data.grupo })
+  }
+
+  editSesion(element) {
+    const dialogRef = this.dialog.open(EditSesionComponent, { width: '800px', data: { sesion: element } });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.sesion) {
+        this.updateSesion(element,data?.sesion);
+      }
+    });
+  }
+
+  updateSesion(sesionAnterior: Sesion, sesionNueva: Sesion) {
+    let indexSesion = this.sesiones.findIndex(sesion => sesion.fechaHora == sesionAnterior.fechaHora)
+    this.sesiones[indexSesion] = sesionNueva;
+    this.sesiones = [].concat(this.sesiones);
   }
 }

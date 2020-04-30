@@ -24,12 +24,12 @@
 
                 <ng-container matColumnDef="fecha">
                     <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                    <td mat-cell *matCellDef="let element">{{element.fechaHora.toDate() | date}} </td>
+                    <td mat-cell *matCellDef="let element">{{element.fechaHora?.toDate() | date}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="horaSesion">
                     <th mat-header-cell *matHeaderCellDef> Hora </th>
-                    <td mat-cell *matCellDef="let element"> {{element.fechaHora.toDate() | date:'shortTime'}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaHora?.toDate() | date:'shortTime'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="direccionSesion">
