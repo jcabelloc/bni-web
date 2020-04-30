@@ -18,7 +18,7 @@
             </mat-form-field>
             <button mat-raised-button color="primary" class="button-align" (click)="generateSesions()">Generar Programación</button>
         </div>
-        <mat-card class="container-table">
+        <mat-card *ngIf="sesionesDataTable != null" class="container-table">
             <table mat-table [dataSource]="sesionesDataTable" class="mat-elevation-z8">
 
 
