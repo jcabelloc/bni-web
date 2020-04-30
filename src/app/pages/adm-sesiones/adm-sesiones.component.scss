@@ -32,7 +32,7 @@ mat-icon:hover
 {
     width:80%; 
     text-align:end; 
-    margin: 10px auto;
+    margin: 20px auto;
     min-width:800px
 }
 .text
@@ -53,6 +53,15 @@ mat-icon:hover
     display: flex;
     flex-direction: row;
     min-width:900px;
+}
+.element-row
+{
+    background-color: lightgrey;
+    mat-icon{
+        cursor: none;
+        pointer-events: none;
+    }
+    
 }
 @media only screen and (max-width: 800px) {
     .scroll {

@@ -7,45 +7,57 @@
                 <p class="text">Direccion de Sesión:{{" "+grupo.direccionSesion}}</p>
         </div>
         <div class="container-btn">
+
+            <mat-form-field style="margin-right: 20px;">
+                <mat-label>Año</mat-label>
+                <mat-select [(ngModel)]="yearFilter" name="yearFilter" (selectionChange)="updateSesionesDataTable()">
+                    <mat-option *ngFor="let year of selectYear" [value]="year">
+                        {{year}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <button mat-raised-button color="primary" class="button-align" (click)="generateSesions()">Generar Programación</button>
         </div>
-        <mat-card class="container-table">
-            <!--
-            <table mat-table [dataSource]="grupos" class="mat-elevation-z8">
+        <mat-card *ngIf="sesionesDataTable != null" class="container-table">
+            <table mat-table [dataSource]="sesionesDataTable" class="mat-elevation-z8">
 
 
-                <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                    <td mat-cell *matCellDef="let element">{{element.nombre}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="diaSesion">
-                    <th mat-header-cell *matHeaderCellDef> Día Sesión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.diaSesion}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="direccionSesion">
-                    <th mat-header-cell *matHeaderCellDef> Direccion de Sesión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.direccionSesion}} </td>
+                <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let element">{{element.fechaHora.toDate() | date}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="horaSesion">
-                    <th mat-header-cell *matHeaderCellDef> Hora de Sesión </th>
-                    <td mat-cell *matCellDef="let element"> {{element.horaSesion}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Hora </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaHora.toDate() | date:'shortTime'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="direccionSesion">
+                    <th mat-header-cell *matHeaderCellDef> Dirección </th>
+                    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lugarSesion">
+                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
+                    <td mat-cell *matCellDef="let element"> {{element.lugar}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ubicacionSesion">
+                    <th mat-header-cell *matHeaderCellDef> Ubicación </th>
+                    <td mat-cell *matCellDef="let element"> <mat-icon color="primary" style="margin-left: 7px;">room</mat-icon></td>
                 </ng-container>
 
                 <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element;let i=index">
-                        <mat-icon (click)="editGrupo(element)">edit</mat-icon>
-                        <mat-icon (click)="deleteGrupo(element.idGrupo)">delete</mat-icon>
+                        <mat-icon>edit</mat-icon>
+                        <mat-icon>delete</mat-icon>
                     </td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+                <tr mat-row [class.element-row]="getValidacionFechaPasada(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-        -->
         </mat-card>
     </div>
 </div>

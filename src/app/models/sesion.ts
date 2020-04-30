@@ -3,7 +3,7 @@ export class Sesion {
     ubicacion: firebase.firestore.GeoPoint;
     direccion: string;
     lugar: string;
-    fechaHora: Date;
+    fechaHora: firebase.firestore.Timestamp;
     idGrupo: string;
 
     public static readonly valueDia = new Map<string,number>([
