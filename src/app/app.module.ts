@@ -40,6 +40,7 @@ import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.componen
 import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesiones.component';
 import { EditSesionComponent } from './dialog/edit-sesion/edit-sesion.component';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consultar-referencia.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     SaveGrupoComponent,
     AdmSesionesComponent,
     GenerarSesionesComponent,
-    EditSesionComponent
+    EditSesionComponent,
+    ConsultarReferenciaComponent
   ],
   imports: [
     BrowserModule,
