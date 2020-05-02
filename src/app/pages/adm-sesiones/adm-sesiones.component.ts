@@ -94,4 +94,13 @@ export class AdmSesionesComponent implements OnInit {
       return true;
     }
   }
+
+  deleteSesion(idSesion: string) {
+    this.sesionService.deleteSesion(idSesion).subscribe(
+      () => {
+        this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 });
+        this.updateSesionesDataTable();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 }));
+  }
 }

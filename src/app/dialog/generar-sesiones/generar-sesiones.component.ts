@@ -97,8 +97,14 @@ export class GenerarSesionesComponent implements OnInit {
   }
 
   updateSesion(sesionAnterior: Sesion, sesionNueva: Sesion) {
-    let indexSesion = this.sesiones.findIndex(sesion => sesion.fechaHora == sesionAnterior.fechaHora)
+    let indexSesion = this.sesiones.findIndex(sesion => sesion.fechaHora == sesionAnterior.fechaHora);
     this.sesiones[indexSesion] = sesionNueva;
+    this.sesiones = [].concat(this.sesiones);
+  }
+
+  deleteSesion(sesionDelete: Sesion) {
+    let indexSesion = this.sesiones.findIndex(sesion => sesion.fechaHora == sesionDelete.fechaHora);
+    this.sesiones.splice(indexSesion,1);
     this.sesiones = [].concat(this.sesiones);
   }
 }

@@ -36,4 +36,8 @@ export class SesionService {
   updateSesion(sesion: Sesion): Observable<void> {
     return from(this.sesionesCollection.doc(sesion.idSesion).update({ ...sesion }));
   }
+
+  deleteSesion(idSesion: string): Observable<void> {
+    return from(this.sesionesCollection.doc(idSesion).delete());
+  }
 }

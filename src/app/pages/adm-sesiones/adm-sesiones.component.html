@@ -51,7 +51,7 @@
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element;let i=index">
                         <button mat-icon-button [disabled]="getValidacionFechaPasada(element)"><mat-icon (click)="editSesion(element)">edit</mat-icon> </button>
-                        <button mat-icon-button [disabled]="getValidacionFechaPasada(element)"><mat-icon>delete</mat-icon> </button>
+                        <button mat-icon-button [disabled]="getValidacionFechaPasada(element)"><mat-icon (click)="deleteSesion(element.idSesion)">delete</mat-icon> </button>
                     </td>
                 </ng-container>
 
