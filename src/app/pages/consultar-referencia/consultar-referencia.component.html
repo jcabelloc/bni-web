@@ -1,6 +1,6 @@
 <div class="container">
     <div class="scroll">
-        <div *ngIf="!usuario?.esAdmin || (selectIdGrupo != 'NONE' && selectIdGrupo != null)" class="container-info">
+        <div *ngIf="grupo" class="container-info">
             <p class="text">Nombre de Grupo:{{" "+grupo?.nombre}}</p>
             <p class="text">Día de Sesión: {{" "+grupo?.diaSesion}} </p>
             <p class="text">Hora de Sesión: {{" "+grupo?.horaSesion}}</p>
@@ -78,34 +78,34 @@
                 </div>
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Nombre Referencia</mat-label>
-                    <input matInput>
+                    <input matInput [(ngModel)]="referenciaFiltro.nombre" name="nombre" (keyup.enter)="addFiltroNombreReferencia()">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Cargo Referencia</mat-label>
-                    <input matInput>
+                    <input matInput [(ngModel)]="referenciaFiltro.cargo" name="cargo" (keyup.enter)="addFiltroCargoReferencia()">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Empresa Referencia</mat-label>
-                    <input matInput>
+                    <input matInput [(ngModel)]="referenciaFiltro.empresa" name="empresa" (keyup.enter)="addFiltroEmpresaReferencia()">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Nombre del Miembro</mat-label>
-                    <input matInput>
+                    <input matInput [(ngModel)]="nombreMiembroFiltro" name="nombreMiembroFiltro" (keyup.enter)="addFiltroNombreMiembro()">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Fecha Desde</mat-label>
-                    <input matInput [matDatepicker]="picker1" placeholder="Fecha">
+                    <input matInput [matDatepicker]="picker1" placeholder="Fecha" [(ngModel)]="fechaDesdeFiltro" name="fechaDesdeFiltro"  (dateChange)="addFiltroFechaDesde()" >
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker color="accent" #picker1></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Fecha Hasta</mat-label>
-                    <input matInput [matDatepicker]="picker2" placeholder="Fecha">
+                    <input matInput [matDatepicker]="picker2" placeholder="Fecha" [(ngModel)]="fechaHastaFiltro" name="fechaHastaFiltro"  (dateChange)="addFiltroFechaHasta()" >
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker color="accent" #picker2></mat-datepicker>
                 </mat-form-field>
@@ -115,7 +115,10 @@
                     <div style="margin-top: 25px;">
 
                         <mat-chip-list>
-            
+                            <mat-chip removable *ngFor="let filtro of filtros; let i=index" title="{{filtro.key}}">
+                                {{filtro.value}}
+                                <mat-icon matChipRemove (click)="removeFilter(i)">cancel</mat-icon>
+                            </mat-chip>
                         </mat-chip-list>
                     </div>
                 </div>
