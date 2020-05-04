@@ -17,14 +17,14 @@ interface Chip {
 })
 export class AdmMiembrosComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreCompania', 'acciones'];
+  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'acciones'];
 
   miembros: Miembro[]
   cloneMiembros: Miembro[]
   showFilters: boolean = false;
   filtros: Chip[] = new Array<Chip>();
   nombreFiltro: string;
-  companiaFiltro: string;
+  empresaFiltro: string;
   profesionFiltro: string;
   constructor(private miembroService: MiembroService, private dialog: MatDialog, public snackBar: MatSnackBar) { }
 
@@ -95,7 +95,7 @@ export class AdmMiembrosComponent implements OnInit {
 
   filterMiembros() {
     let nombre = "Nombre";
-    let compania = "Compañia";
+    let empresa = "Empresa";
     let profesion = "Profesion";
     this.miembros = this.cloneMiembros;
     this.filtros.forEach(filtro => {
@@ -108,8 +108,8 @@ export class AdmMiembrosComponent implements OnInit {
             }
           })
           break;
-        case compania:
-          this.miembros = this.miembros.filter(miembro => miembro.nombreCompania.toLowerCase().includes(filtro.value.toLowerCase()));
+        case empresa:
+          this.miembros = this.miembros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(filtro.value.toLowerCase()));
           break;
         case profesion:
           this.miembros = this.miembros.filter(miembro => miembro.profesion.toLowerCase().includes(filtro.value.toLowerCase()));
@@ -129,14 +129,14 @@ export class AdmMiembrosComponent implements OnInit {
     this.filterMiembros();
   }
 
-  addFiltroCompania() {
-    let indexFiltro = this.existFiltro("Compañia");
+  addFiltroEmpresa() {
+    let indexFiltro = this.existFiltro("Empresa");
     if (indexFiltro == -1) {
-      this.filtros.push({ key: "Compañia", value: this.companiaFiltro })
+      this.filtros.push({ key: "Empresa", value: this.empresaFiltro })
     } else {
-      this.filtros[indexFiltro].value = this.companiaFiltro;
+      this.filtros[indexFiltro].value = this.empresaFiltro;
     }
-    this.companiaFiltro = null;
+    this.empresaFiltro = null;
     this.filterMiembros();
    
   }

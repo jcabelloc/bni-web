@@ -3,7 +3,7 @@ export class Miembro {
     nombres: string;
     apellidos: string;
     telefono: string;
-    nombreCompania: string;
+    nombreEmpresa: string;
     profesion: string;
     email: string;
     idGrupo: string;
