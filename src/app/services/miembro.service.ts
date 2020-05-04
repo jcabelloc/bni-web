@@ -49,4 +49,11 @@ export class MiembroService {
   updateMiembro(miembro: Miembro): Observable<void> {
     return from(this.miembrosCollection.doc(miembro.idMiembro).update({ ...miembro }));
   }
+
+  getMiembroById(idMiembro: string): Observable<Miembro> {
+    return this.miembrosCollection.doc<Miembro>(idMiembro).valueChanges().pipe(map(document => {
+      document.idMiembro = idMiembro;
+      return document;
+    }));
+  }
 }

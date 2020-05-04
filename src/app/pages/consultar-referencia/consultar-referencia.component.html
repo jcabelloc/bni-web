@@ -1,57 +1,60 @@
 <div class="container">
     <div class="scroll">
-        <div class="container-info">
-            <p class="text">Nombre de Grupo:{{" "}}</p>
-            <p class="text">Día de Sesión: {{" "}} </p>
-            <p class="text">Hora de Sesión: {{" "}}</p>
-            <p class="text">Direccion de Sesión:{{" "}}</p>
+        <div *ngIf="!usuario?.esAdmin || (selectIdGrupo != 'NONE' && selectIdGrupo != null)" class="container-info">
+            <p class="text">Nombre de Grupo:{{" "+grupo?.nombre}}</p>
+            <p class="text">Día de Sesión: {{" "+grupo?.diaSesion}} </p>
+            <p class="text">Hora de Sesión: {{" "+grupo?.horaSesion}}</p>
+            <p class="text">Direccion de Sesión:{{" "+grupo?.direccionSesion}}</p>
         </div>
         <div class="container-btn">
 
-            <mat-form-field style="margin-right: 20px;">
-                <mat-label>Año</mat-label>
-                <mat-select>
-                    <mat-option>
-
+            <mat-form-field class="margin-right">
+                <mat-label>Grupo</mat-label>
+                <mat-select [(ngModel)]="selectIdGrupo" name="selectIdGrupo" [disabled]="!usuario?.esAdmin" (selectionChange)="updateAsistenciaByIdGrupo()">
+                    <mat-option [value]="'NONE'">
+                        Todos
+                    </mat-option>
+                    <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
+                        {{grupo.nombre}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-button mat-icon-button color="accent" style="margin-right: 20px;" (click)="showFilters = true">
+            <button mat-button mat-icon-button color="accent" class="margin-right" (click)="showFilters = true">
                 <mat-icon>filter_list</mat-icon>
             </button>
         </div>
-        <mat-card * class="container-table">
-            <table mat-table [dataSource]="[]" class="mat-elevation-z8">
+        <mat-card class="container-table">
+            <table mat-table [dataSource]="asistencias" class="mat-elevation-z8">
 
 
                 <ng-container matColumnDef="nombreReferencia">
-                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                    <td mat-cell *matCellDef="let element">{{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Nombre de Referencia </th>
+                    <td mat-cell *matCellDef="let element">{{element.referencia.nombre}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="cargoReferencia">
-                    <th mat-header-cell *matHeaderCellDef> Hora </th>
-                    <td mat-cell *matCellDef="let element"> {{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Cargo de Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.referencia.cargo}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="empresaReferencia">
-                    <th mat-header-cell *matHeaderCellDef> Dirección </th>
-                    <td mat-cell *matCellDef="let element"> {{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Empresa de Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.referencia.empresa}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="fechaSesion">
-                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                    <td mat-cell *matCellDef="let element"> {{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Fecha Sesión </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaHora.toDate() | date }} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="nombreMiembro">
-                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                    <td mat-cell *matCellDef="let element"> {{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Miembro </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombreCompletoMiembro}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="nombreGrupo">
-                    <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                    <td mat-cell *matCellDef="let element"> {{element}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Grupo </th>
+                    <td mat-cell *matCellDef="let element">{{ element.nombreGrupo }} </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
