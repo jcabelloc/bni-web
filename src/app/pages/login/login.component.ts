@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -8,25 +10,27 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  //TO-DO
-  usuario: string = "jcabelloc"
-  contraseña: string = "123456"
 
-  usuarioForm: string = ""
-  contraseniaForm: string = ""
+  email: string;
+  password: string;
   progressSnipper = false;
-  constructor(private router:Router) { }
+  constructor(private router: Router, private authentication: AuthenticationService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
 
   logIn() {
     this.progressSnipper = true;
-    setTimeout(() => {
-      this.progressSnipper = false;
-      if (this.usuarioForm === this.usuario && this.contraseña === this.contraseniaForm) {
-         this.router.navigate(["main"])
-      }
-    }, 3000);
+    this.authentication.logIn(this.email, this.password).subscribe(
+      userCredential => {
+        if (userCredential.user.uid != null) {
+          this.router.navigate(["main"]);
+        }
+      },
+      err => {
+        this.progressSnipper = false;
+        this.snackBar.open("Contraseña o email incorrectos", '', { duration: 2000 });
+
+      });
   }
 }

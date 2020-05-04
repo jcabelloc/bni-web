@@ -14,18 +14,14 @@
         <div class="cotainer-form-content">
             <form >
                 <mat-form-field class="full-mat-form-field" appearance="outline">
-                    <mat-label>Usuario</mat-label>
-                    <input matInput [(ngModel)]="usuarioForm" name="usuarioForm">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" [(ngModel)]="email" name="email">
                 </mat-form-field>
 
                 <mat-form-field class="full-mat-form-field" appearance="outline">
-                    <mat-label>Contraseña</mat-label>
-                    <input matInput [(ngModel)]="contraseniaForm" name="contraseniaForm">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" [(ngModel)]="password" name="password">
                 </mat-form-field>
-
-                <div class="check-box">
-                    <mat-checkbox>Recordar contraseña</mat-checkbox>
-                </div>
 
             </form>
             <div class="container-buttons">
