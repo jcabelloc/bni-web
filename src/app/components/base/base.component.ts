@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Opcion } from 'src/app/models/opcion';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -26,8 +29,11 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
-  constructor( changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher) {
+  constructor(changeDetectorRef: ChangeDetectorRef,
+    private media: MediaMatcher,
+    private authentication: AuthenticationService,
+    private router: Router,
+    private snackBar: MatSnackBar) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this.mobileQueryListener);
@@ -38,5 +44,11 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this.mobileQueryListener);
+  }
+
+  logOut() {
+    this.authentication.logOut().subscribe(
+      () => this.router.navigate(["seguridad/login"]),
+      err => this.snackBar.open(err, '', { duration: 2000 }));
   }
 }
