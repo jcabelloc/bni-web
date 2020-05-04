@@ -5,6 +5,7 @@ import { BaseComponent } from './components/base/base.component';
 import { AdmMiembrosComponent } from './pages/adm-miembros/adm-miembros.component';
 import { AdmGruposComponent } from './pages/adm-grupos/adm-grupos.component';
 import { AdmSesionesComponent } from './pages/adm-sesiones/adm-sesiones.component';
+import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consultar-referencia.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path:'main', component:BaseComponent, children:[
     {path:'miembros', component: AdmMiembrosComponent},
     {path:'grupos', component: AdmGruposComponent },
-    {path:'sesiones', component: AdmSesionesComponent }
+    {path:'sesiones', component: AdmSesionesComponent },
+    {path:'referencias', component: ConsultarReferenciaComponent }
   ]},
 
 ];

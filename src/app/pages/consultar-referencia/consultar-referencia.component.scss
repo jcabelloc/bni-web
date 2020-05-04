@@ -1,0 +1,138 @@
+*{
+    box-sizing: border-box;
+}
+.container{
+    height: 100%; 
+    width: 100%;
+}
+.mat-table
+{
+    width: 100%;
+    min-width: 800px; 
+}
+.scroll{
+    overflow: hidden;
+}
+.button-align
+{
+    color: white;
+    margin-right:20px;
+}
+
+.container-table
+{
+    width: 80%; 
+    min-width: 800px;
+    margin: 0 auto;
+}
+.container-btn
+{
+    width:80%; 
+    text-align:end; 
+    margin: 30px auto;
+    min-width:800px
+}
+.text
+{
+    color: var(--color-accent);
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 0 10px;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    font-weight: 600;
+    width: 22%;
+}
+.container-info
+{
+    width:80%;
+    margin: 10px auto; 
+    display: flex;
+    flex-direction: row;
+    min-width:900px;
+}
+.filter-mat-form-field
+{
+    width: 70%;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.hidden-container-filters
+{
+    width: 0; 
+    transition: all 0.5s;
+    background: white;
+
+}
+.show-container-filters
+{
+    height: 100%; 
+    width: 320px; 
+    position: fixed;
+    right: 0;
+    top: 0; 
+    transition: all 0.5s;
+    z-index: 2;
+}
+.content-sub-titles
+{
+    color: var(--color-accent); 
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+    text-align: start;
+    margin-left: 20px; 
+    margin-top: 20px;
+}
+
+.content-inputs-filters
+{
+    width: 100; 
+    margin-top: 50px; 
+    text-align: start;
+}
+.content-button-close
+{
+    width: 100%;
+    margin: 10px 0 0 10px; 
+    color: var(--color-accent);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.margin-right{
+    margin-right: 20px;
+}
+@media only screen and (max-width: 800px) {
+    .scroll {
+        overflow-x: scroll;
+    }
+    .text
+    {
+        position: relative;
+        text-align: start;
+        width: 100%;
+        border: 0;
+        padding: 5px;
+    }
+    .text::after
+    {
+        content: " ";
+        position: absolute;
+        top: 25%;
+        left: 0;
+        height: 50%;
+        border-left: 1.3px solid black;
+    }
+    .container-info
+    {
+        width:80%;
+        margin: 10px auto; 
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: 0;
+        
+    }
+    .show-container-filters
+    {
+        width: 100%;
+    }
+}

@@ -1,0 +1,129 @@
+<div class="container">
+    <div class="scroll">
+        <div *ngIf="grupo" class="container-info">
+            <p class="text">Nombre de Grupo:{{" "+grupo?.nombre}}</p>
+            <p class="text">Día de Sesión: {{" "+grupo?.diaSesion}} </p>
+            <p class="text">Hora de Sesión: {{" "+grupo?.horaSesion}}</p>
+            <p class="text">Direccion de Sesión:{{" "+grupo?.direccionSesion}}</p>
+        </div>
+        <div class="container-btn">
+
+            <mat-form-field class="margin-right">
+                <mat-label>Grupo</mat-label>
+                <mat-select [(ngModel)]="selectIdGrupo" name="selectIdGrupo" [disabled]="!usuario?.esAdmin" (selectionChange)="updateAsistenciaByIdGrupo()">
+                    <mat-option [value]="'NONE'">
+                        Todos
+                    </mat-option>
+                    <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
+                        {{grupo.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-button mat-icon-button color="accent" class="margin-right" (click)="showFilters = true">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+        </div>
+        <mat-card class="container-table">
+            <table mat-table [dataSource]="asistencias" class="mat-elevation-z8">
+
+
+                <ng-container matColumnDef="nombreReferencia">
+                    <th mat-header-cell *matHeaderCellDef> Nombre de Referencia </th>
+                    <td mat-cell *matCellDef="let element">{{element.referencia.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cargoReferencia">
+                    <th mat-header-cell *matHeaderCellDef> Cargo de Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.referencia.cargo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="empresaReferencia">
+                    <th mat-header-cell *matHeaderCellDef> Empresa de Referencia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.referencia.empresa}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaSesion">
+                    <th mat-header-cell *matHeaderCellDef> Fecha Sesión </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fechaHora.toDate() | date }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombreMiembro">
+                    <th mat-header-cell *matHeaderCellDef> Miembro </th>
+                    <td mat-cell *matCellDef="let element"> {{element.nombreCompletoMiembro}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombreGrupo">
+                    <th mat-header-cell *matHeaderCellDef> Grupo </th>
+                    <td mat-cell *matCellDef="let element">{{ element.nombreGrupo }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </mat-card>
+    </div>
+</div>
+<div class="hidden-container-filters" [class.show-container-filters]="showFilters">
+    <div [style.display]="showFilters ? 'block': 'none'">
+        <div class="content-button-close">
+            <button mat-button mat-icon-button color="accent" (click)="showFilters = false">
+                <mat-icon>arrow_right_alt</mat-icon>
+            </button>
+            Filtros
+        </div>
+        <div>
+            <div class="content-inputs-filters">
+                <div class="content-sub-titles">
+                    Búsquedas Personalizadas
+                </div>
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Nombre Referencia</mat-label>
+                    <input matInput [(ngModel)]="referenciaFiltro.nombre" name="nombre" (keyup.enter)="addFiltroNombreReferencia()">
+                </mat-form-field>
+
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Cargo Referencia</mat-label>
+                    <input matInput [(ngModel)]="referenciaFiltro.cargo" name="cargo" (keyup.enter)="addFiltroCargoReferencia()">
+                </mat-form-field>
+
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Empresa Referencia</mat-label>
+                    <input matInput [(ngModel)]="referenciaFiltro.empresa" name="empresa" (keyup.enter)="addFiltroEmpresaReferencia()">
+                </mat-form-field>
+
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Nombre del Miembro</mat-label>
+                    <input matInput [(ngModel)]="nombreMiembroFiltro" name="nombreMiembroFiltro" (keyup.enter)="addFiltroNombreMiembro()">
+                </mat-form-field>
+
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Fecha Desde</mat-label>
+                    <input matInput [matDatepicker]="picker1" placeholder="Fecha" [(ngModel)]="fechaDesdeFiltro" name="fechaDesdeFiltro"  (dateChange)="addFiltroFechaDesde()" >
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker color="accent" #picker1></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="filter-mat-form-field">
+                    <mat-label>Fecha Hasta</mat-label>
+                    <input matInput [matDatepicker]="picker2" placeholder="Fecha" [(ngModel)]="fechaHastaFiltro" name="fechaHastaFiltro"  (dateChange)="addFiltroFechaHasta()" >
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker color="accent" #picker2></mat-datepicker>
+                </mat-form-field>
+
+                <div class="content-sub-titles">
+                    Seleccionados :
+                    <div style="margin-top: 25px;">
+
+                        <mat-chip-list>
+                            <mat-chip removable *ngFor="let filtro of filtros; let i=index" title="{{filtro.key}}">
+                                {{filtro.value}}
+                                <mat-icon matChipRemove (click)="removeFilter(i)">cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
