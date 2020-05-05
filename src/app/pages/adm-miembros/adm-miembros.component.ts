@@ -4,6 +4,7 @@ import { Miembro } from 'src/app/models/miembro';
 import { SaveMiembroComponent } from 'src/app/dialog/save-miembro/save-miembro.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MiembroService } from 'src/app/services/miembro.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 interface Chip {
   key: string;
@@ -17,14 +18,14 @@ interface Chip {
 })
 export class AdmMiembrosComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreCompania', 'acciones'];
+  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'acciones'];
 
   miembros: Miembro[]
   cloneMiembros: Miembro[]
   showFilters: boolean = false;
   filtros: Chip[] = new Array<Chip>();
   nombreFiltro: string;
-  companiaFiltro: string;
+  empresaFiltro: string;
   profesionFiltro: string;
   constructor(private miembroService: MiembroService, private dialog: MatDialog, public snackBar: MatSnackBar) { }
 
@@ -36,31 +37,30 @@ export class AdmMiembrosComponent implements OnInit {
     this.miembroService.getMiembros().subscribe(
       miembros => {
         this.miembros = miembros;
-        this.miembros.forEach(
-          miembro =>
-            this.miembroService.getAvatarImgUrl(miembro.idMiembro)
-              .subscribe(avatarUrl => {
-                miembro.avatarUrl = avatarUrl
-              }));
-        this.cloneMiembros = this.miembros;
+        this.cloneMiembros = miembros;
         this.filterMiembros();
       }
     );
   }
   addMiembro() {
-    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px' });
+    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: new Miembro(), opcion: "Nuevo" } });
     dialogRef.afterClosed().subscribe(data => {
       if (data?.miembro) {
-        this.miembroService.createMiembro(data.miembro).subscribe(
-          idMiembro => {
-            this.miembroService.uploadAvatar(idMiembro, data.imageFile).subscribe
-              (() => {
-                data.miembro.idMiembro = idMiembro;
-                this.getAvatarUrlMiembro(data.miembro);
-              }, err => this.snackBar.open(err, '', { duration: 2000 }));
-
-          },
-          err => this.snackBar.open(err, '', { duration: 2000 }))
+        if (data?.imageFile) {
+          this.miembroService.createMiembro(data.miembro).subscribe(
+            idMiembro => {
+              this.miembroService.uploadAvatar(idMiembro, data.imageFile).subscribe(
+                () => {
+                  data.miembro.idMiembro = idMiembro;
+                  this.getAvatarUrlMiembro(data.miembro);
+                }, err => this.snackBar.open(err, '', { duration: 2000 }));
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }))
+        } else {
+          this.miembroService.createMiembro(data.miembro).subscribe(
+            idMiembro => this.snackBar.open("Creado correctamente", '', { duration: 2000 })),
+            err => this.snackBar.open(err, '', { duration: 2000 });
+        }
       }
     });
   }
@@ -78,13 +78,28 @@ export class AdmMiembrosComponent implements OnInit {
   }
 
   editMiembro(miembro: Miembro) {
-    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: miembro } });
+    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: miembro, opcion: "Editar" } });
     dialogRef.afterClosed().subscribe(data => {
       if (data?.miembro) {
-        this.miembroService.updateMiembro(miembro).subscribe(
-          () => this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 }),
-          err => this.snackBar.open(err, '', { duration: 2000 })
-        );
+        if (data?.imageFile) {
+          this.miembroService.uploadAvatar(miembro.idMiembro, data.imageFile).subscribe(
+            () => {
+              this.miembroService.updateMiembro(data.miembro).subscribe(
+                () => {
+                  this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+                  this.getAvatarUrlMiembro(data.miembro);
+                },
+                err => this.snackBar.open(err, '', { duration: 2000 }));
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }));
+        }
+        else {
+          this.miembroService.updateMiembro(data.miembro).subscribe(
+            () => {
+              this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }));
+        }
       }
     });
   }
@@ -95,7 +110,7 @@ export class AdmMiembrosComponent implements OnInit {
 
   filterMiembros() {
     let nombre = "Nombre";
-    let compania = "Compañia";
+    let empresa = "Empresa";
     let profesion = "Profesion";
     this.miembros = this.cloneMiembros;
     this.filtros.forEach(filtro => {
@@ -108,8 +123,8 @@ export class AdmMiembrosComponent implements OnInit {
             }
           })
           break;
-        case compania:
-          this.miembros = this.miembros.filter(miembro => miembro.nombreCompania.toLowerCase().includes(filtro.value.toLowerCase()));
+        case empresa:
+          this.miembros = this.miembros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(filtro.value.toLowerCase()));
           break;
         case profesion:
           this.miembros = this.miembros.filter(miembro => miembro.profesion.toLowerCase().includes(filtro.value.toLowerCase()));
@@ -129,16 +144,16 @@ export class AdmMiembrosComponent implements OnInit {
     this.filterMiembros();
   }
 
-  addFiltroCompania() {
-    let indexFiltro = this.existFiltro("Compañia");
+  addFiltroEmpresa() {
+    let indexFiltro = this.existFiltro("Empresa");
     if (indexFiltro == -1) {
-      this.filtros.push({ key: "Compañia", value: this.companiaFiltro })
+      this.filtros.push({ key: "Empresa", value: this.empresaFiltro })
     } else {
-      this.filtros[indexFiltro].value = this.companiaFiltro;
+      this.filtros[indexFiltro].value = this.empresaFiltro;
     }
-    this.companiaFiltro = null;
+    this.empresaFiltro = null;
     this.filterMiembros();
-   
+
   }
 
   addFiltroProfesion() {
@@ -150,7 +165,7 @@ export class AdmMiembrosComponent implements OnInit {
     }
     this.profesionFiltro = null;
     this.filterMiembros();
-    
+
   }
 
   existFiltro(tipo: string): number {

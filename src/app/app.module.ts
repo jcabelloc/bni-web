@@ -84,9 +84,7 @@ import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consu
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDkY0z8ZHx7crWrDDONgwibUns7ogcppoc'
-    }),
+    AgmCoreModule.forRoot({apiKey: environment.apiKey}),
   ],
   providers: [],
   bootstrap: [AppComponent]

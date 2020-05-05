@@ -59,4 +59,28 @@ export const environment = {
 * Firestore /Storage 
 * Permission:     allow read, write: if request.time < timestamp.date(2020, 5, 23);
 
+## Install Angular Google Maps (AGM)
+```bash
+npm install @agm/core --save
+```
 
+### Get API KEY
+
+https://developers.google.com/maps/documentation/javascript/get-api-key?hl=es-419
+
+### Import and add AgmCoreModule to AppModule
+```bash
+import { AgmCoreModule } from '@agm/core';
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
+    })
+  ],
+  declarations: [ AppComponent ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule {}
+```

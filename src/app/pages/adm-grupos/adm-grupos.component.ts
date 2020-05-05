@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AdmGruposComponent implements OnInit {
 
   grupos: Grupo[];
-  displayedColumns: string[] = ['nombre', 'diaSesion', 'direccionSesion', 'horaSesion', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
 
   constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar) { }
 

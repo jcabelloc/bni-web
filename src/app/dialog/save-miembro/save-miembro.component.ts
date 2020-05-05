@@ -1,8 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Miembro } from 'src/app/models/miembro';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { database } from 'firebase';
+import { Grupo } from 'src/app/models/grupo';
+import { GrupoService } from 'src/app/services/grupo.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-save-miembro',
@@ -14,12 +15,20 @@ export class SaveMiembroComponent implements OnInit {
   miembro: Miembro = new Miembro();
   selectedFile: File;
   imageName: string;
-  constructor(public dialogRef: MatDialogRef<SaveMiembroComponent>, @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro }) { }
+  opcion: string;
+  grupos: Grupo[];
+  constructor(private snackBar: MatSnackBar,
+              private grupoService: GrupoService, 
+              public dialogRef: MatDialogRef<SaveMiembroComponent>, 
+              @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro, opcion : string }) { }
+
 
   ngOnInit(): void {
+    this.getGrupos();
     if (this.data.miembro) {
-        this.miembro = this.data.miembro;
+        this.miembro = {... this.data.miembro};
     }
+    this.opcion = this.data.opcion;
   }
 
   agregarMiembro() {
@@ -29,5 +38,12 @@ export class SaveMiembroComponent implements OnInit {
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] as File;
     this.imageName = this.selectedFile.name;
+  }
+
+  getGrupos() {
+    this.grupoService.getGrupos().subscribe(
+      grupos => { this.grupos = grupos; },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
   }
 }
