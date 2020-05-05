@@ -14,12 +14,14 @@ export class SaveMiembroComponent implements OnInit {
   miembro: Miembro = new Miembro();
   selectedFile: File;
   imageName: string;
-  constructor(public dialogRef: MatDialogRef<SaveMiembroComponent>, @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro }) { }
+  opcion: string;
+  constructor(public dialogRef: MatDialogRef<SaveMiembroComponent>, @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro, opcion : string }) { }
 
   ngOnInit(): void {
     if (this.data.miembro) {
-        this.miembro = this.data.miembro;
+        this.miembro = {... this.data.miembro};
     }
+    this.opcion = this.data.opcion;
   }
 
   agregarMiembro() {

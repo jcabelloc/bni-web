@@ -4,6 +4,7 @@ import { Miembro } from 'src/app/models/miembro';
 import { SaveMiembroComponent } from 'src/app/dialog/save-miembro/save-miembro.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MiembroService } from 'src/app/services/miembro.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 interface Chip {
   key: string;
@@ -36,31 +37,30 @@ export class AdmMiembrosComponent implements OnInit {
     this.miembroService.getMiembros().subscribe(
       miembros => {
         this.miembros = miembros;
-        this.miembros.forEach(
-          miembro =>
-            this.miembroService.getAvatarImgUrl(miembro.idMiembro)
-              .subscribe(avatarUrl => {
-                miembro.avatarUrl = avatarUrl
-              }));
-        this.cloneMiembros = this.miembros;
+        this.cloneMiembros = miembros;
         this.filterMiembros();
       }
     );
   }
   addMiembro() {
-    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px' });
+    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: new Miembro(), opcion: "Nuevo" } });
     dialogRef.afterClosed().subscribe(data => {
       if (data?.miembro) {
-        this.miembroService.createMiembro(data.miembro).subscribe(
-          idMiembro => {
-            this.miembroService.uploadAvatar(idMiembro, data.imageFile).subscribe
-              (() => {
-                data.miembro.idMiembro = idMiembro;
-                this.getAvatarUrlMiembro(data.miembro);
-              }, err => this.snackBar.open(err, '', { duration: 2000 }));
-
-          },
-          err => this.snackBar.open(err, '', { duration: 2000 }))
+        if (data?.imageFile) {
+          this.miembroService.createMiembro(data.miembro).subscribe(
+            idMiembro => {
+              this.miembroService.uploadAvatar(idMiembro, data.imageFile).subscribe(
+                () => {
+                  data.miembro.idMiembro = idMiembro;
+                  this.getAvatarUrlMiembro(data.miembro);
+                }, err => this.snackBar.open(err, '', { duration: 2000 }));
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }))
+        } else {
+          this.miembroService.createMiembro(data.miembro).subscribe(
+            idMiembro => this.snackBar.open("Creado correctamente", '', { duration: 2000 })),
+            err => this.snackBar.open(err, '', { duration: 2000 });
+        }
       }
     });
   }
@@ -78,13 +78,28 @@ export class AdmMiembrosComponent implements OnInit {
   }
 
   editMiembro(miembro: Miembro) {
-    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: miembro } });
+    const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: miembro, opcion: "Editar" } });
     dialogRef.afterClosed().subscribe(data => {
       if (data?.miembro) {
-        this.miembroService.updateMiembro(miembro).subscribe(
-          () => this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 }),
-          err => this.snackBar.open(err, '', { duration: 2000 })
-        );
+        if (data?.imageFile) {
+          this.miembroService.uploadAvatar(miembro.idMiembro, data.imageFile).subscribe(
+            () => {
+              this.miembroService.updateMiembro(data.miembro).subscribe(
+                () => {
+                  this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+                  this.getAvatarUrlMiembro(data.miembro);
+                },
+                err => this.snackBar.open(err, '', { duration: 2000 }));
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }));
+        }
+        else {
+          this.miembroService.updateMiembro(data.miembro).subscribe(
+            () => {
+              this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            },
+            err => this.snackBar.open(err, '', { duration: 2000 }));
+        }
       }
     });
   }
@@ -138,7 +153,7 @@ export class AdmMiembrosComponent implements OnInit {
     }
     this.empresaFiltro = null;
     this.filterMiembros();
-   
+
   }
 
   addFiltroProfesion() {
@@ -150,7 +165,7 @@ export class AdmMiembrosComponent implements OnInit {
     }
     this.profesionFiltro = null;
     this.filterMiembros();
-    
+
   }
 
   existFiltro(tipo: string): number {
