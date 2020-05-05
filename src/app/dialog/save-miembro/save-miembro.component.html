@@ -36,12 +36,21 @@
                 <input matInput [(ngModel)]="miembro.nombreEmpresa" name="nombreEmpresa" required>
             </mat-form-field>
 
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Grupo</mat-label>
+                <mat-select [(ngModel)]="miembro.idGrupo" name="idGrupo" required>
+                    <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
+                        {{grupo.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <input style="width: 0;" type="file" (change)="onFileSelected($event)" #imageInput />
 
             <mat-form-field class="full-mat-form-field">
-                <input matInput type="text" placeholder="Foto de perfil" readonly [(ngModel)]="imageName" name="imageName">
-                <button mat-button matSuffix mat-icon-button color="accent" 
-                    (click)="imageInput.click()">
+                <input matInput type="text" placeholder="Foto de perfil" readonly [(ngModel)]="imageName"
+                    name="imageName">
+                <button mat-button matSuffix mat-icon-button color="accent" (click)="imageInput.click()">
                     <mat-icon style="font-size: 30px;">cloud_upload</mat-icon>
 
                 </button>
@@ -56,7 +65,8 @@
     </mat-card-content>
 
     <mat-card-actions class="mat-actions">
-        <button mat-raised-button color="primary" class="button_save" (click)="agregarMiembro()" [disabled]="!saveForm.form.valid"> Guardar</button>
+        <button mat-raised-button color="primary" class="button_save" (click)="agregarMiembro()"
+            [disabled]="!saveForm.form.valid"> Guardar</button>
         <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
     </mat-card-actions>
 </mat-card>

@@ -93,15 +93,6 @@ export class ConsultarReferenciaComponent implements OnInit {
 
   }
 
-  mostrarOcultarDetalleGrupo() {
-    if(this.usuario.esAdmin == true) {
-
-    }
-    else{
-
-    }
-  }
-
   getGrupos() {
     this.grupoService.getGrupos().subscribe(
       grupos => { this.grupos = grupos; },
