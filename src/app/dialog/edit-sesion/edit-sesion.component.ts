@@ -13,6 +13,7 @@ export class EditSesionComponent implements OnInit {
 
   sesion: Sesion;
   fechaForm: Date;
+  minDate: Date = new Date();
   horaForm: string;
   showCoordenadas: boolean = false;
   zoom: number = 12;

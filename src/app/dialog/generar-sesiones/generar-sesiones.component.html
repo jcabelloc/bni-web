@@ -16,7 +16,10 @@
         </mat-form-field>
     </div>
     <mat-card-content style="margin-top: 30px;">
-        <div *ngIf="data.grupo.ultimaGeneracion == null && sesiones.length == 0" style="text-align: center;">No tiene Sesiones programadas</div>
+        <div *ngIf="selectYear.length == 0" class="text-center">
+            Solo se pueden generar sesiones máximo un año adelante
+        </div>
+        <div *ngIf="data.grupo.ultimaGeneracion == null && sesiones.length == 0" class="text-center">No tiene Sesiones programadas</div>
         <div *ngIf="sesiones.length != 0" class="container-mat-content">
             <div class="container-table">
                 <table mat-table [dataSource]="sesiones" class="mat-elevation-z8">
@@ -64,7 +67,7 @@
 
     <mat-card-actions class="mat-actions">
         <button mat-raised-button color="primary" class="button_save" (click)="sesiones.length == 0 ? generateSesiones(): grabarSesiones()"
-         [disabled]="data.grupo.ultimaGeneracion == null && (optionYear > yearActual)">{{ sesiones.length == 0? "Generar" : "Grabar"}}</button>
+         [disabled]="(data.grupo.ultimaGeneracion == null && (optionYear > yearActual)) || selectYear.length == 0">{{ sesiones.length == 0? "Generar" : "Grabar"}}</button>
         <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
     </mat-card-actions>
 </mat-card>

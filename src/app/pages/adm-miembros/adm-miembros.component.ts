@@ -52,6 +52,7 @@ export class AdmMiembrosComponent implements OnInit {
               this.miembroService.uploadAvatar(idMiembro, data.imageFile).subscribe(
                 () => {
                   data.miembro.idMiembro = idMiembro;
+                  this.snackBar.open("Creado correctamente", '', { duration: 2000 });
                   this.getAvatarUrlMiembro(data.miembro);
                 }, err => this.snackBar.open(err, '', { duration: 2000 }));
             },
