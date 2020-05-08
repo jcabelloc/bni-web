@@ -17,6 +17,7 @@ export class AuthenticationService {
   }
 
   logOut(): Observable<void> {
+    this.usuario = null;
     return from(this.auth.signOut());
   }
 

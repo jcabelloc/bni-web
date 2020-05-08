@@ -48,7 +48,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   logOut() {
     this.authentication.logOut().subscribe(
       () => {
-        this.authentication.saveCredentials(null);
         this.router.navigate(["seguridad/login"]);
       },
       err => this.snackBar.open(err, '', { duration: 2000 }));

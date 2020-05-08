@@ -4,7 +4,6 @@ import { Miembro } from 'src/app/models/miembro';
 import { Grupo } from 'src/app/models/grupo';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-miembro',
@@ -15,7 +14,7 @@ export class SaveMiembroComponent implements OnInit {
 
   miembro: Miembro = new Miembro();
   selectedFile: File;
-  defaultProfile: any = "../../../assets/default-profile.jpg";
+  defaultProfile: any = "../../../assets/default-profile.png";
   opcion: string;
   grupos: Grupo[];
   constructor(private snackBar: MatSnackBar,
