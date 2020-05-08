@@ -4,6 +4,7 @@ import { Miembro } from 'src/app/models/miembro';
 import { Grupo } from 'src/app/models/grupo';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-save-miembro',
@@ -18,21 +19,26 @@ export class SaveMiembroComponent implements OnInit {
   opcion: string;
   grupos: Grupo[];
   constructor(private snackBar: MatSnackBar,
-              private grupoService: GrupoService, 
-              public dialogRef: MatDialogRef<SaveMiembroComponent>, 
-              @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro, opcion : string }) { }
+    private grupoService: GrupoService,
+    public dialogRef: MatDialogRef<SaveMiembroComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { miembro: Miembro, opcion: string }) { }
 
 
   ngOnInit(): void {
     this.getGrupos();
     if (this.data.miembro) {
-        this.miembro = {... this.data.miembro};
+      this.miembro = { ... this.data.miembro };
     }
     this.opcion = this.data.opcion;
   }
 
   agregarMiembro() {
-    this.dialogRef.close({ miembro: this.miembro, imageFile: this.selectedFile })
+      this.miembro.nombreGrupo =this.getNombreGrupoById(this.miembro.idGrupo);
+      this.dialogRef.close({ miembro: this.miembro, imageFile: this.selectedFile })
+  }
+
+  getNombreGrupoById(idGrupo): string {
+    return this.grupos.filter(grupo => grupo.idGrupo == idGrupo)[0].nombre;
   }
 
   onFileSelected(event: any) {

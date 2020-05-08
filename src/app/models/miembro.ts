@@ -9,8 +9,15 @@ export class Miembro {
     idGrupo: string;
     nombreGrupo: string;
     avatarUrl?: string;
-    esLider: boolean;
+    esAdmGrupo: boolean;
+    estado: Estado;
     constructor() {
-        this.esLider = false;
+        this.esAdmGrupo  = false;
     }
+}
+
+enum Estado {
+    ACTIVO,
+    SUSPENDIDO,
+    INACTIVO,
 }

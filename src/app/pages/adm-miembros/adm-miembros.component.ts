@@ -18,7 +18,7 @@ interface Chip {
 })
 export class AdmMiembrosComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'acciones'];
+  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa','grupo', 'acciones'];
 
   miembros: Miembro[]
   cloneMiembros: Miembro[]
