@@ -7,6 +7,18 @@
 
     <mat-card-content style="margin-top: 30px;">
         <form id="saveForm" #saveForm="ngForm">
+
+            <div style="width: 100%;">
+                <div style="width: 100px;height: 100px; margin: auto; position: relative;">
+                    <img style="width: 100%;height: 100%; margin: auto; border-radius: 50px; object-fit: contain;"
+                        [src]="defaultProfile" />
+                    <button style="position: absolute; right: 0;bottom: 0;" mat-button matSuffix mat-icon-button
+                        color="accent" (click)="imageInput.click()">
+                        <mat-icon>add_a_photo</mat-icon>
+                    </button>
+                </div>
+
+            </div>
             <mat-form-field class="full-mat-form-field">
                 <mat-label>Nombres</mat-label>
                 <input matInput [(ngModel)]="miembro.nombres" name="foto" required>
@@ -46,18 +58,8 @@
             </mat-form-field>
 
             <input style="width: 0;" type="file" (change)="onFileSelected($event)" #imageInput />
-
-            <mat-form-field class="full-mat-form-field">
-                <input matInput type="text" placeholder="Foto de perfil" readonly [(ngModel)]="imageName"
-                    name="imageName">
-                <button mat-button matSuffix mat-icon-button color="accent" (click)="imageInput.click()">
-                    <mat-icon style="font-size: 30px;">cloud_upload</mat-icon>
-
-                </button>
-            </mat-form-field>
-
             <mat-slide-toggle class="full-mat-form-field" [(ngModel)]="miembro.esAdmGrupo " name="esAdmGrupo ">
-                Lider
+                esAdmGrupo
             </mat-slide-toggle>
 
 

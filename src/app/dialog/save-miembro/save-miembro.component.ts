@@ -15,7 +15,7 @@ export class SaveMiembroComponent implements OnInit {
 
   miembro: Miembro = new Miembro();
   selectedFile: File;
-  imageName: string;
+  defaultProfile: any = "../../../assets/default-profile.jpg";
   opcion: string;
   grupos: Grupo[];
   constructor(private snackBar: MatSnackBar,
@@ -33,8 +33,8 @@ export class SaveMiembroComponent implements OnInit {
   }
 
   agregarMiembro() {
-      this.miembro.nombreGrupo =this.getNombreGrupoById(this.miembro.idGrupo);
-      this.dialogRef.close({ miembro: this.miembro, imageFile: this.selectedFile })
+    this.miembro.nombreGrupo = this.getNombreGrupoById(this.miembro.idGrupo);
+    this.dialogRef.close({ miembro: this.miembro, imageFile: this.selectedFile })
   }
 
   getNombreGrupoById(idGrupo): string {
@@ -42,8 +42,13 @@ export class SaveMiembroComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
+    
+    const reader: FileReader = new FileReader();
     this.selectedFile = event.target.files[0] as File;
-    this.imageName = this.selectedFile.name;
+    reader.readAsDataURL(this.selectedFile);
+    reader.onload = (event) => {
+      this.defaultProfile = event.target.result;
+    }
   }
 
   getGrupos() {
