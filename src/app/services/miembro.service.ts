@@ -56,4 +56,8 @@ export class MiembroService {
       return document;
     }));
   }
+
+  getMiembrosByIdGrupo(idGrupo: string): Observable<Miembro[]> {
+    return this.afs.collection<Miembro>('miembros', ref => ref.where('idGrupo', '==', idGrupo)).valueChanges({ idField: 'idMiembro' });
+  }
 }

@@ -4,6 +4,10 @@ import { Miembro } from 'src/app/models/miembro';
 import { SaveMiembroComponent } from 'src/app/dialog/save-miembro/save-miembro.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MiembroService } from 'src/app/services/miembro.service';
+import { Usuario } from 'src/app/models/usuario';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GrupoService } from 'src/app/services/grupo.service';
+import { Grupo } from 'src/app/models/grupo';
 
 interface Chip {
   key: string;
@@ -17,29 +21,75 @@ interface Chip {
 })
 export class AdmMiembrosComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'grupo', 'acciones'];
+  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'estado', 'telefono', 'email', 'nombreEmpresa', 'grupo', 'acciones'];
+  usuario: Usuario;
   miembros: Miembro[]
+  miembro: Miembro;
   cloneMiembros: Miembro[]
+  grupos: Grupo[];
   showFilters: boolean = false;
   filtros: Chip[] = new Array<Chip>();
   nombreFiltro: string;
   empresaFiltro: string;
   profesionFiltro: string;
-  constructor(private miembroService: MiembroService, private dialog: MatDialog, public snackBar: MatSnackBar) { }
+  selectIdGrupo: string;
+  disabledSelect: boolean;
+  defaultProfile: string;
+  constructor(private miembroService: MiembroService,
+    private dialog: MatDialog, public snackBar: MatSnackBar,
+    private authentication: AuthenticationService,
+    private grupoService: GrupoService) { }
 
   ngOnInit(): void {
+    this.usuario = this.authentication.getUsuario();
+    this.miembro = this.authentication.getMiembro();
 
-    this.getMiembros();
+    this.getDefaultProfile();
+    this.getGrupos();
+    if (this.usuario.esAdmin) {
+      this.getMiembros();
+    } else if (this.miembro.esAdmGrupo) {
+      this.getMiembrosByIdGrupo();
+      this.selectIdGrupo = this.miembro.idGrupo;
+      this.disabledSelect = true;
+    }
+
   }
+  getMiembrosByIdGrupo() {
+    this.miembroService.getMiembrosByIdGrupo(this.miembro.idGrupo).subscribe(
+      miembros => {
+        this.miembros = miembros;
+        this.cloneMiembros = miembros;
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
+  }
+
+  getDefaultProfile() {
+    this.miembroService.getAvatarImgUrl(Miembro.defaultAvatar).subscribe(
+      avatarUrl => {
+        this.defaultProfile = avatarUrl;
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
+  }
+
+  getGrupos() {
+    this.grupoService.getGrupos().subscribe(
+      grupos => { this.grupos = grupos; },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
+  }
+
   getMiembros() {
     this.miembroService.getMiembros().subscribe(
       miembros => {
         this.miembros = miembros;
         this.cloneMiembros = miembros;
-        this.filterMiembros();
       }
     );
   }
+
   addMiembro() {
     const dialogRef = this.dialog.open(SaveMiembroComponent, { width: '800px', data: { miembro: new Miembro(), opcion: "Nuevo" } });
     dialogRef.afterClosed().subscribe(data => {
@@ -114,6 +164,7 @@ export class AdmMiembrosComponent implements OnInit {
     let empresa = "Empresa";
     let profesion = "Profesion";
     this.miembros = this.cloneMiembros;
+    this.filterByIdGrupo();
     this.filtros.forEach(filtro => {
       switch (filtro.key) {
         case nombre:
@@ -132,6 +183,12 @@ export class AdmMiembrosComponent implements OnInit {
           break;
       }
     });
+
+  }
+  filterByIdGrupo() {
+    if (this.selectIdGrupo != null && this.selectIdGrupo != 'TODOS') {
+      this.miembros = this.miembros.filter(miembro => miembro.idGrupo === this.selectIdGrupo);
+    }
   }
 
   addFiltroNombre() {
@@ -181,11 +238,6 @@ export class AdmMiembrosComponent implements OnInit {
 
   removeFilter(index: number) {
     this.filtros.splice(index, 1)
-    if (this.filtros.length == 0) {
-      this.miembros = this.cloneMiembros;
-    }
-    else {
-      this.filterMiembros();
-    }
+    this.filterMiembros();
   }
 }

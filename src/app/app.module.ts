@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -41,6 +41,7 @@ import { GenerarSesionesComponent } from './dialog/generar-sesiones/generar-sesi
 import { EditSesionComponent } from './dialog/edit-sesion/edit-sesion.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consultar-referencia.component';
+import { AuthenticationService } from './services/authentication.service';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,12 @@ import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consu
     AngularFireStorageModule,
     AgmCoreModule.forRoot({apiKey: environment.apiKey}),
   ],
-  providers: [],
+  providers: [{
+    provide: APP_INITIALIZER,
+    useFactory: (authService: AuthenticationService) => () => authService.initializeUsuario(),
+    deps: [AuthenticationService],
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

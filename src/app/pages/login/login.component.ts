@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { Usuario } from 'src/app/models/usuario';
+import { MiembroService } from 'src/app/services/miembro.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,9 @@ export class LoginComponent implements OnInit {
   email: string;
   password: string;
   progressSnipper = false;
-  constructor(private router: Router, private authentication: AuthenticationService, private snackBar: MatSnackBar, private usuarioService: UsuarioService) { }
+  constructor(private router: Router, private authentication: AuthenticationService, private snackBar: MatSnackBar, 
+    private usuarioService: UsuarioService,
+    private miembroService: MiembroService) { }
 
   ngOnInit(): void {
   }
@@ -28,8 +30,13 @@ export class LoginComponent implements OnInit {
         if (userCredential.user.uid != null) {
           this.usuarioService.getUsuarioById(userCredential.user.uid).subscribe(
             usuario => {
-              this.authentication.saveCredentials(usuario);
-              this.router.navigate(["main"])
+              this.miembroService.getMiembroById(usuario.idMiembro).subscribe(
+                miembro => {
+                  this.authentication.saveUsuario(usuario);
+                  this.authentication.saveMiembro(miembro);
+                  this.router.navigate(["main"])
+                },
+                err =>this.snackBar.open(err, '', { duration: 2000 }));
             },
             err => {
               this.progressSnipper = false;
