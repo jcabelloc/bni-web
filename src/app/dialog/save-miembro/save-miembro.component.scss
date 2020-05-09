@@ -6,6 +6,9 @@
 .card{
     padding: 0%;
 }
+.mat-card-content{
+    margin-top: 30px;
+}
 .mat-actions
 {
     width: 90%;
@@ -41,4 +44,28 @@
     display: flex;
     justify-content: center;
     align-items: center
+}
+.container-profile{
+    width: 100px;
+    height: 100px; 
+    margin: auto; 
+    position: relative;
+}
+.image_profile
+{
+    width: 100%;
+    height: 100%; 
+    margin: auto; 
+    border-radius: 50px; 
+    object-fit: contain;
+}
+.button-upload-image
+{
+    position: absolute; 
+    right: 0;
+    bottom: 0;
+}
+.container-container-profile
+{
+    width: 100%;
 }

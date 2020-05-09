@@ -4,7 +4,6 @@ import { Miembro } from 'src/app/models/miembro';
 import { SaveMiembroComponent } from 'src/app/dialog/save-miembro/save-miembro.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MiembroService } from 'src/app/services/miembro.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 interface Chip {
   key: string;
@@ -18,8 +17,7 @@ interface Chip {
 })
 export class AdmMiembrosComponent implements OnInit {
 
-  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'acciones'];
-
+  displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'telefono', 'email', 'nombreEmpresa', 'grupo', 'acciones'];
   miembros: Miembro[]
   cloneMiembros: Miembro[]
   showFilters: boolean = false;
@@ -108,6 +106,8 @@ export class AdmMiembrosComponent implements OnInit {
   deleteMiembro(id: string) {
     this.miembroService.deleteMiembro(id);
   }
+
+  // Filtros 
 
   filterMiembros() {
     let nombre = "Nombre";
