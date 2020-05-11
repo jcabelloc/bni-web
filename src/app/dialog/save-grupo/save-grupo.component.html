@@ -7,6 +7,20 @@
 
     <mat-card-content style="margin-top: 30px;">
         <form id="saveForm" #saveForm="ngForm">
+
+            <input style="width: 0;" type="file" (change)="onFileSelected($event)" #imageInput />
+            <div class="container-container-avatar">
+                <div class="container-avatar">
+                    <mat-spinner *ngIf="showSpinner"></mat-spinner>
+                    <img  *ngIf="!showSpinner" class="image-avatar" [src]="defaultAvatar" />
+                    <button  *ngIf="!showSpinner" type="button" class="button-upload-avatar" mat-button matSuffix mat-icon-button
+                        color="accent" (click)="imageInput.click()">
+                        <mat-icon>add_a_photo</mat-icon>
+                    </button>
+                </div>
+
+            </div>
+
             <mat-form-field class="full-mat-form-field">
                 <mat-label>Nombre</mat-label>
                 <input matInput [(ngModel)]="grupo.nombre" name="nombre" required>

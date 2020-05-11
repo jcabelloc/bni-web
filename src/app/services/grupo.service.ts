@@ -49,4 +49,11 @@ export class GrupoService {
     return ref.getDownloadURL();
   }
 
+  uploadAvatar(idGrupo: string, file: File): Observable<any> {
+
+    const filePath = "avatar_grupos/" + idGrupo;
+    this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+    return from(task);
+  }
 }
