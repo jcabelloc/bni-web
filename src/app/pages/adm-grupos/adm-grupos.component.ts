@@ -13,12 +13,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AdmGruposComponent implements OnInit {
 
   grupos: Grupo[];
-  displayedColumns: string[] = ['nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
+  defaultAvatarUrl: string;
+  displayedColumns: string[] = ['avatar', 'nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
 
   constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.setDefaultAvatarUrl();
     this.getGrupos();
+  }
+
+  setDefaultAvatarUrl(): void {
+    this.grupoService.getAvatarImgUrl(Grupo.defaultAvatar).subscribe(
+      avatarUrl => {
+        this.defaultAvatarUrl = avatarUrl;
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
   }
 
   getGrupos() {

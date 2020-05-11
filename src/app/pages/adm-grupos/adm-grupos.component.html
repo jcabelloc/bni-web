@@ -6,6 +6,11 @@
         <mat-card class="container-table">
             <table mat-table [dataSource]="grupos" class="mat-elevation-z8">
 
+                <ng-container matColumnDef="avatar">
+                    <th mat-header-cell *matHeaderCellDef width="60px"></th>
+                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatarUrl" class="avatar-grupo" />
+                    </td>
+                </ng-container>
 
                 <ng-container matColumnDef="nombre">
                     <th mat-header-cell *matHeaderCellDef> Nombre </th>
