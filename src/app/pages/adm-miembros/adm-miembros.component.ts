@@ -8,6 +8,7 @@ import { Usuario } from 'src/app/models/usuario';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { Grupo } from 'src/app/models/grupo';
+import { DeleteMiembroComponent } from 'src/app/dialog/delete-miembro/delete-miembro.component';
 
 @Component({
   selector: 'app-adm-miembros',
@@ -139,8 +140,18 @@ export class AdmMiembrosComponent implements OnInit {
     });
   }
 
-  deleteMiembro(id: string) {
-    this.miembroService.deleteMiembro(id);
+  deleteMiembro(miembro: Miembro) {
+    const dialogRef = this.dialog.open(DeleteMiembroComponent, { width: '800px', data: { miembro: miembro } });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.existeHistorialMiembro) {
+        this.miembroService.deleteMiembro(miembro.idMiembro).subscribe(
+          () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
+          err => this.snackBar.open(err, '', { duration: 2000 }));
+      }
+      else if (data?.existeHistorialMiembro == false) {
+        this.snackBar.open("El miembro tiene historial, no se puede eliminar", '', { duration: 2000 });
+      }
+    });
   }
 
   // Filtros 

@@ -1,0 +1,12 @@
+<mat-card class="card">
+    <mat-card-header class="card-header">
+        <mat-card-title>
+           ¿ Estás seguro de querer eliminar a {{ data.miembro.nombres + " " + data.miembro.apellidos }} ?
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-actions class="mat-actions">
+        <button mat-raised-button color="primary" class="button_save" (click)="returnConfirmDelete()"> Confirmar</button>
+        <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
+    </mat-card-actions>
+</mat-card>
