@@ -36,29 +36,34 @@ export class AuthenticationService {
     return this.usuario;
   }
 
-  getMiembro(): Miembro
-  {
+  getMiembro(): Miembro {
     return this.miembro;
   }
 
   initializeUsuario(): Promise<void> {
     const bind = this;
     return new Promise(function (resolve, reject) {
+
       bind.auth.user.subscribe(
-        user =>  bind.usuarioService.getUsuarioById(user.uid).subscribe(
-          usuario => {
-            bind.miembroService.getMiembroById(usuario.idMiembro).subscribe(
-              miembro =>{
-                bind.saveUsuario(usuario);
-                bind.saveMiembro(miembro);
-                resolve();
-              }
-            ) 
-          },
-          err => reject(Error("No se pudo encontrar el usuario"))
-        ) 
+        user => {
+          if (user) {
+            bind.usuarioService.getUsuarioById(user.uid).subscribe(
+              usuario => {
+                bind.miembroService.getMiembroById(usuario.idMiembro).subscribe(
+                  miembro => {
+                    bind.saveUsuario(usuario);
+                    bind.saveMiembro(miembro);
+                    resolve();
+                  })
+              },
+              err => reject(Error("No se pudo encontrar el usuario"))
+            )
+          } else {
+            resolve();
+          }
+        }
       );
-      resolve();
+
     });
   }
 }

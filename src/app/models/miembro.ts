@@ -22,11 +22,6 @@ export class Miembro {
     }
 }
 
-enum Estado {
-    ACTIVO,
-    SUSPENDIDO,
-    INACTIVO,
-}
 export interface SelectEstado{
     key: String;
     viewValue: String;

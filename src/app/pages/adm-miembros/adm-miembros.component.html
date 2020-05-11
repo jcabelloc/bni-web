@@ -19,7 +19,7 @@
             <button mat-raised-button color="primary" class="button-align" (click)="addMiembro()">Agregar</button>
         </div>
         <mat-card class="container-table">
-            <table mat-table [dataSource]="miembros" class="mat-elevation-z8">
+            <table mat-table [dataSource]="miembrosConFiltros" class="mat-elevation-z8">
 
                 <ng-container matColumnDef="avatar">
                     <th mat-header-cell *matHeaderCellDef width="60px"></th>

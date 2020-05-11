@@ -23,9 +23,9 @@ export class AdmMiembrosComponent implements OnInit {
 
   displayedColumns: string[] = ['avatar', 'nombre', 'profesion', 'estado', 'telefono', 'email', 'nombreEmpresa', 'grupo', 'acciones'];
   usuario: Usuario;
-  miembros: Miembro[]
+  miembrosConFiltros: Miembro[]
   miembro: Miembro;
-  cloneMiembros: Miembro[]
+  miembrosTotales: Miembro[]
   grupos: Grupo[];
   showFilters: boolean = false;
   filtros: Chip[] = new Array<Chip>();
@@ -58,8 +58,8 @@ export class AdmMiembrosComponent implements OnInit {
   getMiembrosByIdGrupo() {
     this.miembroService.getMiembrosByIdGrupo(this.miembro.idGrupo).subscribe(
       miembros => {
-        this.miembros = miembros;
-        this.cloneMiembros = miembros;
+        this.miembrosConFiltros = miembros;
+        this.miembrosTotales = miembros;
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
@@ -84,8 +84,8 @@ export class AdmMiembrosComponent implements OnInit {
   getMiembros() {
     this.miembroService.getMiembros().subscribe(
       miembros => {
-        this.miembros = miembros;
-        this.cloneMiembros = miembros;
+        this.miembrosConFiltros = miembros;
+        this.miembrosTotales = miembros;
       }
     );
   }
@@ -163,12 +163,12 @@ export class AdmMiembrosComponent implements OnInit {
     let nombre = "Nombre";
     let empresa = "Empresa";
     let profesion = "Profesion";
-    this.miembros = this.cloneMiembros;
+    this.miembrosConFiltros = this.miembrosTotales;
     this.filterByIdGrupo();
     this.filtros.forEach(filtro => {
       switch (filtro.key) {
         case nombre:
-          this.miembros = this.miembros.filter(miembro => {
+          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => {
             let nombreCompleto = miembro.nombres + " " + miembro.apellidos;
             if (nombreCompleto.toLowerCase().includes(filtro.value.toLowerCase())) {
               return true;
@@ -176,10 +176,10 @@ export class AdmMiembrosComponent implements OnInit {
           })
           break;
         case empresa:
-          this.miembros = this.miembros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(filtro.value.toLowerCase()));
+          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(filtro.value.toLowerCase()));
           break;
         case profesion:
-          this.miembros = this.miembros.filter(miembro => miembro.profesion.toLowerCase().includes(filtro.value.toLowerCase()));
+          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.profesion.toLowerCase().includes(filtro.value.toLowerCase()));
           break;
       }
     });
@@ -187,7 +187,7 @@ export class AdmMiembrosComponent implements OnInit {
   }
   filterByIdGrupo() {
     if (this.selectIdGrupo != null && this.selectIdGrupo != 'TODOS') {
-      this.miembros = this.miembros.filter(miembro => miembro.idGrupo === this.selectIdGrupo);
+      this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.idGrupo === this.selectIdGrupo);
     }
   }
 
