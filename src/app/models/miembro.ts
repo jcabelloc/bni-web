@@ -10,14 +10,19 @@ export class Miembro {
     nombreGrupo: string;
     avatarUrl?: string;
     esAdmGrupo: boolean;
-    estado: Estado;
+    estado: String;
+    public static readonly defaultAvatar = "default-avatar.png";
+    public static readonly estadoMiembro: SelectEstado[] = [
+        {key: "ACTIVO", viewValue: 'ACTIVO'},
+        {key: "SUSPENDIDO", viewValue: 'SUSPENDIDO'},
+        {key: "INACTIVO" ,viewValue: 'INACTIVO'}
+    ];
     constructor() {
         this.esAdmGrupo  = false;
     }
 }
 
-enum Estado {
-    ACTIVO,
-    SUSPENDIDO,
-    INACTIVO,
+export interface SelectEstado{
+    key: String;
+    viewValue: String;
 }

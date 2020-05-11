@@ -10,8 +10,9 @@
 
             <div class="container-container-profile">
                 <div class="container-profile">
-                    <img class="image_profile" [src]="defaultProfile" />
-                    <button type="button" class="button-upload-image" mat-button matSuffix mat-icon-button
+                    <mat-spinner *ngIf="showSpinner"></mat-spinner>
+                    <img  *ngIf="!showSpinner" class="image_profile" [src]="defaultProfile" />
+                    <button  *ngIf="!showSpinner" type="button" class="button-upload-image" mat-button matSuffix mat-icon-button
                         color="accent" (click)="imageInput.click()">
                         <mat-icon>add_a_photo</mat-icon>
                     </button>
@@ -49,9 +50,18 @@
 
             <mat-form-field class="full-mat-form-field">
                 <mat-label>Grupo</mat-label>
-                <mat-select [(ngModel)]="miembro.idGrupo" name="idGrupo" required>
+                <mat-select [(ngModel)]="miembro.idGrupo" name="idGrupo" required [disabled]="disabledSelect">
                     <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
                         {{grupo.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Estado</mat-label>
+                <mat-select [(ngModel)]="miembro.estado" name="estado" required>
+                    <mat-option *ngFor="let estado of estados" [value]="estado.key">
+                        {{estado.viewValue}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
