@@ -9,11 +9,6 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { Grupo } from 'src/app/models/grupo';
 
-interface Chip {
-  key: string;
-  value: string;
-}
-
 @Component({
   selector: 'app-adm-miembros',
   templateUrl: './adm-miembros.component.html',
@@ -28,13 +23,10 @@ export class AdmMiembrosComponent implements OnInit {
   miembrosTotales: Miembro[]
   grupos: Grupo[];
   showFilters: boolean = false;
-  filtros: Chip[] = new Array<Chip>();
-  nombreFiltro: string;
-  empresaFiltro: string;
-  profesionFiltro: string;
+  filtrosSeleccionados: Map<string, string> = new Map();
   selectIdGrupo: string;
   disabledSelect: boolean;
-  defaultProfile: string;
+  defaultAvatarUrl: string;
   constructor(private miembroService: MiembroService,
     private dialog: MatDialog, public snackBar: MatSnackBar,
     private authentication: AuthenticationService,
@@ -44,49 +36,43 @@ export class AdmMiembrosComponent implements OnInit {
     this.usuario = this.authentication.getUsuario();
     this.miembro = this.authentication.getMiembro();
 
-    this.getDefaultProfile();
-    this.getGrupos();
+    this.setDefaultAvatarUrl();
+    this.setGrupos();
     if (this.usuario.esAdmin) {
-      this.getMiembros();
+      this.miembroService.getMiembros().subscribe(
+        miembros => {
+          this.miembrosConFiltros = miembros;
+          this.miembrosTotales = miembros;
+        },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
     } else if (this.miembro.esAdmGrupo) {
-      this.getMiembrosByIdGrupo();
+      this.miembroService.getMiembrosByIdGrupo(this.miembro.idGrupo).subscribe(
+        miembros => {
+          this.miembrosConFiltros = miembros;
+          this.miembrosTotales = miembros;
+        },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
       this.selectIdGrupo = this.miembro.idGrupo;
       this.disabledSelect = true;
     }
 
   }
-  getMiembrosByIdGrupo() {
-    this.miembroService.getMiembrosByIdGrupo(this.miembro.idGrupo).subscribe(
-      miembros => {
-        this.miembrosConFiltros = miembros;
-        this.miembrosTotales = miembros;
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
-  }
 
-  getDefaultProfile() {
+  setDefaultAvatarUrl(): void {
     this.miembroService.getAvatarImgUrl(Miembro.defaultAvatar).subscribe(
       avatarUrl => {
-        this.defaultProfile = avatarUrl;
+        this.defaultAvatarUrl = avatarUrl;
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
 
-  getGrupos() {
+  setGrupos(): void {
     this.grupoService.getGrupos().subscribe(
       grupos => { this.grupos = grupos; },
       err => this.snackBar.open(err, '', { duration: 2000 })
-    );
-  }
-
-  getMiembros() {
-    this.miembroService.getMiembros().subscribe(
-      miembros => {
-        this.miembrosConFiltros = miembros;
-        this.miembrosTotales = miembros;
-      }
     );
   }
 
@@ -158,86 +144,41 @@ export class AdmMiembrosComponent implements OnInit {
   }
 
   // Filtros 
-
   filterMiembros() {
-    let nombre = "Nombre";
-    let empresa = "Empresa";
-    let profesion = "Profesion";
     this.miembrosConFiltros = this.miembrosTotales;
-    this.filterByIdGrupo();
-    this.filtros.forEach(filtro => {
-      switch (filtro.key) {
-        case nombre:
+    this.filterMiembrosByIdGrupo();
+    this.filtrosSeleccionados.forEach( (value , key) => {
+      switch (key) {
+        case 'Nombre':
           this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => {
             let nombreCompleto = miembro.nombres + " " + miembro.apellidos;
-            if (nombreCompleto.toLowerCase().includes(filtro.value.toLowerCase())) {
-              return true;
-            }
+            return nombreCompleto.toLowerCase().includes(value.toLowerCase());
           })
           break;
-        case empresa:
-          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(filtro.value.toLowerCase()));
+        case 'Empresa':
+          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.nombreEmpresa.toLowerCase().includes(value.toLowerCase()));
           break;
-        case profesion:
-          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.profesion.toLowerCase().includes(filtro.value.toLowerCase()));
+        case 'Profesion':
+          this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.profesion.toLowerCase().includes(value.toLowerCase()));
           break;
       }
-    });
-
+    })
   }
-  filterByIdGrupo() {
+
+  filterMiembrosByIdGrupo() {
     if (this.selectIdGrupo != null && this.selectIdGrupo != 'TODOS') {
       this.miembrosConFiltros = this.miembrosConFiltros.filter(miembro => miembro.idGrupo === this.selectIdGrupo);
     }
   }
 
-  addFiltroNombre() {
-    let indexFiltro = this.existFiltro("Nombre");
-    if (indexFiltro == -1) {
-      this.filtros.push({ key: "Nombre", value: this.nombreFiltro })
-    } else {
-      this.filtros[indexFiltro].value = this.nombreFiltro;
-    }
-    this.nombreFiltro = null;
+  addFiltro(criterioFiltro: string, event: any) {
+    this.filtrosSeleccionados.set(criterioFiltro,event.target.value);
+    event.target.value = '';
     this.filterMiembros();
   }
 
-  addFiltroEmpresa() {
-    let indexFiltro = this.existFiltro("Empresa");
-    if (indexFiltro == -1) {
-      this.filtros.push({ key: "Empresa", value: this.empresaFiltro })
-    } else {
-      this.filtros[indexFiltro].value = this.empresaFiltro;
-    }
-    this.empresaFiltro = null;
-    this.filterMiembros();
-
-  }
-
-  addFiltroProfesion() {
-    let indexFiltro = this.existFiltro("Profesion");
-    if (indexFiltro == -1) {
-      this.filtros.push({ key: "Profesion", value: this.profesionFiltro })
-    } else {
-      this.filtros[indexFiltro].value = this.profesionFiltro;
-    }
-    this.profesionFiltro = null;
-    this.filterMiembros();
-
-  }
-
-  existFiltro(tipo: string): number {
-    let indexFiltro: number = -1;
-    this.filtros.forEach((filtro, index) => {
-      if (filtro.key === tipo) {
-        indexFiltro = index
-      }
-    })
-    return indexFiltro;
-  }
-
-  removeFilter(index: number) {
-    this.filtros.splice(index, 1)
+  removeFilter(criterioFiltro: string) {
+    this.filtrosSeleccionados.delete(criterioFiltro);
     this.filterMiembros();
   }
 }

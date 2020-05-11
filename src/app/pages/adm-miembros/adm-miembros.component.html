@@ -23,7 +23,7 @@
 
                 <ng-container matColumnDef="avatar">
                     <th mat-header-cell *matHeaderCellDef width="60px"></th>
-                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultProfile" class="img-miembro" />
+                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatarUrl" class="img-miembro" />
                     </td>
 
                 </ng-container>
@@ -92,19 +92,17 @@
                 </div>
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Nombre</mat-label>
-                    <input matInput (keyup.enter)="addFiltroNombre()" [(ngModel)]="nombreFiltro" name="nombreFiltro">
+                    <input matInput (keyup.enter)="addFiltro('Nombre', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Empresa</mat-label>
-                    <input matInput (keyup.enter)="addFiltroEmpresa()" [(ngModel)]="empresaFiltro"
-                        name="empresaFiltro">
+                    <input matInput (keyup.enter)="addFiltro('Empresa', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Profesion</mat-label>
-                    <input matInput (keyup.enter)="addFiltroProfesion()" [(ngModel)]="profesionFiltro"
-                        name="profesionFiltro">
+                    <input matInput (keyup.enter)="addFiltro('Profesion', $event)">
                 </mat-form-field>
 
                 <div class="content-sub-titles">
@@ -112,9 +110,9 @@
                     <div style="margin-top: 25px;">
 
                         <mat-chip-list>
-                            <mat-chip removable *ngFor="let filtro of filtros; let i=index" title="{{filtro.key}}">
+                            <mat-chip removable *ngFor="let filtro of filtrosSeleccionados|keyvalue" title="{{filtro.key}}">
                                 {{filtro.value}}
-                                <mat-icon matChipRemove (click)="removeFilter(i)">cancel</mat-icon>
+                                <mat-icon matChipRemove (click)="removeFilter(filtro.key)">cancel</mat-icon>
                             </mat-chip>
                         </mat-chip-list>
                     </div>
