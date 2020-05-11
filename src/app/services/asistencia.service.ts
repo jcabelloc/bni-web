@@ -17,7 +17,7 @@ export class AsistenciaService {
   }
 
 
-  getAsistenciasByIdGrupo(idGrupo): Observable<Asistencia[]> {
+  getAsistenciasByIdGrupo(idGrupo: string): Observable<Asistencia[]> {
     return this.afs.collection<Asistencia>('asistencias', ref => ref.where('idGrupo', '==', idGrupo)).valueChanges({ idField: 'idAsistencia' });
   }
 
@@ -25,4 +25,7 @@ export class AsistenciaService {
     return this.asistenciasCollection.valueChanges({idField:'idAsistencia'});
   }
 
+  getAsistenciasByIdMiembro(idMiembro: string): Observable<Asistencia[]> {
+    return this.afs.collection<Asistencia>('asistencias', ref => ref.where('idMiembro', '==', idMiembro)).valueChanges({ idField: 'idAsistencia' });
+  }
 }
