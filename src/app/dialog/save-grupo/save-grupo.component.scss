@@ -84,3 +84,27 @@
     height:100%;
     min-height: 500px;
 }
+.container-avatar{
+    width: 100px;
+    height: 100px; 
+    margin: auto; 
+    position: relative;
+}
+.image-avatar
+{
+    width: 100%;
+    height: 100%; 
+    margin: auto; 
+    border-radius: 50px; 
+    object-fit: contain;
+}
+.button-upload-avatar
+{
+    position: absolute; 
+    right: 0;
+    bottom: 0;
+}
+.container-container-avatar
+{
+    width: 100%;
+}

@@ -143,12 +143,12 @@ export class AdmMiembrosComponent implements OnInit {
   deleteMiembro(miembro: Miembro) {
     const dialogRef = this.dialog.open(DeleteMiembroComponent, { width: '800px', data: { miembro: miembro } });
     dialogRef.afterClosed().subscribe(data => {
-      if (data?.existeHistorialMiembro) {
+      if (data?.existeHistorialMiembro == false) {
         this.miembroService.deleteMiembro(miembro.idMiembro).subscribe(
           () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
           err => this.snackBar.open(err, '', { duration: 2000 }));
       }
-      else if (data?.existeHistorialMiembro == false) {
+      else if (data?.existeHistorialMiembro) {
         this.snackBar.open("El miembro tiene historial, no se puede eliminar", '', { duration: 2000 });
       }
     });

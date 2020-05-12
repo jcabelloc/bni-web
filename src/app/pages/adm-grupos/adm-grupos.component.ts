@@ -4,6 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Grupo } from 'src/app/models/grupo';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Usuario } from 'src/app/models/usuario';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Miembro } from 'src/app/models/miembro';
+import { DeleteGrupoComponent } from 'src/app/dialog/delete-grupo/delete-grupo.component';
 
 @Component({
   selector: 'app-adm-grupos',
@@ -12,18 +16,39 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AdmGruposComponent implements OnInit {
 
-  grupos: Grupo[];
-  displayedColumns: string[] = ['nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
-
-  constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar) { }
+  grupos: Grupo[] = new Array<Grupo>();
+  defaultAvatarUrl: string;
+  displayedColumns: string[] = ['avatar', 'nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
+  usuario: Usuario; 
+  miembro: Miembro;
+  constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar, private authentication: AuthenticationService) { }
 
   ngOnInit(): void {
-    this.getGrupos();
+    this.setDefaultAvatarUrl();
+    this.usuario = this.authentication.getUsuario();
+    this.miembro = this.authentication.getMiembro();
+    if(this.usuario.esAdmin){
+      this.grupoService.getGrupos().subscribe(
+        grupos => { this.grupos = grupos; },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
+    } else if(this.miembro.esAdmGrupo){
+     this.grupoService.findById(this.miembro.idGrupo).subscribe(
+      grupo =>{
+        this.grupos.push(grupo);
+        this.grupos = [].concat(this.grupos);
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+     ) 
+    }
+    
   }
 
-  getGrupos() {
-    this.grupoService.getGrupos().subscribe(
-      grupos => { this.grupos = grupos; },
+  setDefaultAvatarUrl(): void {
+    this.grupoService.getAvatarImgUrl(Grupo.defaultAvatar).subscribe(
+      avatarUrl => {
+        this.defaultAvatarUrl = avatarUrl;
+      },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
@@ -33,7 +58,17 @@ export class AdmGruposComponent implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data?.grupo) {
         this.grupoService.createGrupo(data?.grupo).subscribe(
-          () => { this.snackBar.open("Se guardó correctamente", '', { duration: 2000 }) },
+          idGrupo => {
+             if(data?.avatarFile)
+             {
+               data.grupo.idGrupo = idGrupo;
+               this.grupoService.uploadAvatar(idGrupo,data?.avatarFile).subscribe(
+                 () => this.updateGrupo(data?.grupo,"guardó"),
+                 err =>this.snackBar.open(err, '', { duration: 2000 }));
+             }else{
+              this.snackBar.open("Se guardó correctamente", '', { duration: 2000 });
+             }
+          },  
           err => this.snackBar.open(err, '', { duration: 2000 })
         );
       }
@@ -43,19 +78,41 @@ export class AdmGruposComponent implements OnInit {
   editGrupo(grupo: Grupo) {
     const dialogRef = this.dialog.open(SaveGrupoComponent, { width: '800px', data: { grupo: grupo, opcion: "Editar" } });
     dialogRef.afterClosed().subscribe(data => {
-      if (data?.grupo) {
-        this.grupoService.updateGrupo(data?.grupo).subscribe(
-          () => this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 }),
-          err => this.snackBar.open(err, '', { duration: 2000 })
+      if (data?.avatarFile) {
+        this.grupoService.uploadAvatar(data?.grupo.idGrupo, data?.avatarFile).subscribe(
+          () => this.updateGrupo(data?.grupo,"actualizó"),
+          err => this.snackBar.open(err, '', { duration: 2000 }) 
         );
+      }else {
+        this.updateGrupo(data?.grupo,"actualizó");
       }
     });
   }
 
-  deleteGrupo(idGrupo: string) {
-    this.grupoService.deleteGrupo(idGrupo).subscribe(
-      () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
+  updateGrupo(grupo: Grupo, mensaje: string){
+    this.grupoService.getAvatarImgUrl(grupo.idGrupo).subscribe(
+      avatarUrl => {
+        grupo.avatarUrl = avatarUrl;
+        this.grupoService.updateGrupo(grupo).subscribe(
+          () => this.snackBar.open("Se "+ mensaje +" correctamente", '', { duration: 2000 }),
+          err => this.snackBar.open(err, '', { duration: 2000 })
+        );
+      },
       err => this.snackBar.open(err, '', { duration: 2000 })
-    );
+    ); 
+  }
+
+  deleteGrupo(grupo: Grupo) {
+    const dialogRef = this.dialog.open(DeleteGrupoComponent, { width: '800px', data: { grupo: grupo} });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.existeHistorialGrupo == false) {
+        this.grupoService.deleteGrupo(grupo.idGrupo).subscribe(
+          () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
+          err => this.snackBar.open(err, '', { duration: 2000 })
+        );
+      }else if(data?.existeHistorialGrupo){
+        this.snackBar.open("El grupo tiene historial, no se puede eliminar", '', { duration: 2000 });
+      }
+    });
   }
 }

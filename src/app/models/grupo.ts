@@ -9,7 +9,8 @@ export class Grupo {
     lugarSesion: string;
     horaSesion: string;
     ultimaGeneracion: number;
-
+    avatarUrl?: string;
+    public static readonly defaultAvatar = "default-avatar.jpg";
     public static readonly diasSemana: DiasSemana[] = [
         {key: 'LUNES', viewValue: 'Lunes'},
         {key: 'MARTES', viewValue: 'Martes'},

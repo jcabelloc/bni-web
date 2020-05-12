@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Grupo } from '../models/grupo';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class GrupoService {
 
   private gruposCollection: AngularFirestoreCollection<Grupo>;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(private afs: AngularFirestore, private storage: AngularFireStorage) {
     this.gruposCollection = afs.collection<Grupo>('grupos');
   }
 
@@ -41,5 +42,18 @@ export class GrupoService {
       document.idGrupo = idGrupo;
       return document;
     }));
+  }
+
+  getAvatarImgUrl(rutaImageAvatar: string): Observable<any> {
+    const ref = this.storage.ref('avatar_grupos/' + rutaImageAvatar);
+    return ref.getDownloadURL();
+  }
+
+  uploadAvatar(idGrupo: string, file: File): Observable<any> {
+
+    const filePath = "avatar_grupos/" + idGrupo;
+    this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+    return from(task);
   }
 }

@@ -24,9 +24,9 @@ export class DeleteMiembroComponent implements OnInit {
     this.asistenciasService.getAsistenciasByIdMiembro(this.data.miembro.idMiembro).subscribe(
       asistencias => {
         if (asistencias.length == 0) {
-          this.dialogRef.close({existeHistorialMiembro: true })
-        } else {
           this.dialogRef.close({existeHistorialMiembro: false })
+        } else {
+          this.dialogRef.close({existeHistorialMiembro: true })
         }
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
