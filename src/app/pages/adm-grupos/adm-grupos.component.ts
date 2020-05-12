@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Usuario } from 'src/app/models/usuario';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Miembro } from 'src/app/models/miembro';
+import { DeleteGrupoComponent } from 'src/app/dialog/delete-grupo/delete-grupo.component';
 
 @Component({
   selector: 'app-adm-grupos',
@@ -101,10 +102,17 @@ export class AdmGruposComponent implements OnInit {
     ); 
   }
 
-  deleteGrupo(idGrupo: string) {
-    this.grupoService.deleteGrupo(idGrupo).subscribe(
-      () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
+  deleteGrupo(grupo: Grupo) {
+    const dialogRef = this.dialog.open(DeleteGrupoComponent, { width: '800px', data: { grupo: grupo} });
+    dialogRef.afterClosed().subscribe(data => {
+      if (data?.existeHistorialGrupo == false) {
+        this.grupoService.deleteGrupo(grupo.idGrupo).subscribe(
+          () => this.snackBar.open("Se eliminó correctamente", '', { duration: 2000 }),
+          err => this.snackBar.open(err, '', { duration: 2000 })
+        );
+      }else if(data?.existeHistorialGrupo){
+        this.snackBar.open("El grupo tiene historial, no se puede eliminar", '', { duration: 2000 });
+      }
+    });
   }
 }

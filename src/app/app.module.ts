@@ -43,6 +43,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consultar-referencia.component';
 import { AuthenticationService } from './services/authentication.service';
 import { DeleteMiembroComponent } from './dialog/delete-miembro/delete-miembro.component';
+import { DeleteGrupoComponent } from './dialog/delete-grupo/delete-grupo.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { DeleteMiembroComponent } from './dialog/delete-miembro/delete-miembro.c
     GenerarSesionesComponent,
     EditSesionComponent,
     ConsultarReferenciaComponent,
-    DeleteMiembroComponent
+    DeleteMiembroComponent,
+    DeleteGrupoComponent
   ],
   imports: [
     BrowserModule,
