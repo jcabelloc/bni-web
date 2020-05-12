@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Grupo } from 'src/app/models/grupo';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Usuario } from 'src/app/models/usuario';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Miembro } from 'src/app/models/miembro';
 
 @Component({
   selector: 'app-adm-grupos',
@@ -12,15 +15,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AdmGruposComponent implements OnInit {
 
-  grupos: Grupo[];
+  grupos: Grupo[] = new Array<Grupo>();
   defaultAvatarUrl: string;
   displayedColumns: string[] = ['avatar', 'nombre', 'diaSesion', 'direccionSesion', 'lugarSesion', 'horaSesion','acciones'];
-
-  constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar) { }
+  usuario: Usuario; 
+  miembro: Miembro;
+  constructor(private dialog: MatDialog, private grupoService: GrupoService, private snackBar: MatSnackBar, private authentication: AuthenticationService) { }
 
   ngOnInit(): void {
     this.setDefaultAvatarUrl();
-    this.getGrupos();
+    this.usuario = this.authentication.getUsuario();
+    this.miembro = this.authentication.getMiembro();
+    if(this.usuario.esAdmin){
+      this.grupoService.getGrupos().subscribe(
+        grupos => { this.grupos = grupos; },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
+    } else if(this.miembro.esAdmGrupo){
+     this.grupoService.findById(this.miembro.idGrupo).subscribe(
+      grupo =>{
+        this.grupos.push(grupo);
+        this.grupos = [].concat(this.grupos);
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+     ) 
+    }
+    
   }
 
   setDefaultAvatarUrl(): void {
@@ -28,13 +48,6 @@ export class AdmGruposComponent implements OnInit {
       avatarUrl => {
         this.defaultAvatarUrl = avatarUrl;
       },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
-  }
-
-  getGrupos() {
-    this.grupoService.getGrupos().subscribe(
-      grupos => { this.grupos = grupos; },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }

@@ -1,7 +1,7 @@
 <div class="container">
     <div class="scroll">
         <div class="container-btn">
-            <button mat-raised-button color="primary" class="button-align" (click)="addGrupo()">Agregar</button>
+            <button *ngIf="usuario.esAdmin" mat-raised-button color="primary" class="button-align" (click)="addGrupo()">Agregar</button>
         </div>
         <mat-card class="container-table">
             <table mat-table [dataSource]="grupos" class="mat-elevation-z8">
@@ -41,7 +41,7 @@
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element;let i=index">
                         <mat-icon (click)="editGrupo(element)">edit</mat-icon>
-                        <mat-icon (click)="deleteGrupo(element.idGrupo)">delete</mat-icon>
+                        <mat-icon *ngIf="usuario.esAdmin" (click)="deleteGrupo(element.idGrupo)">delete</mat-icon>
                     </td>
                 </ng-container>
 
