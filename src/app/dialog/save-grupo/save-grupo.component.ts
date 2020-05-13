@@ -46,6 +46,7 @@ export class SaveGrupoComponent implements OnInit {
   }
 
   agregarGrupo() {
+    this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
     this.dialogRef.close({grupo: this.grupo, avatarFile: this.selectedFile});
   }
 

@@ -2,17 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Grupo } from 'src/app/models/grupo';
 import { GrupoService } from 'src/app/services/grupo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/models/usuario';
-import { MiembroService } from 'src/app/services/miembro.service';
 import { AsistenciaService } from 'src/app/services/asistencia.service';
 import { Asistencia } from 'src/app/models/asistencia';
-import { Referencia } from 'src/app/models/referencia';
-
-interface Chip {
-  key: string;
-  value: string;
-}
+import { Miembro } from 'src/app/models/miembro';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-consultar-referencia',
@@ -21,184 +15,109 @@ interface Chip {
 })
 export class ConsultarReferenciaComponent implements OnInit {
 
-  idUsuario: string = "V0HGm0EeHaPlGyxZ3d4c2fl5do23";
   showFilters: boolean = false;
   displayedColumns: string[] = ['nombreReferencia', 'cargoReferencia', 'empresaReferencia', 'fechaSesion', 'nombreMiembro', 'nombreGrupo'];
   grupos: Grupo[];
   grupo: Grupo;
   usuario: Usuario;
+  miembro: Miembro;
   selectIdGrupo: string;
-  asistencias: Asistencia[];
-  cloneAsistencias: Asistencia[];
+  asistenciasConFiltros: Asistencia[];
+  asistenciasTotales: Asistencia[];
 
-  filtros: Chip[] = new Array<Chip>();
-  referenciaFiltro: Referencia = new Referencia();
-  nombreMiembroFiltro: string;
-  fechaDesdeFiltro: Date;
-  fechaHastaFiltro: Date;
-  constructor(private asistenciaService: AsistenciaService, private usuarioService: UsuarioService, private grupoService: GrupoService, private snackBar: MatSnackBar, private miembroService: MiembroService) { }
+  filtrosSeleccionados: Map<string, string> = new Map();
+
+  constructor(private asistenciaService: AsistenciaService, private authentication: AuthenticationService, private grupoService: GrupoService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.getGrupos();
-    this.getUsuarioById();
+
+    this.usuario = this.authentication.getUsuario();
+    this.miembro = this.authentication.getMiembro();
+    if (this.usuario.esAdmin) {
+      this.setAllAsistencias();
+    } else if (this.miembro.esAdmGrupo) {
+      this.selectIdGrupo = this.miembro.idGrupo;
+      this.setAsistenciasBytIdGrupo(this.selectIdGrupo);
+    }
+    this.setGrupos();
   }
 
-  getUsuarioById() {
-    this.usuarioService.getUsuarioById(this.idUsuario).subscribe(
-      usuario => {
-        this.usuario = usuario;
-        if (!usuario.esAdmin) {
-          this.miembroService.getMiembroById(usuario.idMiembro).subscribe(
-            miembro => {
-              this.selectIdGrupo = miembro.idGrupo;
-              this.updateAsistenciaByIdGrupo();
-            },
-            err => this.snackBar.open(err, '', { duration: 2000 })
-          );
-        }
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
-
-  }
-  getAsistenciasBytIdGrupo(idGrupo: string) {
+  setAsistenciasBytIdGrupo(idGrupo: string) {
     this.asistenciaService.getAsistenciasByIdGrupo(idGrupo).subscribe(
       asistencias => {
-        this.asistencias = asistencias;
-        this.cloneAsistencias = asistencias;
+        this.asistenciasConFiltros = asistencias;
+        this.asistenciasTotales = asistencias;
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
 
-  getAllAsistencias() {
+  setAllAsistencias() {
     this.asistenciaService.getAsistencias().subscribe(
       asistencias => {
-        this.asistencias = asistencias;
-        this.cloneAsistencias = asistencias;
+        this.asistenciasConFiltros = asistencias;
+        this.asistenciasTotales = asistencias;
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
-  updateAsistenciaByIdGrupo() {
 
-    if (this.selectIdGrupo == 'NONE') {
-      this.getAllAsistencias();
-      this.grupo = null;
-    }
-    else {
-      this.getAsistenciasBytIdGrupo(this.selectIdGrupo);
-      this.grupo = this.grupos.filter(grupo => grupo.idGrupo == this.selectIdGrupo)[0];
-    }
-
-  }
-
-  getGrupos() {
+  setGrupos() {
     this.grupoService.getGrupos().subscribe(
-      grupos => { this.grupos = grupos; },
+      grupos => {
+        this.grupos = grupos;
+        this.grupo = this.grupos.filter(grupo => grupo.idGrupo == this.selectIdGrupo)[0];
+      },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
 
-  addFiltro(tipoFiltro: string, value: any) {
-    let indexFiltro = this.existFiltro(tipoFiltro);
-    if (indexFiltro == -1) {
-      this.filtros.push({ key: tipoFiltro, value: value })
+
+  addFiltro(criterioFiltro: string, event: any) {
+    if (criterioFiltro === 'Fecha_Hasta' || criterioFiltro === 'Fecha_Desde') {
+      this.filtrosSeleccionados.set(criterioFiltro, event.target.value.toDateString());
     } else {
-      this.filtros[indexFiltro].value = value;
+      this.filtrosSeleccionados.set(criterioFiltro, event.target.value);
     }
+    event.target.value = '';
     this.filterAsistencia();
   }
 
-  addFiltroNombreReferencia() {
-    let tipoFiltro: string = "Nombre_Referencia";
-    this.addFiltro(tipoFiltro, this.referenciaFiltro.nombre);
-    this.referenciaFiltro.nombre = null;
-  }
-  addFiltroCargoReferencia() {
-
-    let tipoFiltro: string = "Cargo_Referencia";
-    this.addFiltro(tipoFiltro, this.referenciaFiltro.cargo);
-    this.referenciaFiltro.cargo = null;
+  removeFilter(criterioFiltro: string) {
+    this.filtrosSeleccionados.delete(criterioFiltro);
+    this.filterAsistencia();
   }
 
-  addFiltroEmpresaReferencia() {
-
-    let tipoFiltro: string = "Empresa_Referencia";
-    this.addFiltro(tipoFiltro, this.referenciaFiltro.empresa);
-    this.referenciaFiltro.empresa = null;
-  }
-  addFiltroNombreMiembro() {
-
-    let tipoFiltro: string = "Nombre_Miembro";
-    this.addFiltro(tipoFiltro, this.nombreMiembroFiltro);
-    this.nombreMiembroFiltro = null;
-  }
-  addFiltroFechaDesde() {
-    let tipoFiltro: string = "Fecha_Desde";
-    this.addFiltro(tipoFiltro, this.fechaDesdeFiltro.toDateString());
-    this.fechaDesdeFiltro = null;
-
-  }
-  addFiltroFechaHasta() {
-    let tipoFiltro: string = "Fecha_Hasta";
-    this.addFiltro(tipoFiltro, this.fechaHastaFiltro.toDateString());
-    this.fechaHastaFiltro = null;
-
-  }
-
-  existFiltro(tipo: string): number {
-    let indexFiltro: number = -1;
-    this.filtros.forEach((filtro, index) => {
-      if (filtro.key === tipo) {
-        indexFiltro = index
-      }
-    })
-    return indexFiltro;
-  }
-
-  removeFilter(index: number) {
-    this.filtros.splice(index, 1)
-    if (this.filtros.length == 0) {
-      this.asistencias = this.cloneAsistencias;
+  filterAsistenciasByIdGrupo() {
+    if (this.selectIdGrupo != null && this.selectIdGrupo != 'TODOS') {
+      this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.idGrupo === this.selectIdGrupo);
     }
-    else {
-      this.filterAsistencia();
-    }
+    this.grupo = this.grupos.filter(grupo => grupo.idGrupo == this.selectIdGrupo)[0];
   }
-
   filterAsistencia() {
-    let nombreReferencia: string = "Nombre_Referencia";
-    let cargoReferencia: string = "Cargo_Referencia";
-    let empresaReferencia: string = "Empresa_Referencia";;
-    let nombreMiembro: string = "Nombre_Miembro";
-    let fechaDesde: string = "Fecha_Desde";
-    let fechaHasta: string = "Fecha_Hasta";
-
-    this.asistencias = this.cloneAsistencias;
-    this.filtros.forEach(filtro => {
-      switch (filtro.key) {
-        case nombreReferencia:
-          this.asistencias = this.asistencias.filter(asistencia => {
-            if (asistencia.referencia.nombre.toLowerCase().includes(filtro.value.toLowerCase())) {
-              return true;
-            }
+    this.asistenciasConFiltros = this.asistenciasTotales;
+    this.filterAsistenciasByIdGrupo();
+    this.filtrosSeleccionados.forEach((value, key) => {
+      switch (key) {
+        case 'Nombre_Referencia':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => {
+            return asistencia.referencia.nombre.toLowerCase().includes(value.toLowerCase())
           })
           break;
-        case cargoReferencia:
-          this.asistencias = this.asistencias.filter(asistencia => asistencia.referencia.cargo.toLowerCase().includes(filtro.value.toLowerCase()));
+        case 'Cargo_Referencia':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.referencia.cargo.toLowerCase().includes(value.toLowerCase()));
           break;
-        case empresaReferencia:
-          this.asistencias = this.asistencias.filter(asistencia => asistencia.referencia.empresa.toLowerCase().includes(filtro.value.toLowerCase()));
+        case 'Empresa_Referencia':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.referencia.empresa.toLowerCase().includes(value.toLowerCase()));
           break;
-        case nombreMiembro:
-          this.asistencias = this.asistencias.filter(asistencia => asistencia.nombreCompletoMiembro.toLowerCase().includes(filtro.value.toLowerCase()));
+        case 'Nombre_Miembro':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.nombreCompletoMiembro.toLowerCase().includes(value.toLowerCase()));
           break;
-        case fechaDesde:
-          this.asistencias = this.asistencias.filter(asistencia => asistencia.fechaHora.toDate().getTime() >= new Date(filtro.value).getTime());
+        case 'Fecha_Desde':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.fechaHora.toDate().getTime() >= new Date(value).getTime());
           break;
-        case fechaHasta:
-          this.asistencias = this.asistencias.filter(asistencia => asistencia.fechaHora.toDate().getTime() <= new Date(filtro.value).getTime());
+        case 'Fecha_Hasta':
+          this.asistenciasConFiltros = this.asistenciasConFiltros.filter(asistencia => asistencia.fechaHora.toDate().getTime() <= new Date(value).getTime());
           break;
       }
     });

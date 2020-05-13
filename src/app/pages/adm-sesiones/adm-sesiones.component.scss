@@ -68,6 +68,9 @@ mat-icon:hover
     cursor: context-menu;
     pointer-events: none;
 }
+.margin-right{
+    margin-right: 20px;
+}
 @media only screen and (max-width: 800px) {
     .scroll {
         overflow-x: scroll;

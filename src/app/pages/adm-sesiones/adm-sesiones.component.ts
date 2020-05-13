@@ -7,6 +7,9 @@ import { GenerarSesionesComponent } from 'src/app/dialog/generar-sesiones/genera
 import { SesionService } from 'src/app/services/sesion.service';
 import { Sesion } from 'src/app/models/sesion';
 import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.component';
+import { Miembro } from 'src/app/models/miembro';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Usuario } from 'src/app/models/usuario';
 
 @Component({
   selector: 'app-adm-sesiones',
@@ -15,24 +18,49 @@ import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.comp
 })
 export class AdmSesionesComponent implements OnInit {
 
-  idGrupo: string = '81uhFghXoitJqwdckubT';
-  grupo: Grupo = new Grupo();
+  miembro: Miembro;
+  usuario: Usuario;
+  disabledSelect: boolean = false;
+  idGrupoSeleccionado: string;
+  grupo: Grupo;
+  grupos: Grupo[];
   sesiones: Sesion[];
   sesionesDataTable: Sesion[];
   yearFilter: number;
   selectYear: number[] = Array<number>();
   displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   fechaActual: Date = new Date();
-  constructor(private grupoService: GrupoService, private sesionService: SesionService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
+  constructor(private authentication: AuthenticationService,
+              private grupoService: GrupoService, 
+              private sesionService: SesionService, 
+              private snackBar: MatSnackBar, 
+              private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.getGrupo();
-    this.getSesionesByIdGrupoAndAscendingByFechaHora();
+    this.miembro = this.authentication.getMiembro();
+    this.usuario = this.authentication.getUsuario();
+    if(this.usuario.esAdmin){
+      this.setGrupos();
+    }else if(this.miembro.esAdmGrupo) {
+      this.grupoService.findById(this.miembro.idGrupo).subscribe(
+        grupo => {
+          this.grupo = grupo;
+          this.grupos = [].concat(grupo);        
+        },
+        err =>this.snackBar.open(err, '', { duration: 2000 })
+      );
+      this.getSesionesByIdGrupoAndAscendingByFechaHora(this.miembro.idGrupo);
+      this.idGrupoSeleccionado = this.miembro.idGrupo;
+      this.disabledSelect = true;
+    }
+  
   }
 
-  getGrupo() {
-    this.grupoService.findById(this.idGrupo).subscribe(
-      grupo => { this.grupo = grupo },
+  setGrupos() {
+    this.grupoService.getGrupos().subscribe(
+      grupos => { 
+        this.grupos = grupos 
+      },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
@@ -72,8 +100,8 @@ export class AdmSesionesComponent implements OnInit {
       }
     });
   }
-  getSesionesByIdGrupoAndAscendingByFechaHora() {
-    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(this.idGrupo).subscribe(
+  getSesionesByIdGrupoAndAscendingByFechaHora(idGrupo: string) {
+    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(idGrupo).subscribe(
       sesiones => {
         this.sesiones = sesiones;
         this.generateSelectYears();
@@ -102,5 +130,19 @@ export class AdmSesionesComponent implements OnInit {
         this.updateSesionesDataTable();
       },
       err => this.snackBar.open(err, '', { duration: 2000 }));
+  }
+
+  filterSesiones()
+  {
+    this.getSesionesByIdGrupoAndAscendingByFechaHora(this.idGrupoSeleccionado);
+    this.updateGrupo();
+    this.yearFilter = null;
+    this.sesionesDataTable = [].concat([]);
+  }
+
+  updateGrupo() {
+    if (this.idGrupoSeleccionado != null ) {
+      this.grupo = this.grupos.filter(grupo => grupo.idGrupo === this.idGrupoSeleccionado)[0];
+    }
   }
 }

@@ -33,7 +33,7 @@ export class SaveMiembroComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.getGrupos();
+    this.setGrupos();
     this.miembro = { ... this.data.miembro };
     this.opcion = this.data.opcion;
     this.defaultProfile = this.miembro.avatarUrl;
@@ -42,9 +42,14 @@ export class SaveMiembroComponent implements OnInit {
     }
     this.usuario = this.authentication.getUsuario();
     if(!this.usuario.esAdmin){
+      this.setMiembroIdGrupo();
       this.disabledSelect = true;
     }
 
+  }
+  setMiembroIdGrupo(){
+    let miembro: Miembro = this.authentication.getMiembro();
+    this.miembro.idGrupo = miembro.idGrupo;
   }
   getAvatarProfileDefault() {
     this.showSpinner = true;
@@ -78,7 +83,7 @@ export class SaveMiembroComponent implements OnInit {
     }
   }
 
-  getGrupos() {
+  setGrupos() {
     this.grupoService.getGrupos().subscribe(
       grupos => { this.grupos = grupos; },
       err => this.snackBar.open(err, '', { duration: 2000 })
