@@ -7,6 +7,8 @@ import { GenerarSesionesComponent } from 'src/app/dialog/generar-sesiones/genera
 import { SesionService } from 'src/app/services/sesion.service';
 import { Sesion } from 'src/app/models/sesion';
 import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.component';
+import { Miembro } from 'src/app/models/miembro';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-adm-sesiones',
@@ -15,7 +17,7 @@ import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.comp
 })
 export class AdmSesionesComponent implements OnInit {
 
-  idGrupo: string = '81uhFghXoitJqwdckubT';
+  miembro: Miembro;
   grupo: Grupo = new Grupo();
   sesiones: Sesion[];
   sesionesDataTable: Sesion[];
@@ -23,15 +25,20 @@ export class AdmSesionesComponent implements OnInit {
   selectYear: number[] = Array<number>();
   displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   fechaActual: Date = new Date();
-  constructor(private grupoService: GrupoService, private sesionService: SesionService, private snackBar: MatSnackBar, private dialog: MatDialog) { }
+  constructor(private authentication: AuthenticationService,
+              private grupoService: GrupoService, 
+              private sesionService: SesionService, 
+              private snackBar: MatSnackBar, 
+              private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.getGrupo();
+    this.miembro = this.authentication.getMiembro();
+    this.setGrupo();
     this.getSesionesByIdGrupoAndAscendingByFechaHora();
   }
 
-  getGrupo() {
-    this.grupoService.findById(this.idGrupo).subscribe(
+  setGrupo() {
+    this.grupoService.findById(this.miembro.idGrupo).subscribe(
       grupo => { this.grupo = grupo },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
@@ -73,7 +80,7 @@ export class AdmSesionesComponent implements OnInit {
     });
   }
   getSesionesByIdGrupoAndAscendingByFechaHora() {
-    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(this.idGrupo).subscribe(
+    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(this.miembro.idGrupo).subscribe(
       sesiones => {
         this.sesiones = sesiones;
         this.generateSelectYears();

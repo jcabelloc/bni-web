@@ -20,17 +20,21 @@
                 <input type="time" matInput [(ngModel)]="horaForm" name="horaForm" required>
             </mat-form-field>
 
-            <mat-form-field class="full-mat-form-field">
+            <mat-slide-toggle class="full-width-mat-form-field" [(ngModel)]="sesion.esVirtual" name="sesion.esVirtual">
+                Virtual
+            </mat-slide-toggle>
+            
+            <mat-form-field *ngIf="!sesion.esVirtual" class="full-mat-form-field">
                 <mat-label>Dirección</mat-label>
                 <input matInput [(ngModel)]="sesion.direccion" name="direccion" required>
             </mat-form-field>
 
-            <mat-form-field class="full-mat-form-field">
+            <mat-form-field *ngIf="!sesion.esVirtual" class="full-mat-form-field">
                 <mat-label>Lugar</mat-label>
                 <input type="text" matInput [(ngModel)]="sesion.lugar" name="lugar" required>
             </mat-form-field>
 
-            <mat-form-field class="full-mat-form-field">
+            <mat-form-field *ngIf="!sesion.esVirtual" class="full-mat-form-field">
                 <input matInput type="text" placeholder="Latitud" readonly [value]="sesion.ubicacion?.latitude" required>
                 <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
                     <mat-icon style="font-size: 20px;">room</mat-icon>
@@ -38,7 +42,7 @@
             </mat-form-field>
             
             
-            <mat-form-field class="full-mat-form-field">
+            <mat-form-field *ngIf="!sesion.esVirtual" class="full-mat-form-field">
                 <input matInput type="text" placeholder="Longitud" readonly [value]="sesion.ubicacion?.longitude" required>
                 <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
                     <mat-icon style="font-size: 20px;">room</mat-icon>

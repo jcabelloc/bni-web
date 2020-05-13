@@ -27,12 +27,19 @@ export class EditSesionComponent implements OnInit {
 
   ngOnInit(): void {
     this.sesion = { ...this.data.sesion };
-    this.latSesion = this.data.sesion.ubicacion.latitude;
-    this.lngSesion = this.data.sesion.ubicacion.longitude;
+    if(!this.sesion.esVirtual) {
+      this.latSesion = this.data.sesion.ubicacion.latitude;
+      this.lngSesion = this.data.sesion.ubicacion.longitude;
+    }
     this.horaForm =  this.data.sesion.fechaHora.toDate().toLocaleTimeString();
     this.fechaForm = this.data.sesion.fechaHora.toDate();
   }
   editarSesion() {
+    if(this.sesion.esVirtual){
+      this.sesion.direccion = "-";
+      this.sesion.lugar = "-";
+      this.sesion.ubicacion = null;
+    }
     this.sesion.fechaHora = this.buildFechaHora();
     this.dialogRef.close({ sesion: this.sesion });
   }
