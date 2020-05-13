@@ -10,8 +10,8 @@
 
             <mat-form-field class="margin-right">
                 <mat-label>Grupo</mat-label>
-                <mat-select [(ngModel)]="selectIdGrupo" name="selectIdGrupo" [disabled]="!usuario?.esAdmin" (selectionChange)="updateAsistenciaByIdGrupo()">
-                    <mat-option [value]="'NONE'">
+                <mat-select [(ngModel)]="selectIdGrupo" name="selectIdGrupo" [disabled]="!usuario?.esAdmin" (selectionChange)="filterAsistencia()">
+                    <mat-option [value]="'TODOS'">
                         Todos
                     </mat-option>
                     <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
@@ -24,7 +24,7 @@
             </button>
         </div>
         <mat-card class="container-table">
-            <table mat-table [dataSource]="asistencias" class="mat-elevation-z8">
+            <table mat-table [dataSource]="asistenciasConFiltros" class="mat-elevation-z8">
 
 
                 <ng-container matColumnDef="nombreReferencia">
@@ -78,34 +78,34 @@
                 </div>
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Nombre Referencia</mat-label>
-                    <input matInput [(ngModel)]="referenciaFiltro.nombre" name="nombre" (keyup.enter)="addFiltroNombreReferencia()">
+                    <input matInput  name="nombre" (keyup.enter)="addFiltro('Nombre_Referencia', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Cargo Referencia</mat-label>
-                    <input matInput [(ngModel)]="referenciaFiltro.cargo" name="cargo" (keyup.enter)="addFiltroCargoReferencia()">
+                    <input matInput  (keyup.enter)="addFiltro('Cargo_Referencia', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Empresa Referencia</mat-label>
-                    <input matInput [(ngModel)]="referenciaFiltro.empresa" name="empresa" (keyup.enter)="addFiltroEmpresaReferencia()">
+                    <input matInput  (keyup.enter)="addFiltro('Empresa_Referencia', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Nombre del Miembro</mat-label>
-                    <input matInput [(ngModel)]="nombreMiembroFiltro" name="nombreMiembroFiltro" (keyup.enter)="addFiltroNombreMiembro()">
+                    <input matInput (keyup.enter)="addFiltro('Nombre_Miembro', $event)">
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Fecha Desde</mat-label>
-                    <input matInput [matDatepicker]="picker1" placeholder="Fecha" [(ngModel)]="fechaDesdeFiltro" name="fechaDesdeFiltro"  (dateChange)="addFiltroFechaDesde()" >
+                    <input matInput [matDatepicker]="picker1" placeholder="Fecha" (dateChange)="addFiltro('Fecha_Desde', $event)" >
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker color="accent" #picker1></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field class="filter-mat-form-field">
                     <mat-label>Fecha Hasta</mat-label>
-                    <input matInput [matDatepicker]="picker2" placeholder="Fecha" [(ngModel)]="fechaHastaFiltro" name="fechaHastaFiltro"  (dateChange)="addFiltroFechaHasta()" >
+                    <input matInput [matDatepicker]="picker2" placeholder="Fecha" (dateChange)="addFiltro('Fecha_Hasta', $event)" >
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker color="accent" #picker2></mat-datepicker>
                 </mat-form-field>
@@ -115,9 +115,9 @@
                     <div style="margin-top: 25px;">
 
                         <mat-chip-list>
-                            <mat-chip removable *ngFor="let filtro of filtros; let i=index" title="{{filtro.key}}">
+                            <mat-chip removable *ngFor="let filtro of filtrosSeleccionados|keyvalue" title="{{filtro.key}}">
                                 {{filtro.value}}
-                                <mat-icon matChipRemove (click)="removeFilter(i)">cancel</mat-icon>
+                                <mat-icon matChipRemove (click)="removeFilter(filtro.key)">cancel</mat-icon>
                             </mat-chip>
                         </mat-chip-list>
                     </div>
