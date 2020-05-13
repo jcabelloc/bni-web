@@ -1,14 +1,21 @@
 <div class="container">
     <div class="scroll">
-        <div class="container-info">
-                <p class="text">Nombre de Grupo:{{" "+grupo.nombre}}</p>
-                <p class="text">Día de Sesión: {{" "+grupo.diaSesion}} </p>
-                <p class="text">Hora de Sesión: {{" "+grupo.horaSesion}}</p>
-                <p class="text">Direccion de Sesión:{{" "+grupo.direccionSesion}}</p>
+        <div *ngIf="grupo" class="container-info">
+                <p class="text">Nombre de Grupo:{{" "+grupo?.nombre}}</p>
+                <p class="text">Día de Sesión: {{" "+grupo?.diaSesion}} </p>
+                <p class="text">Hora de Sesión: {{" "+grupo?.horaSesion}}</p>
+                <p class="text">Direccion de Sesión:{{" "+grupo?.direccionSesion}}</p>
         </div>
         <div class="container-btn">
-
-            <mat-form-field style="margin-right: 20px;">
+            <mat-form-field class="margin-right">
+                <mat-label>Grupo</mat-label>
+                <mat-select [(ngModel)]="idGrupoSeleccionado" name="idGrupoSeleccionado" [disabled]="disabledSelect" (selectionChange)="filterSesiones()">
+                    <mat-option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">
+                        {{grupo.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="margin-right">
                 <mat-label>Año</mat-label>
                 <mat-select [(ngModel)]="yearFilter" name="yearFilter" (selectionChange)="updateSesionesDataTable()">
                     <mat-option *ngFor="let year of selectYear" [value]="year">
@@ -34,12 +41,12 @@
 
                 <ng-container matColumnDef="direccionSesion">
                     <th mat-header-cell *matHeaderCellDef> Dirección </th>
-                    <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.esVirtual? '-': element.direccion}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="lugarSesion">
                     <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                    <td mat-cell *matCellDef="let element"> {{element.lugar}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.esVirtual? '-': element.lugar}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ubicacionSesion">

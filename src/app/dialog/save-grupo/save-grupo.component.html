@@ -21,7 +21,7 @@
 
             </div>
 
-            <mat-form-field class="full-mat-form-field">
+            <mat-form-field class="full-width-mat-form-field">
                 <mat-label>Nombre</mat-label>
                 <input matInput [(ngModel)]="grupo.nombre" name="nombre" required>
             </mat-form-field>
@@ -35,6 +35,10 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field class="full-mat-form-field">
+                <mat-label>Hora de la Sesión</mat-label>
+                <input type="time" matInput [(ngModel)]="grupo.horaSesion" name="horaSesion" required>
+            </mat-form-field>
 
             <mat-form-field class="full-mat-form-field">
                 <mat-label>Dirección de la Sesión</mat-label>
@@ -48,22 +52,17 @@
              
     
             <mat-form-field class="full-mat-form-field">
-                <input matInput type="text" placeholder="Latitud" readonly [value]="grupo.ubicacionSesion?.latitude" required>
+                <input matInput type="text" placeholder="Latitud" readonly [(ngModel)]="latSesion" name="latSesion" required>
                 <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
                     <mat-icon style="font-size: 20px;">room</mat-icon>
                  </button>
             </mat-form-field>
             
             <mat-form-field class="full-mat-form-field">
-                <input matInput type="text" placeholder="Longitud" readonly [value]="grupo.ubicacionSesion?.longitude" required>
+                <input matInput type="text" placeholder="Longitud" readonly [(ngModel)]="lngSesion" name="lngSesion" required>
                 <button mat-button matSuffix mat-icon-button color="accent" (click)="showCoordenadas = true">
                     <mat-icon style="font-size: 20px;">room</mat-icon>
                  </button>
-            </mat-form-field>
-
-            <mat-form-field class="full-mat-form-field">
-                <mat-label>Hora de la Sesión</mat-label>
-                <input type="time" matInput [(ngModel)]="grupo.horaSesion" name="horaSesion" required>
             </mat-form-field>
       
         </form>

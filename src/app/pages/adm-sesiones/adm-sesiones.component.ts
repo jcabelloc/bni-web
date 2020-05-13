@@ -9,6 +9,7 @@ import { Sesion } from 'src/app/models/sesion';
 import { EditSesionComponent } from 'src/app/dialog/edit-sesion/edit-sesion.component';
 import { Miembro } from 'src/app/models/miembro';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Usuario } from 'src/app/models/usuario';
 
 @Component({
   selector: 'app-adm-sesiones',
@@ -18,7 +19,11 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class AdmSesionesComponent implements OnInit {
 
   miembro: Miembro;
-  grupo: Grupo = new Grupo();
+  usuario: Usuario;
+  disabledSelect: boolean = false;
+  idGrupoSeleccionado: string;
+  grupo: Grupo;
+  grupos: Grupo[];
   sesiones: Sesion[];
   sesionesDataTable: Sesion[];
   yearFilter: number;
@@ -33,13 +38,29 @@ export class AdmSesionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.miembro = this.authentication.getMiembro();
-    this.setGrupo();
-    this.getSesionesByIdGrupoAndAscendingByFechaHora();
+    this.usuario = this.authentication.getUsuario();
+    if(this.usuario.esAdmin){
+      this.setGrupos();
+    }else if(this.miembro.esAdmGrupo) {
+      this.grupoService.findById(this.miembro.idGrupo).subscribe(
+        grupo => {
+          this.grupo = grupo;
+          this.grupos = [].concat(grupo);        
+        },
+        err =>this.snackBar.open(err, '', { duration: 2000 })
+      );
+      this.getSesionesByIdGrupoAndAscendingByFechaHora(this.miembro.idGrupo);
+      this.idGrupoSeleccionado = this.miembro.idGrupo;
+      this.disabledSelect = true;
+    }
+  
   }
 
-  setGrupo() {
-    this.grupoService.findById(this.miembro.idGrupo).subscribe(
-      grupo => { this.grupo = grupo },
+  setGrupos() {
+    this.grupoService.getGrupos().subscribe(
+      grupos => { 
+        this.grupos = grupos 
+      },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
@@ -79,8 +100,8 @@ export class AdmSesionesComponent implements OnInit {
       }
     });
   }
-  getSesionesByIdGrupoAndAscendingByFechaHora() {
-    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(this.miembro.idGrupo).subscribe(
+  getSesionesByIdGrupoAndAscendingByFechaHora(idGrupo: string) {
+    this.sesionService.getSesionesByIdGrupoAndAscendingByFechaHora(idGrupo).subscribe(
       sesiones => {
         this.sesiones = sesiones;
         this.generateSelectYears();
@@ -109,5 +130,19 @@ export class AdmSesionesComponent implements OnInit {
         this.updateSesionesDataTable();
       },
       err => this.snackBar.open(err, '', { duration: 2000 }));
+  }
+
+  filterSesiones()
+  {
+    this.getSesionesByIdGrupoAndAscendingByFechaHora(this.idGrupoSeleccionado);
+    this.updateGrupo();
+    this.yearFilter = null;
+    this.sesionesDataTable = [].concat([]);
+  }
+
+  updateGrupo() {
+    if (this.idGrupoSeleccionado != null ) {
+      this.grupo = this.grupos.filter(grupo => grupo.idGrupo === this.idGrupoSeleccionado)[0];
+    }
   }
 }
