@@ -84,3 +84,72 @@ import { AgmCoreModule } from '@agm/core';
 })
 export class AppModule {}
 ```
+
+
+### Agregar Firebase Functions
+* Referencia: https://firebase.google.com/docs/functions/get-started
+* Ejecutar el comando: firebase init functions
+
+```bash
+$ firebase init functions
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\jcabelloc\workspace\iTana\7.bni\bni-web\bni-web
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+  * You are initializing in an existing Firebase project directory
+
+? Are you ready to proceed? Yes
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add,
+but for now we'll just set up a default project.
+
+? Please select an option: Use an existing project
+? Select a default Firebase project for this directory: bni-dev (bni-dev)
+i  Using project bni-dev (bni-dev)
+
+=== Functions Setup
+
+A functions directory will be created in your project with a Node.js
+package pre-configured. Functions can be deployed with firebase deploy.
+
+? What language would you like to use to write Cloud Functions? TypeScript
+? Do you want to use TSLint to catch probable bugs and enforce style? Yes
++  Wrote functions/package.json
++  Wrote functions/tslint.json
++  Wrote functions/tsconfig.json
++  Wrote functions/src/index.ts
++  Wrote functions/.gitignore
+? Do you want to install dependencies with npm now? Yes
+
+> protobufjs@6.9.0 postinstall C:\jcabelloc\workspace\iTana\7.bni\bni-web\bni-web\functions\node_modules\protobufjs
+> node scripts/postinstall
+
+npm notice created a lockfile as package-lock.json. You should commit this file.
+added 292 packages from 221 contributors and audited 292 packages in 14.209s
+
+32 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
++  Firebase initialization complete!
+
+jcabelloc@DESKTOP-J7LQIC5 MINGW64 /c/jcabelloc/workspace/iTana/7.bni/bni-web/bni-web (master)
+```
