@@ -153,3 +153,10 @@ i  Writing project information to .firebaserc...
 
 jcabelloc@DESKTOP-J7LQIC5 MINGW64 /c/jcabelloc/workspace/iTana/7.bni/bni-web/bni-web (master)
 ```
+
+### Agregar funciones en Firebase que sean ejecutadas por eventos
+* https://firebase.google.com/docs/functions/firestore-events
+* https://firebase.google.com/docs/reference/admin
+* https://googleapis.dev/nodejs/firestore/latest/
+* https://firebase.google.com/docs/firestore/manage-data/add-data#web
+ 
