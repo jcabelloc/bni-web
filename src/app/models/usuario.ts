@@ -6,4 +6,5 @@ export class Usuario {
     idMiembro: string;
     esAdmin: boolean;
     avatarUrl: string;
+    public static readonly defaultAvatar = "default-avatar.png";
 }

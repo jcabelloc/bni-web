@@ -29,6 +29,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule  } from '@angular/material/datepicker';
 import { AgmCoreModule } from '@agm/core';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 import { environment } from 'src/environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -44,6 +45,7 @@ import { ConsultarReferenciaComponent } from './pages/consultar-referencia/consu
 import { AuthenticationService } from './services/authentication.service';
 import { DeleteMiembroComponent } from './dialog/delete-miembro/delete-miembro.component';
 import { DeleteGrupoComponent } from './dialog/delete-grupo/delete-grupo.component';
+import { AdmUsuariosComponent } from './pages/adm-usuarios/adm-usuarios.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,8 @@ import { DeleteGrupoComponent } from './dialog/delete-grupo/delete-grupo.compone
     EditSesionComponent,
     ConsultarReferenciaComponent,
     DeleteMiembroComponent,
-    DeleteGrupoComponent
+    DeleteGrupoComponent,
+    AdmUsuariosComponent
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import { DeleteGrupoComponent } from './dialog/delete-grupo/delete-grupo.compone
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatPaginatorModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,
