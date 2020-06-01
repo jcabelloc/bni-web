@@ -3,8 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Miembro } from 'src/app/models/miembro';
 import { MiembroService } from 'src/app/services/miembro.service';
-import { SaveUsuarioComponent } from '../save-usuario/save-usuario.component';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -40,8 +39,13 @@ export class BuscarMiembroComponent implements OnInit {
 
     this.miembroService.getMiembros().subscribe(
       miembros => {
-        this.miembros = miembros;
-        this.dataSource = new MatTableDataSource(miembros);
+
+        this.miembroFiltrado = miembros.filter(miembro => {
+          return miembro.esAdmGrupo
+        })
+
+        this.miembros = this.miembroFiltrado;
+        this.dataSource = new MatTableDataSource(this.miembroFiltrado);
         this.dataSource.paginator = this.paginator;
     });
 
@@ -61,27 +65,26 @@ export class BuscarMiembroComponent implements OnInit {
     );
   }
 
-  filtrarMimebros(){
-
+  filtrarMiembros(){
+    
     if(this.nombreMiembro == null){
-      this.miembroService.getMiembros().subscribe(
-        miembros => {
-          this.miembros = miembros;
-          this.dataSource = new MatTableDataSource(miembros);
-          this.dataSource.paginator = this.paginator;
-      });
-    }else{
+
+      this.dataSource = new MatTableDataSource(this.miembroFiltrado);
+      this.dataSource.paginator = this.paginator;
+
+    } else {
+
       this.miembroFiltrado = this.miembros.filter(miembro => {
         let nombreCompleto = miembro.nombres + " " + miembro.apellidos;
         return nombreCompleto.toLowerCase().includes(this.nombreMiembro.toLowerCase());
-      })
+        })
+      
       this.dataSource = new MatTableDataSource(this.miembroFiltrado);
       this.dataSource.paginator = this.paginator;
     }
 
   }
 
-  
   enviarMiembro(miembro: Miembro){  
     this.dialogRef.close({MiembroSeleccionado: miembro })
   }

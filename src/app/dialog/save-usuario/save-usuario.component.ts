@@ -23,10 +23,7 @@ export class SaveUsuarioComponent implements OnInit {
   defaultProfile: any;
   selectedFile: File;
 
-  defaultAvatarUrl: string;
   esMiembro: boolean;
-
-  uid: string;
 
   constructor( private usuarioService: UsuarioService,
               private authenticationService: AuthenticationService,
@@ -95,10 +92,10 @@ export class SaveUsuarioComponent implements OnInit {
   guardarUsuario(){
     this.authenticationService.signUpWithEmail(this.usuario.email,this.password)
           .subscribe( resp => {
-            this.uid = resp;
-            this.usuarioService.createUsuario(this.usuario, this.uid);
-          }, err => console.log(err));    
-
+            this.usuarioService.createUsuario(this.usuario, resp ).subscribe(() => {
+              this.snackBar.open("Creado correctamente", '', { duration: 2000 })
+            });
+          },  err => this.snackBar.open(err, '', { duration: 2000 }));    
     this.dialogRef.close();
   }
 

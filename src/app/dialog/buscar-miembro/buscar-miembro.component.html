@@ -10,7 +10,7 @@
             <form>
                 <mat-form-field floatLabel="auto" appearance="outline" class="buscarMiembro">
                     <mat-label>Nombre Miembro</mat-label>
-                    <input type="text" matInput (keyup)="filtrarMimebros()" id="nombreMiembro" name="nombreMiembro" [(ngModel)]="nombreMiembro">             
+                    <input type="text" matInput (keyup)="filtrarMiembros()" id="nombreMiembro" name="nombreMiembro" [(ngModel)]="nombreMiembro">             
                 </mat-form-field>
             </form>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
