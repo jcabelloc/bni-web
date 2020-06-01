@@ -46,6 +46,8 @@ import { AuthenticationService } from './services/authentication.service';
 import { DeleteMiembroComponent } from './dialog/delete-miembro/delete-miembro.component';
 import { DeleteGrupoComponent } from './dialog/delete-grupo/delete-grupo.component';
 import { AdmUsuariosComponent } from './pages/adm-usuarios/adm-usuarios.component';
+import { SaveUsuarioComponent } from './dialog/save-usuario/save-usuario.component';
+import { BuscarMiembroComponent } from './dialog/buscar-miembro/buscar-miembro.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { AdmUsuariosComponent } from './pages/adm-usuarios/adm-usuarios.componen
     ConsultarReferenciaComponent,
     DeleteMiembroComponent,
     DeleteGrupoComponent,
-    AdmUsuariosComponent
+    AdmUsuariosComponent,
+    SaveUsuarioComponent,
+    BuscarMiembroComponent
   ],
   imports: [
     BrowserModule,

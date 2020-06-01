@@ -1,0 +1,55 @@
+
+.card{
+    padding: 0%;
+}
+.card-header
+{
+    background-color: var(--color-accent); 
+    width: 100%;
+    padding: 0; 
+    margin: 0;
+    height: 70px; 
+    color: white;
+    border-radius: 15px 0 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+@media only screen and (max-width: 800px) {
+    .full-mat-form-field {
+        width:90%;
+    }
+}
+.container{
+    height: 100%; 
+    width: 100%;
+}
+.container-table
+{
+    width: 80%; 
+    min-width: 200px; 
+    margin: 0 auto;
+}
+.buscarMiembro{
+    margin-left: 50px;
+    width: 80%;
+}
+
+.img-miembro
+{
+    width:40px; 
+    border-radius:45%;
+    margin-right: 20px;
+    object-fit: contain;
+}
+
+.mat-table
+{
+    width: 100%;
+    min-width: 200px; 
+}
+
+
+

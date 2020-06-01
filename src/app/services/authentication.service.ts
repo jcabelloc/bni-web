@@ -5,6 +5,7 @@ import { Usuario } from '../models/usuario';
 import { UsuarioService } from './usuario.service';
 import { Miembro } from '../models/miembro';
 import { MiembroService } from './miembro.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -66,4 +67,14 @@ export class AuthenticationService {
 
     });
   }
+
+  signUpWithEmail(email: string, password: string): Observable<string> {
+    return from(this.auth.createUserWithEmailAndPassword(email,password)).pipe(map(document => document.user.uid));
+  }
+
+  obtenerUsuario(){
+    var user = this.auth.currentUser;
+    return user;
+  }
+
 }
