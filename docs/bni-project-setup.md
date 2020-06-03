@@ -160,3 +160,5 @@ jcabelloc@DESKTOP-J7LQIC5 MINGW64 /c/jcabelloc/workspace/iTana/7.bni/bni-web/bni
 * https://googleapis.dev/nodejs/firestore/latest/
 * https://firebase.google.com/docs/firestore/manage-data/add-data#web
  
+
+ ## 

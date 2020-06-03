@@ -1,7 +1,7 @@
 <mat-card class="card">
     <mat-card-header class="card-header">
         <mat-card-title>
-            {{opcion}} Usuario
+            {{tituloOpcion}} Usuario
         </mat-card-title>
     </mat-card-header>
  
@@ -19,9 +19,9 @@
                 </div>
             </div>
 
-            <mat-slide-toggle class="full-mat-form-field" [(ngModel)]="esMiembro" name="esMiembro" (click)="validar()">
+            <mat-slide-toggle class="full-mat-form-field" [(ngModel)]="esMiembro" name="esMiembro" (click)="initDefaultData()">
                 Es miembro
-                <button *ngIf="esMiembro" mat-icon-button (click)="buscarMiembro()">
+                <button *ngIf="esMiembro" mat-icon-button (click)="updateUsuarioFromMiembro()">
                     <mat-icon>search</mat-icon>
                 </button>
             </mat-slide-toggle>
@@ -46,21 +46,21 @@
 
             <mat-form-field class="full-mat-form-field">
                 <mat-label>Password</mat-label>
-                <input matInput [(ngModel)]="password" name="password" [type]="hide ? 'password' : 'text'" required 
+                <input matInput [(ngModel)]="password" name="password" [type]="passwordHidden ? 'password' : 'text'" required 
                     minlength="6" maxlength="15" #inputPassword="ngModel">
                 <mat-hint *ngIf="inputPassword.errors?.minlength" class="colorInput">mínimo 6 caracteres</mat-hint>
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <button mat-icon-button matSuffix (click)="passwordHidden = !passwordHidden">
+                    <mat-icon>{{passwordHidden ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field>
 
-            <input style="width: 0;" type="file" (change)="onFileSelected($event)" #imageInput />
+            <input style="width: 0;" type="file" (change)="onAvatarSelected($event)" #imageInput />
             
         </form>
     </mat-card-content>
 
     <mat-card-actions class="mat-actions">
-        <button mat-raised-button color="primary" class="button_save" (click)="guardarUsuario()"
+        <button mat-raised-button color="primary" class="button_save" (click)="createUsuario()"
             [disabled]="!saveForm.form.valid"> Guardar</button>
         <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
     </mat-card-actions>

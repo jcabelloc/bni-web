@@ -34,7 +34,7 @@ export class UsuarioService {
   }
 
 
-  createUsuario(usuario: Usuario, passwordInicial: string): Observable<any> {
+  createUsuario(usuario: Usuario, passwordInicial: string): Observable<void> {
     let uid: string
     uid = this.afs.createId();
     return from(this.usuariosCollection.doc(uid).set({ ...usuario , passwordInicial: passwordInicial}));

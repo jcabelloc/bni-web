@@ -14,19 +14,18 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class SaveUsuarioComponent implements OnInit {
 
   usuario: Usuario;
-  opcion: string;
+  tituloOpcion: string;
 
   password: string;
-  hide = true;
+  passwordHidden = true;
 
   showSpinner: boolean = false;
-  defaultProfile: any;
-  selectedFile: File;
+  defaultAvatar: any;
+  selectedAvatar: File;
 
   esMiembro: boolean;
 
   constructor( private usuarioService: UsuarioService,
-              private authenticationService: AuthenticationService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
               private snackBar: MatSnackBar,
               private dialog: MatDialog,
@@ -34,73 +33,77 @@ export class SaveUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = { ... this.data.usuario}
-    this.opcion = this.data.opcion;
+    this.tituloOpcion = this.data.opcion;
     this.esMiembro = false;
     
     if(this.usuario.idMiembro == null || this.usuario.avatarUrl == null) {
-      this.getAvatarProfileDefault();
+      this.updateDefaultAvatar();
     }
 
   }
 
-  getAvatarProfileDefault() {
+  updateDefaultAvatar() {
     this.showSpinner = true;
     this.usuarioService.getAvatarImgUrl(Usuario.defaultAvatar).subscribe(
       avatarUrl => {
-        this.defaultProfile = avatarUrl;
+        this.defaultAvatar = avatarUrl;
         this.showSpinner = false;
       },
       err => {
-        this.snackBar.open("No se encontró la foto prederminada", '', { duration: 2000 });
+        this.snackBar.open("No se encontró la foto predeterminada", '', { duration: 2000 });
         this.showSpinner = false;
       }
     );
   }
 
-  onFileSelected(event: any) {
+  onAvatarSelected(event: any) {
     const reader: FileReader = new FileReader();
-    this.selectedFile = event.target.files[0] as File;
-    reader.readAsDataURL(this.selectedFile);
+    this.selectedAvatar = event.target.files[0] as File;
+    reader.readAsDataURL(this.selectedAvatar);
     reader.onload = (event) => {
-      this.defaultProfile = event.target.result;
-      this.usuario.avatarUrl = this.defaultProfile;
+      this.defaultAvatar = event.target.result;
+      this.usuario.avatarUrl = this.defaultAvatar;
     }
   }
 
-  buscarMiembro(){
+  updateUsuarioFromMiembro(){
     const dialogRefMiembro = this.dialog.open(BuscarMiembroComponent, { width: '800px', height: '600px' });
-    //this.getAvatarProfileDefault()
     dialogRefMiembro.afterClosed().subscribe(data => {
-      if (data?.MiembroSeleccionado){
+      if (data?.miembroSeleccionado){
         
-        this.usuario.nombres = data.MiembroSeleccionado.nombres;
-        this.usuario.apellidos = data.MiembroSeleccionado.apellidos;
-        this.usuario.email = data.MiembroSeleccionado.email;
+        this.usuario.nombres = data.miembroSeleccionado.nombres;
+        this.usuario.apellidos = data.miembroSeleccionado.apellidos;
+        this.usuario.email = data.miembroSeleccionado.email;
 
-        if ( data?.MiembroSeleccionado?.avatarUrl ) {
-          this.usuario.avatarUrl = data.MiembroSeleccionado.avatarUrl;
-          this.defaultProfile = data.MiembroSeleccionado.avatarUrl;
+        if ( data?.miembroSeleccionado?.avatarUrl ) {
+          this.usuario.avatarUrl = data.miembroSeleccionado.avatarUrl;
+          this.defaultAvatar = data.miembroSeleccionado.avatarUrl;
         }
 
         this.usuario.esAdmin = false;
-        this.usuario.idMiembro = data.MiembroSeleccionado.idMiembro;
+        this.usuario.idMiembro = data.miembroSeleccionado.idMiembro;
       }else{
-        this.snackBar.open("No seleccionó ningún Miembro", '', { duration: 2000 });
+        this.snackBar.open("No seleccionó ningún miembro", '', { duration: 2000 });
       }
     });
     
   }
 
-  guardarUsuario(){
+  createUsuario(){
 
-    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(() => {
-      this.snackBar.open("Creado correctamente", '', { duration: 2000 })
-    });  
-    this.dialogRef.close();
+    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
+      () => {
+        this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+        this.dialogRef.close();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+      );  
+    
   }
 
-  validar(){
-    this.getAvatarProfileDefault();
+  initDefaultData(){
+    this.updateDefaultAvatar();
     this.usuario = new Usuario;
+    this.password = "";
   }
 }

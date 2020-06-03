@@ -81,7 +81,7 @@ export class BuscarMiembroComponent implements OnInit {
   }
 
   enviarMiembro(miembro: Miembro){  
-    this.dialogRef.close({MiembroSeleccionado: miembro })
+    this.dialogRef.close({miembroSeleccionado: miembro })
   }
   
 
