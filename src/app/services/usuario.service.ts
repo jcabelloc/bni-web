@@ -3,7 +3,7 @@ import { Usuario } from '../models/usuario';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/public_api';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -11,25 +11,32 @@ import { map } from 'rxjs/operators';
 })
 export class UsuarioService {
 
-  private gruposCollection: AngularFirestoreCollection<Usuario>;
+  private usuariosCollection: AngularFirestoreCollection<Usuario>;
 
   constructor(private afs: AngularFirestore, private storage: AngularFireStorage) {
-    this.gruposCollection = afs.collection<Usuario>('usuarios');
+    this.usuariosCollection = afs.collection<Usuario>('usuarios');
   }
 
   getUsuarioById(idUsuario: string): Observable<Usuario> {
-    return this.gruposCollection.doc<Usuario>(idUsuario).valueChanges().pipe(map(document => {
+    return this.usuariosCollection.doc<Usuario>(idUsuario).valueChanges().pipe(map(document => {
       document.uid = idUsuario;
       return document;
     }));
   }
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.gruposCollection.valueChanges({ idField: 'idUsuario' });
+    return this.usuariosCollection.valueChanges({ idField: 'idUsuario' });
   }
 
   getAvatarImgUrl(rutaImageProfile: string): Observable<any> {
     const ref = this.storage.ref('avatar_miembros/' + rutaImageProfile);
     return ref.getDownloadURL();
+  }
+
+
+  createUsuario(usuario: Usuario, passwordInicial: string): Observable<void> {
+    let uid: string
+    uid = this.afs.createId();
+    return from(this.usuariosCollection.doc(uid).set({ ...usuario , passwordInicial: passwordInicial}));
   }
 }

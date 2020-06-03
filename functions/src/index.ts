@@ -20,3 +20,22 @@ export const updateUsuarioOnUpdateMiembro = functions.firestore
             });
         return 0;
     });
+
+export const createFirebaseUserOnCreateUsuario = functions.firestore
+    .document('usuarios/{usuarioId}')
+    .onCreate(async (snap, context) => {
+        const userId = context.params.usuarioId;
+        const usuario = snap.data();
+        admin.auth().createUser({
+            disabled: false,
+            displayName: usuario?.nombres,
+            email: usuario?.email,
+            password: usuario?.passwordInicial,
+            uid: userId
+        }).then(
+            db.collection('usuarios').doc(userId).update({
+                passwordInicial: "",
+            }, { merge: true })
+        );
+        return 0;
+    });

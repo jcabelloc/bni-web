@@ -5,6 +5,7 @@ import { Usuario } from '../models/usuario';
 import { UsuarioService } from './usuario.service';
 import { Miembro } from '../models/miembro';
 import { MiembroService } from './miembro.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
