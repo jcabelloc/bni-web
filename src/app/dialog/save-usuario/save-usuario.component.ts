@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { BuscarMiembroComponent } from '../buscar-miembro/buscar-miembro.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-save-usuario',
@@ -24,16 +25,34 @@ export class SaveUsuarioComponent implements OnInit {
 
   esMiembro: boolean;
 
+  editarUsuario: boolean;
+  estadoCuentaUsuario: boolean;
+  editPassword: boolean;
+
   constructor( private usuarioService: UsuarioService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
               private snackBar: MatSnackBar,
               private dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string } ) { }
+              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string, editar: boolean } ) { }
 
   ngOnInit(): void {
+    this.editarUsuario = false;
+    this.editPassword = false;
+
+    if(this.data?.editar){
+      this.editarUsuario = true;
+    }
+
     this.usuario = { ... this.data.usuario}
+    
+    if(this.data?.usuario?.avatarUrl){
+      this.defaultAvatar = this.data.usuario.avatarUrl;
+    }
+    
     this.tituloOpcion = this.data.tituloOpcion;
     this.esMiembro = false;
+
+    this.estadoCuentaUsuario = true;
     
     if(this.usuario.idMiembro == null || this.usuario.avatarUrl == null) {
       this.updateDefaultAvatar();
@@ -110,4 +129,22 @@ export class SaveUsuarioComponent implements OnInit {
     this.usuario = new Usuario;
     this.password = "";
   }
+
+  changeUserAccountStatus(){
+    if (this.estadoCuentaUsuario){
+      this.estadoCuentaUsuario = false;
+    }else{
+      this.estadoCuentaUsuario = true;
+    }
+  }
+
+  changeEditPasswordStatus(event: MatSlideToggleChange){
+    this.password = "";
+    if(event.checked.valueOf){
+      this.editPassword = true;
+    } else {
+      this.editPassword = false;
+    }
+  }
+
 }

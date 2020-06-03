@@ -2,14 +2,14 @@
 <div class="container">
     <div class="scroll">
         <div class="container-btn">
-            <button mat-raised-button color="primary" class="button-align" (click)="addUsuario()">Agregar</button>
+            <button mat-raised-button color="primary" class="button-align" (click)="addUser()">Agregar</button>
         </div>
         <mat-card class="container-table">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                 <ng-container matColumnDef="avatar">
                     <th mat-header-cell *matHeaderCellDef width="60px"></th>
-                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatarUrl" class="img-usuario" />
+                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatar" class="img-usuario" />
                     </td>
                 </ng-container>
 
@@ -31,7 +31,7 @@
                 <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef> Acciones </th>
                     <td mat-cell *matCellDef="let element;">
-                        <button mat-icon-button>
+                        <button mat-icon-button (click)="editUser(element)">
                             <mat-icon>edit</mat-icon>
                         </button>
                     </td>
