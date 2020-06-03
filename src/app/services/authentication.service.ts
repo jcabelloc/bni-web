@@ -67,14 +67,4 @@ export class AuthenticationService {
 
     });
   }
-
-  signUpWithEmail(email: string, password: string): Observable<string> {
-    return from(this.auth.createUserWithEmailAndPassword(email,password)).pipe(map(document => document.user.uid));
-  }
-
-  obtenerUsuario(){
-    var user = this.auth.currentUser;
-    return user;
-  }
-
 }

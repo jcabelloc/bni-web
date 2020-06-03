@@ -69,33 +69,33 @@ export class SaveUsuarioComponent implements OnInit {
 
   buscarMiembro(){
     const dialogRefMiembro = this.dialog.open(BuscarMiembroComponent, { width: '800px', height: '600px' });
-    this.getAvatarProfileDefault()
+    //this.getAvatarProfileDefault()
     dialogRefMiembro.afterClosed().subscribe(data => {
-      if (data.MiembroSeleccionado != null){
+      if (data?.MiembroSeleccionado){
         
         this.usuario.nombres = data.MiembroSeleccionado.nombres;
         this.usuario.apellidos = data.MiembroSeleccionado.apellidos;
         this.usuario.email = data.MiembroSeleccionado.email;
 
-        if ( data.MiembroSeleccionado.avatarUrl != null ) {
+        if ( data?.MiembroSeleccionado?.avatarUrl ) {
           this.usuario.avatarUrl = data.MiembroSeleccionado.avatarUrl;
           this.defaultProfile = data.MiembroSeleccionado.avatarUrl;
         }
 
         this.usuario.esAdmin = false;
         this.usuario.idMiembro = data.MiembroSeleccionado.idMiembro;
+      }else{
+        this.snackBar.open("No seleccionó ningún Miembro", '', { duration: 2000 });
       }
     });
     
   }
 
   guardarUsuario(){
-    this.authenticationService.signUpWithEmail(this.usuario.email,this.password)
-          .subscribe( resp => {
-            this.usuarioService.createUsuario(this.usuario, resp ).subscribe(() => {
-              this.snackBar.open("Creado correctamente", '', { duration: 2000 })
-            });
-          },  err => this.snackBar.open(err, '', { duration: 2000 }));    
+
+    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(() => {
+      this.snackBar.open("Creado correctamente", '', { duration: 2000 })
+    });  
     this.dialogRef.close();
   }
 

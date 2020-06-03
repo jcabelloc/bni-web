@@ -20,3 +20,26 @@ export const updateUsuarioOnUpdateMiembro = functions.firestore
             });
         return 0;
     });
+
+export const createUser = functions.firestore
+    .document('usuarios/{usuarioId}')
+    .onCreate(async (snap, context) => {
+        const userId = context.params.usuarioId;
+        const Usuario = snap.data();
+        await admin.auth().createUser({
+            disabled: false,
+            displayName: Usuario?.nombres,
+            email: Usuario?.email,
+            password: Usuario?.passwordInicial,
+            uid: userId
+        });
+        db.doc(snap.ref.path).set({
+            nombres: Usuario.nombres,
+            apellidos: Usuario.apellidos,
+            email: Usuario.email,
+            idMiembro: Usuario.isMiembro,
+            esAdmin: Usuario.esAdmin,
+            passwordInicial: "",
+        }, { merge: true });
+        return 0;
+    });

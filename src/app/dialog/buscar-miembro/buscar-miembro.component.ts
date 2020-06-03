@@ -39,13 +39,8 @@ export class BuscarMiembroComponent implements OnInit {
 
     this.miembroService.getMiembros().subscribe(
       miembros => {
-
-        this.miembroFiltrado = miembros.filter(miembro => {
-          return miembro.esAdmGrupo
-        })
-
-        this.miembros = this.miembroFiltrado;
-        this.dataSource = new MatTableDataSource(this.miembroFiltrado);
+        this.miembros = miembros;
+        this.dataSource = new MatTableDataSource(this.miembros);
         this.dataSource.paginator = this.paginator;
     });
 
