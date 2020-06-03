@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { BuscarMiembroComponent } from '../buscar-miembro/buscar-miembro.component';
-import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-save-usuario',
@@ -29,11 +28,11 @@ export class SaveUsuarioComponent implements OnInit {
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
               private snackBar: MatSnackBar,
               private dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, opcion: string } ) { }
+              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string } ) { }
 
   ngOnInit(): void {
     this.usuario = { ... this.data.usuario}
-    this.tituloOpcion = this.data.opcion;
+    this.tituloOpcion = this.data.tituloOpcion;
     this.esMiembro = false;
     
     if(this.usuario.idMiembro == null || this.usuario.avatarUrl == null) {
@@ -91,13 +90,18 @@ export class SaveUsuarioComponent implements OnInit {
 
   createUsuario(){
 
-    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
-      () => {
-        this.snackBar.open("Creado correctamente", '', { duration: 2000 });
-        this.dialogRef.close();
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-      );  
+    if( this?.usuario?.nombres ){
+      this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
+        () => {
+          this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+          this.dialogRef.close();
+        },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+        );  
+    } else {
+      this.snackBar.open("Debe ingresar los datos del usuario", '', { duration: 2000 });
+    }
+    
     
   }
 

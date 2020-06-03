@@ -11,7 +11,7 @@
             <div class="container-container-profile">
                 <div class="container-profile">
                     <mat-spinner *ngIf="showSpinner"></mat-spinner>
-                    <img  *ngIf="!showSpinner" class="image_profile" [src]="defaultProfile" />
+                    <img  *ngIf="!showSpinner" class="image_profile" [src]="defaultAvatar" />
                     <button  *ngIf="!showSpinner" type="button" class="button-upload-image" mat-button matSuffix mat-icon-button
                         color="accent" (click)="imageInput.click()" [disabled]="esMiembro">
                         <mat-icon>add_a_photo</mat-icon>

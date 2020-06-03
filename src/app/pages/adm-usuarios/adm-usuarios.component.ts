@@ -47,7 +47,7 @@ export class AdmUsuariosComponent implements OnInit {
   }
 
   addUsuario(){
-    const dialogRef = this.dialog.open(SaveUsuarioComponent, { width: '800px', data: { usuario: new Usuario(), opcion: "Nuevo" } });
+    const dialogRef = this.dialog.open(SaveUsuarioComponent, { width: '800px', data: { usuario: new Usuario(), tituloOpcion: "Nuevo" } });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Miembro } from 'src/app/models/miembro';
@@ -15,7 +15,7 @@ export class BuscarMiembroComponent implements OnInit {
 
   displayedColumns: string[] = ['avatar', 'nombre', 'email', 'seleccionar'];
   
-  nombreMiembro: string;
+  nombreMiembroFiltrado: string;
 
   miembros: Miembro[];
   miembroFiltrado: Miembro[];
@@ -26,16 +26,16 @@ export class BuscarMiembroComponent implements OnInit {
 
   showSpinner: boolean = false;
 
-  defaultAvatarUrl: string;
+  defaultAvatar: string;
   
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private miembroService: MiembroService,
     public dialogRef: MatDialogRef<BuscarMiembroComponent>,
-    private snackBar: MatSnackBar,) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.getAvatarProfileDefault();
+    this.updateDefaultAvatar();
 
     this.miembroService.getMiembros().subscribe(
       miembros => {
@@ -46,15 +46,15 @@ export class BuscarMiembroComponent implements OnInit {
 
   }
 
-  getAvatarProfileDefault() {
+  updateDefaultAvatar() {
     this.showSpinner = true;
     this.miembroService.getAvatarImgUrl(Miembro.defaultAvatar).subscribe(
       avatarUrl => {
-        this.defaultAvatarUrl = avatarUrl;
+        this.defaultAvatar = avatarUrl;
         this.showSpinner = false;
       },
       err => {
-        this.snackBar.open("No se encontró la foto prederminada", '', { duration: 2000 });
+        this.snackBar.open("No se encontró la foto predeterminada", '', { duration: 2000 });
         this.showSpinner = false;
       }
     );
@@ -62,7 +62,7 @@ export class BuscarMiembroComponent implements OnInit {
 
   filtrarMiembros(){
     
-    if(this.nombreMiembro == null){
+    if(this.nombreMiembroFiltrado == null){
 
       this.dataSource = new MatTableDataSource(this.miembroFiltrado);
       this.dataSource.paginator = this.paginator;
@@ -71,7 +71,7 @@ export class BuscarMiembroComponent implements OnInit {
 
       this.miembroFiltrado = this.miembros.filter(miembro => {
         let nombreCompleto = miembro.nombres + " " + miembro.apellidos;
-        return nombreCompleto.toLowerCase().includes(this.nombreMiembro.toLowerCase());
+        return nombreCompleto.toLowerCase().includes(this.nombreMiembroFiltrado.toLowerCase());
         })
       
       this.dataSource = new MatTableDataSource(this.miembroFiltrado);

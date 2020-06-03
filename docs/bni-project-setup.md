@@ -161,4 +161,9 @@ jcabelloc@DESKTOP-J7LQIC5 MINGW64 /c/jcabelloc/workspace/iTana/7.bni/bni-web/bni
 * https://firebase.google.com/docs/firestore/manage-data/add-data#web
  
 
- ## 
+ ### Implementar y ejecutar funciones
+ * Referencia: https://firebase.google.com/docs/functions/get-started
+ * Ejecutar el comando: npm install -g firebase-tools
+ * Referencia: https://firebase.google.com/docs/admin/setup
+ * Ejecutar el comando: npm install firebase-admin --save
+ * Ejecutar el comando: firebase deploy --only functions

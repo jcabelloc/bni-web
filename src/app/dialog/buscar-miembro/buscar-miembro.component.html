@@ -10,14 +10,14 @@
             <form>
                 <mat-form-field floatLabel="auto" appearance="outline" class="buscarMiembro">
                     <mat-label>Nombre Miembro</mat-label>
-                    <input type="text" matInput (keyup)="filtrarMiembros()" id="nombreMiembro" name="nombreMiembro" [(ngModel)]="nombreMiembro">             
+                    <input type="text" matInput (keyup)="filtrarMiembros()" id="nombreMiembroFiltrado" name="nombreMiembroFiltrado" [(ngModel)]="nombreMiembroFiltrado">             
                 </mat-form-field>
             </form>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                 <ng-container matColumnDef="avatar">
                     <th mat-header-cell *matHeaderCellDef width="60px"></th>
-                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatarUrl" class="img-miembro" />
+                    <td mat-cell *matCellDef="let element"><img [src]="element.avatarUrl?element.avatarUrl:defaultAvatar" class="img-miembro"/>
                     </td>
                 </ng-container>
 
