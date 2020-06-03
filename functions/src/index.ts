@@ -26,20 +26,17 @@ export const createUser = functions.firestore
     .onCreate(async (snap, context) => {
         const userId = context.params.usuarioId;
         const Usuario = snap.data();
-        await admin.auth().createUser({
+        admin.auth().createUser({
             disabled: false,
             displayName: Usuario?.nombres,
             email: Usuario?.email,
             password: Usuario?.passwordInicial,
             uid: userId
-        });
-        db.doc(snap.ref.path).set({
-            nombres: Usuario.nombres,
-            apellidos: Usuario.apellidos,
-            email: Usuario.email,
-            idMiembro: Usuario.isMiembro,
-            esAdmin: Usuario.esAdmin,
-            passwordInicial: "",
-        }, { merge: true });
+        }).then(
+            db.collection('usuarios').doc(userId).update({
+                passwordInicial: "",
+            }, { merge: true })
+        );
+        
         return 0;
     });
