@@ -59,18 +59,15 @@
                 </button>
             </mat-form-field>
 
+            <mat-slide-toggle *ngIf="editarUsuario" class="full-mat-form-field" [(ngModel)]="estadoCuentaUsuario" name="estadoCuentaUsuario"
+                            (change)="changeAccountStatus($event)">
+                {{estadoCuentaUsuarioMensaje}}
+            </mat-slide-toggle>
+
             <input style="width: 0;" type="file" (change)="onAvatarSelected($event)" #imageInput />
             
         </form>
 
-        <div class="posicionBoton">
-            <button *ngIf="editarUsuario && estadoCuentaUsuario == false" mat-flat-button class="cuentaDesactivada" (click)="changeUserAccountStatus()" >
-                Cuenta Desactivada
-            </button>
-            <button *ngIf="editarUsuario && estadoCuentaUsuario == true" mat-flat-button class="cuentaActiva" (click)="changeUserAccountStatus()">
-                Cuenta Activa
-            </button>
-        </div>
     </mat-card-content>
 
     <mat-card-actions class="mat-actions">

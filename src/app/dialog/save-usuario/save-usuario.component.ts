@@ -29,6 +29,8 @@ export class SaveUsuarioComponent implements OnInit {
   estadoCuentaUsuario: boolean;
   editPassword: boolean;
 
+  estadoCuentaUsuarioMensaje: string;
+
   constructor( private usuarioService: UsuarioService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
               private snackBar: MatSnackBar,
@@ -53,6 +55,11 @@ export class SaveUsuarioComponent implements OnInit {
 
     if(this.editarUsuario){
       this.estadoCuentaUsuario = this.data.usuario['estadoCuentaUsuario']
+      if(this.estadoCuentaUsuario){
+        this.estadoCuentaUsuarioMensaje = "Activo";
+      }else{
+        this.estadoCuentaUsuarioMensaje = "Inactivo";
+      }
     }
 
     this.tituloOpcion = this.data.tituloOpcion;
@@ -134,14 +141,6 @@ export class SaveUsuarioComponent implements OnInit {
     this.password = "";
   }
 
-  changeUserAccountStatus(){
-    if (this.estadoCuentaUsuario){
-      this.estadoCuentaUsuario = false;
-    }else{
-      this.estadoCuentaUsuario = true;
-    }
-  }
-
   changeEditPasswordStatus(event: MatSlideToggleChange){
     this.password = "";
     if(event.checked){
@@ -165,6 +164,14 @@ export class SaveUsuarioComponent implements OnInit {
       err => this.snackBar.open(err, '', { duration: 2000 })
       );  
     
+  }
+
+  changeAccountStatus(event: MatSlideToggleChange){
+    if(event.checked){
+      this.estadoCuentaUsuarioMensaje = "Activo";
+    } else {
+      this.estadoCuentaUsuarioMensaje = "Inactivo";
+    }
   }
 
 }
