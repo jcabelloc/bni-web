@@ -48,17 +48,20 @@ export class SaveUsuarioComponent implements OnInit {
     if(this.data.usuario.avatarUrl){
       this.defaultAvatar = this.data.usuario.avatarUrl;
     }
-    
+
+    this.estadoCuentaUsuario = true;
+
+    if(this.editarUsuario){
+      this.estadoCuentaUsuario = this.data.usuario['estadoCuentaUsuario']
+    }
+
     this.tituloOpcion = this.data.tituloOpcion;
     this.esMiembro = false;
 
-    this.estadoCuentaUsuario = true;
     
     if( this.usuario.avatarUrl == null ) {
       this.updateDefaultAvatar();
     }
-
-    console.log(this.usuario);
   }
 
   updateDefaultAvatar() {
@@ -149,7 +152,7 @@ export class SaveUsuarioComponent implements OnInit {
   }
 
   updateUsuario(){
-    
+
     if (this.password == undefined){
       this.password = "";
     }

@@ -41,10 +41,10 @@ export class UsuarioService {
   }
 
   updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string, estadoCuentaUsuario: boolean) : Observable<void>{
-    const usuarioTemp = {
+    const usuarioEditado = {
       ...usuario
     };
-    delete usuarioTemp['idUsuario'];
-    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioTemp, passwordInicial: passwordNuevo, estadoCuentaUsuario: estadoCuentaUsuario }));
+    delete usuarioEditado['idUsuario'];
+    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioEditado, passwordInicial: passwordNuevo, estadoCuentaUsuario: estadoCuentaUsuario }));
   }
 }
