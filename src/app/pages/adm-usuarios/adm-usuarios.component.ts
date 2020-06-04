@@ -18,7 +18,7 @@ export class AdmUsuariosComponent implements OnInit {
 
   displayedColumns: string[] = ['avatar', 'nombre', 'email','admin', 'acciones'];
 
-  defaultAvatarUrl: string;
+  defaultAvatar: string;
 
   dataSource:MatTableDataSource<Usuario>;
 
@@ -28,7 +28,7 @@ export class AdmUsuariosComponent implements OnInit {
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.setDefaultAvatarUrl();
+    this.updateDefaultAvatar();
     this.usuarioService.getUsuarios().subscribe(
       usuarios => {
         this.usuarios = usuarios;
@@ -37,17 +37,21 @@ export class AdmUsuariosComponent implements OnInit {
     });
   }
 
-  setDefaultAvatarUrl(): void {
+  updateDefaultAvatar(): void {
     this.usuarioService.getAvatarImgUrl(Usuario.defaultAvatar).subscribe(
       avatarUrl => {
-        this.defaultAvatarUrl = avatarUrl;
+        this.defaultAvatar = avatarUrl;
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
 
-  addUsuario(){
+  addUser(){
     const dialogRef = this.dialog.open(SaveUsuarioComponent, { width: '800px', data: { usuario: new Usuario(), tituloOpcion: "Nuevo" } });
+  }
+
+  editUser(usuario: Usuario) {
+    const dialogRef = this.dialog.open(SaveUsuarioComponent, { width: '800px', data: { usuario: usuario , tituloOpcion: "Editar", editar: true } });
   }
 
 }

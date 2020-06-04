@@ -25,7 +25,7 @@ export class UsuarioService {
   }
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.usuariosCollection.valueChanges({ idField: 'idUsuario' });
+    return this.usuariosCollection.valueChanges({ idField: 'uid' });
   }
 
   getAvatarImgUrl(rutaImageProfile: string): Observable<any> {
@@ -33,10 +33,13 @@ export class UsuarioService {
     return ref.getDownloadURL();
   }
 
-
   createUsuario(usuario: Usuario, passwordInicial: string): Observable<void> {
     let uid: string
     uid = this.afs.createId();
     return from(this.usuariosCollection.doc(uid).set({ ...usuario , passwordInicial: passwordInicial}));
+  }
+
+  updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string) : Observable<void>{
+    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuario, passwordInicial: passwordNuevo }));
   }
 }

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { BuscarMiembroComponent } from '../buscar-miembro/buscar-miembro.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-save-usuario',
@@ -24,21 +25,36 @@ export class SaveUsuarioComponent implements OnInit {
 
   esMiembro: boolean;
 
+  editarUsuario: boolean;
+  editPassword: boolean;
+
+  nombreEstadoCuenta: string;
+
   constructor( private usuarioService: UsuarioService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
               private snackBar: MatSnackBar,
               private dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string } ) { }
+              @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string, editar: boolean } ) { }
 
   ngOnInit(): void {
-    this.usuario = { ... this.data.usuario}
-    this.tituloOpcion = this.data.tituloOpcion;
-    this.esMiembro = false;
+    // Se clona objeto para trabajar sobre una copia del usuario
+    this.usuario = {... this.data.usuario};
+
+    this.editarUsuario = false;
+    this.editPassword = true;
+
+    if(this.data?.editar){
+      this.editarUsuario = true;
+      this.editPassword = false;
+    }
     
-    if(this.usuario.idMiembro == null || this.usuario.avatarUrl == null) {
+    this.defaultAvatar = this.usuario.avatarUrl;
+    if (!this.defaultAvatar) {
       this.updateDefaultAvatar();
     }
 
+    this.tituloOpcion = this.data.tituloOpcion;
+    this.esMiembro = false;
   }
 
   updateDefaultAvatar() {
@@ -110,4 +126,38 @@ export class SaveUsuarioComponent implements OnInit {
     this.usuario = new Usuario;
     this.password = "";
   }
+
+  changeEditPasswordStatus(event: MatSlideToggleChange){
+    this.password = "";
+    if(event.checked){
+      this.editPassword = true;
+    } else {
+      this.editPassword = false;
+    }
+  }
+
+  updateUsuario(){
+
+    if (this.password == undefined){
+      this.password = "";
+    }
+
+    this.usuarioService.updateUsuario(this.usuario, this.usuario.uid, this.password).subscribe(
+      () => {
+        this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+        this.dialogRef.close();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+      );  
+    
+  }
+
+  changeAccountStatus(event: MatSlideToggleChange){
+    if(event.checked){
+      this.nombreEstadoCuenta = "Activo";
+    } else {
+      this.nombreEstadoCuenta = "Inactivo";
+    }
+  }
+
 }

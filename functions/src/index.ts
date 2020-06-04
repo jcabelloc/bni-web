@@ -39,3 +39,39 @@ export const createFirebaseUserOnCreateUsuario = functions.firestore
         );
         return 0;
     });
+
+export const updateFirebaseUserOnUpdateUsuario = functions.firestore
+    .document('usuarios/{usuarioId}')
+    .onUpdate((change, context) => {
+        
+        const userId = context.params.usuarioId;
+        const usuario = change.after.data();
+
+        let passwordUsuarioFirebase: string;
+
+        admin.auth().getUser(userId).then(function(userRecord: any) {
+            passwordUsuarioFirebase = userRecord.password;
+            admin.auth().updateUser(userId, {
+                disabled: !usuario?.estaActivo,
+                displayName: usuario?.nombres,
+                email: usuario?.email,
+                password: usuario?.passwordInicial !== "" ? usuario?.passwordInicial :passwordUsuarioFirebase
+            }).then(db.collection('usuarios').doc(userId).update({
+                passwordInicial: "",
+            }, { merge: true }));
+        })
+        return 0;
+    });
+
+export const updateMiembroOnUpdateUsuario = functions.firestore
+    .document('usuarios/{idUsuario}')
+    .onUpdate((change, context) => {
+        const updatedUsuario = change.after.data();
+        db.collection('miembros').doc(updatedUsuario?.idMiembro).update({
+            nombres: updatedUsuario?.nombres,
+            apellidos: updatedUsuario?.apellidos,
+            avatarUrl: updatedUsuario?.avatarUrl,
+            email: updatedUsuario?.email
+        }, { merge: true });
+        return 0;
+    });

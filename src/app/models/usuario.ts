@@ -6,5 +6,10 @@ export class Usuario {
     idMiembro: string;
     esAdmin: boolean;
     avatarUrl: string;
+    estaActivo: boolean;
     public static readonly defaultAvatar = "default-avatar.png";
+
+    constructor() {
+        this.estaActivo = true;
+    }
 }
