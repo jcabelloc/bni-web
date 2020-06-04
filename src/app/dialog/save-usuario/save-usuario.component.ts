@@ -26,7 +26,6 @@ export class SaveUsuarioComponent implements OnInit {
   esMiembro: boolean;
 
   editarUsuario: boolean;
-  estaActivo: boolean;
   editPassword: boolean;
 
   nombreEstadoCuenta: string;
@@ -38,6 +37,8 @@ export class SaveUsuarioComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string, editar: boolean } ) { }
 
   ngOnInit(): void {
+    this.usuario = this.data.usuario;
+
     this.editarUsuario = false;
     this.editPassword = true;
 
@@ -45,31 +46,14 @@ export class SaveUsuarioComponent implements OnInit {
       this.editarUsuario = true;
       this.editPassword = false;
     }
-
-    this.usuario = { ... this.data.usuario}
     
-    if(this.data.usuario.avatarUrl){
-      this.defaultAvatar = this.data.usuario.avatarUrl;
-    }
-
-    this.estaActivo = true;
-
-    if(this.editarUsuario){
-      this.estaActivo = this.data.usuario.estaActivo;
-      if(this.estaActivo){
-        this.nombreEstadoCuenta = "Activo";
-      }else{
-        this.nombreEstadoCuenta = "Inactivo";
-      }
+    this.defaultAvatar = this.usuario.avatarUrl;
+    if (!this.defaultAvatar) {
+      this.updateDefaultAvatar();
     }
 
     this.tituloOpcion = this.data.tituloOpcion;
     this.esMiembro = false;
-
-    
-    if( this.usuario.avatarUrl == null ) {
-      this.updateDefaultAvatar();
-    }
   }
 
   updateDefaultAvatar() {

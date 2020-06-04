@@ -25,14 +25,13 @@ export class UsuarioService {
   }
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.usuariosCollection.valueChanges({ idField: 'idUsuario' });
+    return this.usuariosCollection.valueChanges({ idField: 'uid' });
   }
 
   getAvatarImgUrl(rutaImageProfile: string): Observable<any> {
     const ref = this.storage.ref('avatar_miembros/' + rutaImageProfile);
     return ref.getDownloadURL();
   }
-
 
   createUsuario(usuario: Usuario, passwordInicial: string): Observable<void> {
     let uid: string
@@ -41,10 +40,6 @@ export class UsuarioService {
   }
 
   updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string) : Observable<void>{
-    const usuarioEditado = {
-      ...usuario
-    };
-    delete usuarioEditado['idUsuario'];
-    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioEditado, passwordInicial: passwordNuevo }));
+    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuario, passwordInicial: passwordNuevo }));
   }
 }

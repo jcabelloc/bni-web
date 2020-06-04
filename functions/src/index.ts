@@ -52,10 +52,10 @@ export const updateFirebaseUserOnUpdateUsuario = functions.firestore
         admin.auth().getUser(userId).then(function(userRecord: any) {
             passwordUsuarioFirebase = userRecord.password;
             admin.auth().updateUser(userId, {
-                disabled: !usuario.estaActivo,
-                displayName: usuario.nombres,
-                email: usuario.email,
-                password: usuario.passwordInicial !== "" ? usuario.passwordInicial :passwordUsuarioFirebase
+                disabled: !usuario?.estaActivo,
+                displayName: usuario?.nombres,
+                email: usuario?.email,
+                password: usuario?.passwordInicial !== "" ? usuario?.passwordInicial :passwordUsuarioFirebase
             }).then(db.collection('usuarios').doc(userId).update({
                 passwordInicial: "",
             }, { merge: true }));

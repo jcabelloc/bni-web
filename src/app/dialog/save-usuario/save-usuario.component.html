@@ -61,7 +61,7 @@
 
             <mat-slide-toggle *ngIf="editarUsuario" class="full-mat-form-field" [(ngModel)]="estaActivo" name="estaActivo"
                             (change)="changeAccountStatus($event)">
-                {{nombreEstadoCuenta}}
+                {{estaActivo?: 'Activo': 'Inactivo'}}
             </mat-slide-toggle>
 
             <input style="width: 0;" type="file" (change)="onAvatarSelected($event)" #imageInput />

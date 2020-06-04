@@ -8,4 +8,8 @@ export class Usuario {
     avatarUrl: string;
     estaActivo: boolean;
     public static readonly defaultAvatar = "default-avatar.png";
+
+    constructor() {
+        this.estaActivo = true;
+    }
 }
