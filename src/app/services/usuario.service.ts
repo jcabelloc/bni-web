@@ -39,4 +39,12 @@ export class UsuarioService {
     uid = this.afs.createId();
     return from(this.usuariosCollection.doc(uid).set({ ...usuario , passwordInicial: passwordInicial}));
   }
+
+  updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string, estadoCuentaUsuario: boolean) : Observable<void>{
+    const usuarioTemp = {
+      ...usuario
+    };
+    delete usuarioTemp['idUsuario'];
+    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioTemp, passwordInicial: passwordNuevo, estadoCuentaUsuario: estadoCuentaUsuario }));
+  }
 }

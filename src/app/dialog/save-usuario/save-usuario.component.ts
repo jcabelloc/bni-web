@@ -45,7 +45,7 @@ export class SaveUsuarioComponent implements OnInit {
 
     this.usuario = { ... this.data.usuario}
     
-    if(this.data?.usuario?.avatarUrl){
+    if(this.data.usuario.avatarUrl){
       this.defaultAvatar = this.data.usuario.avatarUrl;
     }
     
@@ -54,10 +54,11 @@ export class SaveUsuarioComponent implements OnInit {
 
     this.estadoCuentaUsuario = true;
     
-    if(this.usuario.idMiembro == null || this.usuario.avatarUrl == null) {
+    if( this.usuario.avatarUrl == null ) {
       this.updateDefaultAvatar();
     }
 
+    console.log(this.usuario);
   }
 
   updateDefaultAvatar() {
@@ -140,11 +141,27 @@ export class SaveUsuarioComponent implements OnInit {
 
   changeEditPasswordStatus(event: MatSlideToggleChange){
     this.password = "";
-    if(event.checked.valueOf){
+    if(event.checked){
       this.editPassword = true;
     } else {
       this.editPassword = false;
     }
+  }
+
+  updateUsuario(){
+    
+    if (this.password == undefined){
+      this.password = "";
+    }
+    
+    this.usuarioService.updateUsuario(this.usuario, this.usuario['idUsuario'], this.password, this.estadoCuentaUsuario).subscribe(
+      () => {
+        this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+        this.dialogRef.close();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+      );  
+    
   }
 
 }
