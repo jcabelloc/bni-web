@@ -37,7 +37,8 @@ export class SaveUsuarioComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: { usuario: Usuario, tituloOpcion: string, editar: boolean } ) { }
 
   ngOnInit(): void {
-    this.usuario = this.data.usuario;
+    // Se clona objeto para trabajar sobre una copia del usuario
+    this.usuario = {... this.data.usuario};
 
     this.editarUsuario = false;
     this.editPassword = true;
@@ -106,7 +107,6 @@ export class SaveUsuarioComponent implements OnInit {
   createUsuario(){
 
     if( this?.usuario?.nombres ){
-      this.usuario.estaActivo = this.estaActivo;
       this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
         () => {
           this.snackBar.open("Creado correctamente", '', { duration: 2000 });
@@ -142,9 +142,7 @@ export class SaveUsuarioComponent implements OnInit {
       this.password = "";
     }
 
-    this.usuario.estaActivo = this.estaActivo;
-    
-    this.usuarioService.updateUsuario(this.usuario, this.usuario['idUsuario'], this.password).subscribe(
+    this.usuarioService.updateUsuario(this.usuario, this.usuario.uid, this.password).subscribe(
       () => {
         this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
         this.dialogRef.close();
