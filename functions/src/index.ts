@@ -52,7 +52,7 @@ export const updateFirebaseUserOnUpdateUsuario = functions.firestore
         admin.auth().getUser(userId).then(function(userRecord: any) {
             passwordUsuarioFirebase = userRecord.password;
             admin.auth().updateUser(userId, {
-                disabled: !usuario.estadoCuentaUsuario,
+                disabled: !usuario.estaActivo,
                 displayName: usuario.nombres,
                 email: usuario.email,
                 password: usuario.passwordInicial !== "" ? usuario.passwordInicial :passwordUsuarioFirebase
@@ -67,16 +67,11 @@ export const updateMiembroOnUpdateUsuario = functions.firestore
     .document('usuarios/{idUsuario}')
     .onUpdate((change, context) => {
         const updatedUsuario = change.after.data();
-        db.collection('miembros').where('idMiembro', '==', updatedUsuario?.idMiembro).get()
-            .then((querySnapshot: any[]) => {
-                querySnapshot.forEach(documentSnapshot => {
-                    db.doc(documentSnapshot.ref.path).set({
-                        nombres: updatedUsuario?.nombres,
-                        apellidos: updatedUsuario?.apellidos,
-                        avatarUrl: updatedUsuario?.avatarUrl,
-                        email: updatedUsuario?.email
-                    }, { merge: true });
-                });
-            });
+        db.collection('miembros').doc(updatedUsuario?.idMiembro).update({
+            nombres: updatedUsuario?.nombres,
+            apellidos: updatedUsuario?.apellidos,
+            avatarUrl: updatedUsuario?.avatarUrl,
+            email: updatedUsuario?.email
+        }, { merge: true });
         return 0;
     });

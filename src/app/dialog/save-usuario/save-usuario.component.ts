@@ -26,10 +26,10 @@ export class SaveUsuarioComponent implements OnInit {
   esMiembro: boolean;
 
   editarUsuario: boolean;
-  estadoCuentaUsuario: boolean;
+  estaActivo: boolean;
   editPassword: boolean;
 
-  estadoCuentaUsuarioMensaje: string;
+  nombreEstadoCuenta: string;
 
   constructor( private usuarioService: UsuarioService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
@@ -39,10 +39,11 @@ export class SaveUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.editarUsuario = false;
-    this.editPassword = false;
+    this.editPassword = true;
 
     if(this.data?.editar){
       this.editarUsuario = true;
+      this.editPassword = false;
     }
 
     this.usuario = { ... this.data.usuario}
@@ -51,14 +52,14 @@ export class SaveUsuarioComponent implements OnInit {
       this.defaultAvatar = this.data.usuario.avatarUrl;
     }
 
-    this.estadoCuentaUsuario = true;
+    this.estaActivo = true;
 
     if(this.editarUsuario){
-      this.estadoCuentaUsuario = this.data.usuario['estadoCuentaUsuario']
-      if(this.estadoCuentaUsuario){
-        this.estadoCuentaUsuarioMensaje = "Activo";
+      this.estaActivo = this.data.usuario.estaActivo;
+      if(this.estaActivo){
+        this.nombreEstadoCuenta = "Activo";
       }else{
-        this.estadoCuentaUsuarioMensaje = "Inactivo";
+        this.nombreEstadoCuenta = "Inactivo";
       }
     }
 
@@ -121,6 +122,7 @@ export class SaveUsuarioComponent implements OnInit {
   createUsuario(){
 
     if( this?.usuario?.nombres ){
+      this.usuario.estaActivo = this.estaActivo;
       this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
         () => {
           this.snackBar.open("Creado correctamente", '', { duration: 2000 });
@@ -155,8 +157,10 @@ export class SaveUsuarioComponent implements OnInit {
     if (this.password == undefined){
       this.password = "";
     }
+
+    this.usuario.estaActivo = this.estaActivo;
     
-    this.usuarioService.updateUsuario(this.usuario, this.usuario['idUsuario'], this.password, this.estadoCuentaUsuario).subscribe(
+    this.usuarioService.updateUsuario(this.usuario, this.usuario['idUsuario'], this.password).subscribe(
       () => {
         this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
         this.dialogRef.close();
@@ -168,9 +172,9 @@ export class SaveUsuarioComponent implements OnInit {
 
   changeAccountStatus(event: MatSlideToggleChange){
     if(event.checked){
-      this.estadoCuentaUsuarioMensaje = "Activo";
+      this.nombreEstadoCuenta = "Activo";
     } else {
-      this.estadoCuentaUsuarioMensaje = "Inactivo";
+      this.nombreEstadoCuenta = "Inactivo";
     }
   }
 

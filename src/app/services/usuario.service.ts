@@ -40,11 +40,11 @@ export class UsuarioService {
     return from(this.usuariosCollection.doc(uid).set({ ...usuario , passwordInicial: passwordInicial}));
   }
 
-  updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string, estadoCuentaUsuario: boolean) : Observable<void>{
+  updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string) : Observable<void>{
     const usuarioEditado = {
       ...usuario
     };
     delete usuarioEditado['idUsuario'];
-    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioEditado, passwordInicial: passwordNuevo, estadoCuentaUsuario: estadoCuentaUsuario }));
+    return from(this.usuariosCollection.doc(idUsuario).update({ ...usuarioEditado, passwordInicial: passwordNuevo }));
   }
 }

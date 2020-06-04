@@ -59,9 +59,9 @@
                 </button>
             </mat-form-field>
 
-            <mat-slide-toggle *ngIf="editarUsuario" class="full-mat-form-field" [(ngModel)]="estadoCuentaUsuario" name="estadoCuentaUsuario"
+            <mat-slide-toggle *ngIf="editarUsuario" class="full-mat-form-field" [(ngModel)]="estaActivo" name="estaActivo"
                             (change)="changeAccountStatus($event)">
-                {{estadoCuentaUsuarioMensaje}}
+                {{nombreEstadoCuenta}}
             </mat-slide-toggle>
 
             <input style="width: 0;" type="file" (change)="onAvatarSelected($event)" #imageInput />
