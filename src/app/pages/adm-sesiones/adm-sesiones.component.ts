@@ -28,7 +28,7 @@ export class AdmSesionesComponent implements OnInit {
   sesionesDataTable: Sesion[];
   yearFilter: number;
   selectYear: number[] = Array<number>();
-  displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
+  displayedColumns: string[] = ['numeroSesion', 'fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   fechaActual: Date = new Date();
   constructor(private authentication: AuthenticationService,
               private grupoService: GrupoService, 
@@ -82,7 +82,18 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   updateSesionesDataTable() {
-    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter);
+
+    let fechaInicial = new Date();
+    fechaInicial.setFullYear(this.yearFilter);
+    fechaInicial.setMonth(0);
+    fechaInicial.setDate(0);
+    
+    let fechaFinal = new Date();
+    fechaFinal.setFullYear(this.yearFilter);
+    fechaFinal.setMonth(11);
+    fechaFinal.setDate(31);
+
+    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate() >= fechaInicial && sesion.fechaHora.toDate() <= fechaFinal );
     this.sesionesDataTable = [].concat(this.sesionesDataTable);
 
   }
@@ -112,7 +123,7 @@ export class AdmSesionesComponent implements OnInit {
   generateSelectYears() {
     this.selectYear = [];
     let initYear = this.sesiones[0]?.fechaHora.toDate().getFullYear();
-    while (initYear <= this.grupo.ultimaGeneracion) {
+    while (initYear <= this.grupo.ultimaGeneracion + 1) {
       this.selectYear.push(initYear);
       initYear++;
     }

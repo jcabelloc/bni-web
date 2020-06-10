@@ -41,23 +41,27 @@ export class GenerarSesionesComponent implements OnInit {
     let fechaActual: Date = new Date();
 
     let fechaInicio: Date = new Date();
+    fechaInicio.setMonth(3);
+    fechaInicio.setDate(1);
 
     let dayActual: number = new Date().getDay();
     let numeroDiaSesion: number = Sesion.valueDia.get(this.data.grupo.diaSesion);  // Número que identifica al día de la Sesion (LUNES - 1 | MARTES - 2 )
+    
     if (fechaInicio.getFullYear() < this.optionYear) {
-      fechaInicio = new Date(this.optionYear, 0, 0)
+      fechaInicio.setFullYear(this.optionYear);
+      fechaActual = fechaInicio;
       dayActual = fechaInicio.getDay();
-    }
-
-    if(fechaActual.getMonth() >= fechaInicio.getMonth()){
-      fechaInicio = fechaActual;
+    } 
+    
+    if(fechaActual.getMonth() >= fechaInicio.getMonth() && fechaActual.getFullYear() == fechaInicio.getFullYear()){
+      fechaInicio.setMonth(fechaActual.getMonth());
     }
 
     if (dayActual <= numeroDiaSesion) {
-      fechaInicio.setDate(fechaInicio.getDate() + (numeroDiaSesion - dayActual) - 7)
+      fechaInicio.setDate(fechaActual.getDate() + (numeroDiaSesion - dayActual) - 7)
       fechaInicio = new Date(fechaInicio)
     } else {
-      fechaInicio.setDate(fechaInicio.getDate() - (dayActual - numeroDiaSesion))
+      fechaInicio.setDate(fechaActual.getDate() - (dayActual - numeroDiaSesion))
       fechaInicio = new Date(fechaInicio)
     }
 
@@ -77,6 +81,7 @@ export class GenerarSesionesComponent implements OnInit {
       this.snackBar.open("Seleccione el año antes de generar las sesiones", '', { duration: 2000 });
       return
     }
+
     let fechaInicio = this.getFechaInicio()
     let sesion: Sesion;
     fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
