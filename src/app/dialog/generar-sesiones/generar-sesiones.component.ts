@@ -15,7 +15,7 @@ export class GenerarSesionesComponent implements OnInit {
   selectYear: number[] = new Array<number>();
   optionYear: number;
   sesiones: Sesion[] = new Array<Sesion>();
-  displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
+  displayedColumns: string[] = ['numeroSesion' ,'fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   yearActual: number = new Date().getFullYear();
   constructor(private snackBar: MatSnackBar,
     private dialogRef: MatDialogRef<GenerarSesionesComponent>,
@@ -37,12 +37,20 @@ export class GenerarSesionesComponent implements OnInit {
   }
 
   getFechaInicio(): Date {
+
+    let fechaActual: Date = new Date();
+
     let fechaInicio: Date = new Date();
+
     let dayActual: number = new Date().getDay();
     let numeroDiaSesion: number = Sesion.valueDia.get(this.data.grupo.diaSesion);  // Número que identifica al día de la Sesion (LUNES - 1 | MARTES - 2 )
     if (fechaInicio.getFullYear() < this.optionYear) {
       fechaInicio = new Date(this.optionYear, 0, 0)
       dayActual = fechaInicio.getDay();
+    }
+
+    if(fechaActual.getMonth() >= fechaInicio.getMonth()){
+      fechaInicio = fechaActual;
     }
 
     if (dayActual <= numeroDiaSesion) {
@@ -62,6 +70,9 @@ export class GenerarSesionesComponent implements OnInit {
     return new Date(fecha.setHours(hora, minutos, 0))
   }
   generateSesiones() {
+    let numeroSesion: number;
+    numeroSesion = 1;
+
     if (this.optionYear == null) {
       this.snackBar.open("Seleccione el año antes de generar las sesiones", '', { duration: 2000 });
       return
@@ -69,14 +80,22 @@ export class GenerarSesionesComponent implements OnInit {
     let fechaInicio = this.getFechaInicio()
     let sesion: Sesion;
     fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
-    while (fechaInicio.getFullYear() < this.optionYear + 1) {
+
+    let fechaFinal = new Date();
+    fechaFinal.setFullYear(fechaInicio.getFullYear() + 1);
+    fechaFinal.setMonth(2);
+    fechaFinal.setDate(31);
+
+    while (fechaInicio < fechaFinal) {
       sesion = new Sesion();
+      sesion.numeroSesion = numeroSesion;
       sesion.direccion = this.data.grupo.direccionSesion;
       sesion.idGrupo = this.data.grupo.idGrupo;
       sesion.lugar = this.data.grupo.lugarSesion;
       sesion.ubicacion = this.data.grupo.ubicacionSesion;
       sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
       fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+      numeroSesion += 1;
       this.sesiones.push(sesion);
     }
     this.sesiones = [].concat(this.sesiones);

@@ -6,6 +6,7 @@ export class Sesion {
     fechaHora: firebase.firestore.Timestamp;
     idGrupo: string;
     esVirtual: boolean;
+    numeroSesion: number;
 
     public static readonly valueDia = new Map<string,number>([
         ['LUNES', 1],

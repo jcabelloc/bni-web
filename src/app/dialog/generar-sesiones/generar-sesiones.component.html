@@ -24,6 +24,10 @@
             <div class="container-table">
                 <table mat-table [dataSource]="sesiones" class="mat-elevation-z8">
 
+                    <ng-container matColumnDef="numeroSesion">
+                        <th mat-header-cell *matHeaderCellDef> Número Sesion </th>
+                        <td mat-cell *matCellDef="let element">{{element.numeroSesion}} </td>
+                    </ng-container>
 
                     <ng-container matColumnDef="fecha">
                         <th mat-header-cell *matHeaderCellDef> Fecha </th>
