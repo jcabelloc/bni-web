@@ -82,18 +82,7 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   updateSesionesDataTable() {
-
-    let fechaInicial = new Date();
-    fechaInicial.setFullYear(this.yearFilter);
-    fechaInicial.setMonth(0);
-    fechaInicial.setDate(0);
-    
-    let fechaFinal = new Date();
-    fechaFinal.setFullYear(this.yearFilter);
-    fechaFinal.setMonth(11);
-    fechaFinal.setDate(31);
-
-    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate() >= fechaInicial && sesion.fechaHora.toDate() <= fechaFinal );
+    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter );
     this.sesionesDataTable = [].concat(this.sesionesDataTable);
 
   }

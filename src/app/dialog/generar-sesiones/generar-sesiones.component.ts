@@ -5,7 +5,7 @@ import { Grupo } from 'src/app/models/grupo';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firestore } from 'firebase';
 import { EditSesionComponent } from '../edit-sesion/edit-sesion.component';
-import { SesionService } from 'src/app/services/sesion.service';
+
 @Component({
   selector: 'app-generar-sesiones',
   templateUrl: './generar-sesiones.component.html',
@@ -40,7 +40,10 @@ export class GenerarSesionesComponent implements OnInit {
   getFechaInicio(numeroDiaSesion: number, anio: number): Date{
 
     let fechaActual: Date = new Date();
+
     let fechaInicio: Date = new Date();
+
+    let fechaActualDentro7Dias: Date = new Date();
 
     let fechaInicioSesion: Date = new Date();
     fechaInicioSesion.setMonth(3);
@@ -59,7 +62,6 @@ export class GenerarSesionesComponent implements OnInit {
     } else {
       fechaInicio.setDate(fechaInicio.getDate() - (dayActual - numeroDiaSesion));
      
-      let fechaActualDentro7Dias = fechaActual;
       fechaActualDentro7Dias.setDate(fechaActualDentro7Dias.getDate() + 7);
 
       if(fechaActualDentro7Dias.getMonth() > fechaInicio.getMonth()){
@@ -67,18 +69,21 @@ export class GenerarSesionesComponent implements OnInit {
       }
 
     }
+
     while(fechaInicio < fechaActual){
       fechaInicio.setDate(fechaInicio.getDate() + 7);
-    }
-
-    if(fechaInicio > fechaActual) {
-      fechaInicio.setDate(fechaInicio.getDate() - 7);
     }
 
     if(fechaInicio.getFullYear() < anio){
       while(fechaInicio < fechaInicioSesion){
         fechaInicio.setDate(fechaInicio.getDate() + 7);
       }
+    }
+
+    this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio);
+
+    if(fechaActual > fechaInicio){
+      fechaInicio.setDate(fechaInicio.getDate() + 7);
     }
 
     return fechaInicio;
@@ -100,7 +105,7 @@ export class GenerarSesionesComponent implements OnInit {
         fechaObtenida.setDate(fechaObtenida.getDate() - 7);
       }
 
-      if(fechaObtenida< fechaInicioSesion){
+      if(fechaObtenida < fechaInicioSesion){
         fechaObtenida.setDate(fechaObtenida.getDate() + 7);
       }
 
@@ -138,7 +143,12 @@ export class GenerarSesionesComponent implements OnInit {
     let sesion: Sesion;
 
     let fechaActual: Date = new Date();
-    let fechaFinal: Date = new Date(fechaInicio.getFullYear(),2,31);
+
+    let fechaFinal: Date = new Date();
+    fechaFinal.setFullYear(fechaInicio.getFullYear());
+    fechaFinal.setMonth(2);
+    fechaFinal.setDate(31);
+
     if(fechaActual.getFullYear() < fechaInicio.getFullYear()){
       while (fechaInicio <= fechaFinal) {
         sesion = new Sesion();
@@ -152,6 +162,21 @@ export class GenerarSesionesComponent implements OnInit {
         numeroSesion++;
         this.sesiones.push(sesion);
       }
+      
+      numeroSesion = 1;
+      while (fechaInicio.getFullYear() < this.optionYear + 1) {
+        sesion = new Sesion();
+        sesion.numeroSesion = numeroSesion;
+        sesion.direccion = this.data.grupo.direccionSesion;
+        sesion.idGrupo = this.data.grupo.idGrupo;
+        sesion.lugar = this.data.grupo.lugarSesion;
+        sesion.ubicacion = this.data.grupo.ubicacionSesion;
+        sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
+        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+        numeroSesion++;
+        this.sesiones.push(sesion);
+      }
+
     }else {
       while (fechaInicio.getFullYear() < this.optionYear + 1) {
         sesion = new Sesion();
