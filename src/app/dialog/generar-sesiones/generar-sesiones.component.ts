@@ -5,6 +5,7 @@ import { Grupo } from 'src/app/models/grupo';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firestore } from 'firebase';
 import { EditSesionComponent } from '../edit-sesion/edit-sesion.component';
+import { SesionService } from 'src/app/services/sesion.service';
 @Component({
   selector: 'app-generar-sesiones',
   templateUrl: './generar-sesiones.component.html',
@@ -36,36 +37,85 @@ export class GenerarSesionesComponent implements OnInit {
     }
   }
 
-  getFechaInicio(): Date {
+  getFechaInicio(numeroDiaSesion: number, anio: number): Date{
 
     let fechaActual: Date = new Date();
-
     let fechaInicio: Date = new Date();
-    fechaInicio.setMonth(3);
-    fechaInicio.setDate(1);
 
-    let dayActual: number = new Date().getDay();
-    let numeroDiaSesion: number = Sesion.valueDia.get(this.data.grupo.diaSesion);  // Número que identifica al día de la Sesion (LUNES - 1 | MARTES - 2 )
-    
-    if (fechaInicio.getFullYear() < this.optionYear) {
-      fechaInicio.setFullYear(this.optionYear);
-      fechaActual = fechaInicio;
-      dayActual = fechaInicio.getDay();
-    } 
-    
-    if(fechaActual.getMonth() >= fechaInicio.getMonth() && fechaActual.getFullYear() == fechaInicio.getFullYear()){
-      fechaInicio.setMonth(fechaActual.getMonth());
+    let fechaInicioSesion: Date = new Date();
+    fechaInicioSesion.setMonth(3);
+    fechaInicioSesion.setDate(1);
+
+    if(fechaInicio.getFullYear() < anio){
+      fechaInicioSesion.setFullYear(anio);
+      fechaInicioSesion.setMonth(0);
+      fechaInicioSesion.setDate(1);
     }
 
+    let dayActual: number = fechaInicio.getDate();
+      
     if (dayActual <= numeroDiaSesion) {
-      fechaInicio.setDate(fechaActual.getDate() + (numeroDiaSesion - dayActual) - 7)
-      fechaInicio = new Date(fechaInicio)
+      fechaInicio.setDate(fechaInicio.getDate() + (numeroDiaSesion - dayActual) - 7)
     } else {
-      fechaInicio.setDate(fechaActual.getDate() - (dayActual - numeroDiaSesion))
-      fechaInicio = new Date(fechaInicio)
+      fechaInicio.setDate(fechaInicio.getDate() - (dayActual - numeroDiaSesion));
+     
+      let fechaActualDentro7Dias = fechaActual;
+      fechaActualDentro7Dias.setDate(fechaActualDentro7Dias.getDate() + 7);
+
+      if(fechaActualDentro7Dias.getMonth() > fechaInicio.getMonth()){
+        fechaInicio.setMonth(fechaInicio.getMonth() + 1);
+      }
+
+    }
+    while(fechaInicio < fechaActual){
+      fechaInicio.setDate(fechaInicio.getDate() + 7);
+    }
+
+    if(fechaInicio > fechaActual) {
+      fechaInicio.setDate(fechaInicio.getDate() - 7);
+    }
+
+    if(fechaInicio.getFullYear() < anio){
+      while(fechaInicio < fechaInicioSesion){
+        fechaInicio.setDate(fechaInicio.getDate() + 7);
+      }
     }
 
     return fechaInicio;
+  }
+
+  getNroSesionInicial(numeroDiaSesion: number, anio: number): number {
+    let nroSesionInicial = 1;
+
+    let fechaObtenida: Date = this.getFechaInicio(numeroDiaSesion, anio);
+    let fechaObtenidaCopia: Date = this.getFechaInicio(numeroDiaSesion, anio);
+    
+    let fechaInicioSesion: Date = new Date();
+    fechaInicioSesion.setMonth(3);
+    fechaInicioSesion.setDate(1);
+
+    if(fechaObtenida >= fechaInicioSesion) {
+
+      while(fechaObtenida >= fechaInicioSesion){
+        fechaObtenida.setDate(fechaObtenida.getDate() - 7);
+      }
+
+      if(fechaObtenida< fechaInicioSesion){
+        fechaObtenida.setDate(fechaObtenida.getDate() + 7);
+      }
+
+      while(fechaObtenida < fechaObtenidaCopia){
+        nroSesionInicial++;
+        fechaObtenida.setDate(fechaObtenida.getDate() + 7);
+      }
+
+      if(fechaObtenida > fechaObtenidaCopia){
+        nroSesionInicial--;
+        fechaObtenida.setDate(fechaObtenida.getDate() - 7);
+      }
+
+    }
+    return nroSesionInicial;
   }
 
   setHourFechaInicio(horaSesion: string, fecha: Date) {
@@ -73,35 +123,48 @@ export class GenerarSesionesComponent implements OnInit {
     let minutos = Number(horaSesion.substring(3, 5))
     return new Date(fecha.setHours(hora, minutos, 0))
   }
-  generateSesiones() {
+
+  getSesiones() {
     let numeroSesion: number;
-    numeroSesion = 1;
 
     if (this.optionYear == null) {
       this.snackBar.open("Seleccione el año antes de generar las sesiones", '', { duration: 2000 });
       return
     }
 
-    let fechaInicio = this.getFechaInicio()
+    let fechaInicio = this.getFechaInicio(Sesion.valueDia.get(this.data.grupo.diaSesion),this.optionYear);
+    numeroSesion = this.getNroSesionInicial(Sesion.valueDia.get(this.data.grupo.diaSesion),this.optionYear);
+
     let sesion: Sesion;
-    fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
 
-    let fechaFinal = new Date();
-    fechaFinal.setFullYear(fechaInicio.getFullYear() + 1);
-    fechaFinal.setMonth(2);
-    fechaFinal.setDate(31);
-
-    while (fechaInicio < fechaFinal) {
-      sesion = new Sesion();
-      sesion.numeroSesion = numeroSesion;
-      sesion.direccion = this.data.grupo.direccionSesion;
-      sesion.idGrupo = this.data.grupo.idGrupo;
-      sesion.lugar = this.data.grupo.lugarSesion;
-      sesion.ubicacion = this.data.grupo.ubicacionSesion;
-      sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
-      fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
-      numeroSesion += 1;
-      this.sesiones.push(sesion);
+    let fechaActual: Date = new Date();
+    let fechaFinal: Date = new Date(fechaInicio.getFullYear(),2,31);
+    if(fechaActual.getFullYear() < fechaInicio.getFullYear()){
+      while (fechaInicio <= fechaFinal) {
+        sesion = new Sesion();
+        sesion.numeroSesion = numeroSesion;
+        sesion.direccion = this.data.grupo.direccionSesion;
+        sesion.idGrupo = this.data.grupo.idGrupo;
+        sesion.lugar = this.data.grupo.lugarSesion;
+        sesion.ubicacion = this.data.grupo.ubicacionSesion;
+        sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
+        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+        numeroSesion++;
+        this.sesiones.push(sesion);
+      }
+    }else {
+      while (fechaInicio.getFullYear() < this.optionYear + 1) {
+        sesion = new Sesion();
+        sesion.numeroSesion = numeroSesion;
+        sesion.direccion = this.data.grupo.direccionSesion;
+        sesion.idGrupo = this.data.grupo.idGrupo;
+        sesion.lugar = this.data.grupo.lugarSesion;
+        sesion.ubicacion = this.data.grupo.ubicacionSesion;
+        sesion.fechaHora = firestore.Timestamp.fromDate(this.setHourFechaInicio(this.data.grupo.horaSesion, fechaInicio));
+        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+        numeroSesion++;
+        this.sesiones.push(sesion);
+      }
     }
     this.sesiones = [].concat(this.sesiones);
   }

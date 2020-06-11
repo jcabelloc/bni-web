@@ -123,7 +123,7 @@ export class AdmSesionesComponent implements OnInit {
   generateSelectYears() {
     this.selectYear = [];
     let initYear = this.sesiones[0]?.fechaHora.toDate().getFullYear();
-    while (initYear <= this.grupo.ultimaGeneracion + 1) {
+    while (initYear <= this.grupo.ultimaGeneracion) {
       this.selectYear.push(initYear);
       initYear++;
     }
