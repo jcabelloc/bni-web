@@ -40,9 +40,15 @@ export class GenerarSesionesComponent implements OnInit {
 
   getNroSesionInicial(numeroDiaSesion: number, anio: number): number {
     let numeroSesionInicial: number = 0;
-    let anioActual = (new Date()).getFullYear();
-    let fechaInicio: Date = (anioActual === anio) ? this.getFechaInicio(numeroDiaSesion, anio): this.getFechaInicio(numeroDiaSesion, anio);
-    let fechaAperturaSesiones = new Date(anioActual, 3, 1);
+    let fechaInicio: Date = this.getFechaInicio(numeroDiaSesion, anio);
+    
+    let anioAperturaSesiones = new Date(fechaInicio).getFullYear();
+    let fechaAperturaSesiones = new Date( anioAperturaSesiones, 3, 1);
+    let fechaDeHoy: Date = new Date();
+    
+    if(fechaDeHoy <  fechaAperturaSesiones){
+      fechaAperturaSesiones.setFullYear(anioAperturaSesiones - 1);
+    }
 
     while(fechaAperturaSesiones.getDay() != numeroDiaSesion) { 
       fechaAperturaSesiones = Utils.addDays(fechaAperturaSesiones, 1);
@@ -56,13 +62,13 @@ export class GenerarSesionesComponent implements OnInit {
   }
 
   getFechaInicio(numeroDiaSesion: number, anio: number): Date {
-    let anioActual = (new Date()).getFullYear();
-    const fechaAperturaSesiones = new Date(anioActual, 3, 1);
+
     const fechaPrimerDiaProximoAnio = new Date(anio, 0, 1);
     let fechaDeHoy: Date = new Date();
+
+    let anioActual = (new Date(fechaDeHoy)).getFullYear();
     let fechaTentativa: Date = (anioActual == anio) ? new Date(fechaDeHoy): new Date(fechaPrimerDiaProximoAnio);
     
-    if(fechaDeHoy < fechaAperturaSesiones && anioActual == anio) fechaTentativa = new Date(fechaAperturaSesiones);
     this.setHourFechaInicio(this.data.grupo.horaSesion, fechaTentativa);
   
     while(fechaTentativa.getDay() != numeroDiaSesion) {
@@ -93,29 +99,24 @@ export class GenerarSesionesComponent implements OnInit {
     return sesion;
   }
 
-  generarSesiones(fechaInicio: Date, numeroSesion: number, fechaDeHoy: Date) : Sesion[]{
+  generarSesiones(fechaInicio: Date, numeroSesion: number) : Sesion[]{
     let sesiones: Sesion[] = [];
     let fechaCierreSesiones: Date = new Date(fechaInicio.getFullYear(), 3, 1);
 
-    if ( fechaDeHoy.getFullYear() < fechaInicio.getFullYear() ) {
-      while (fechaInicio < fechaCierreSesiones ){
-        this.sesiones.push( this.generarSesion(fechaInicio, numeroSesion) );
-        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
-        numeroSesion++;
-      }
-      numeroSesion = 1;
-      while(fechaInicio.getFullYear() < this.optionYear + 1) {
-        this.sesiones.push( this.generarSesion(fechaInicio, numeroSesion) );
-        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
-        numeroSesion++;
-      }
-    } else {
-      while(fechaInicio.getFullYear() < this.optionYear + 1) {
-        this.sesiones.push( this.generarSesion(fechaInicio, numeroSesion) );
-        fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
-        numeroSesion++;
-      }
+    while (fechaInicio < fechaCierreSesiones ){
+      this.sesiones.push( this.generarSesion(fechaInicio, numeroSesion) );
+      fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+      numeroSesion++;
     }
+
+    if (this.sesiones.length > 0) numeroSesion = 1;
+
+    while(fechaInicio.getFullYear() < this.optionYear + 1) {
+      this.sesiones.push( this.generarSesion(fechaInicio, numeroSesion) );
+      fechaInicio = new Date(fechaInicio.setDate(fechaInicio.getDate() + 7));
+      numeroSesion++;
+    }
+
     return sesiones;
   }
 
@@ -127,12 +128,12 @@ export class GenerarSesionesComponent implements OnInit {
       return
     }
 
-    let fechaInicio = this.getFechaInicio(Sesion.valueDia.get(this.data.grupo.diaSesion),this.optionYear);
-    numeroSesion = this.getNroSesionInicial(Sesion.valueDia.get(this.data.grupo.diaSesion),this.optionYear);
-    let fechaDeHoy: Date = new Date();
+    let fechaInicio = this.getFechaInicio(Sesion.valueDia.get(this.data.grupo.diaSesion), this.optionYear);
+    numeroSesion = this.getNroSesionInicial(Sesion.valueDia.get(this.data.grupo.diaSesion), this.optionYear);
+
     let sesiones: Sesion[] = [];
 
-    sesiones = this.generarSesiones(fechaInicio, numeroSesion, fechaDeHoy);
+    sesiones = this.generarSesiones(fechaInicio, numeroSesion);
     this.sesiones = [].concat(this.sesiones);
   }
 
