@@ -28,7 +28,7 @@ export class AdmSesionesComponent implements OnInit {
   sesionesDataTable: Sesion[];
   yearFilter: number;
   selectYear: number[] = Array<number>();
-  displayedColumns: string[] = ['fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
+  displayedColumns: string[] = ['numeroSesion', 'fecha', 'horaSesion', 'direccionSesion', 'lugarSesion', 'ubicacionSesion', 'acciones'];
   fechaActual: Date = new Date();
   constructor(private authentication: AuthenticationService,
               private grupoService: GrupoService, 
@@ -82,7 +82,7 @@ export class AdmSesionesComponent implements OnInit {
   }
 
   updateSesionesDataTable() {
-    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter);
+    this.sesionesDataTable = this.sesiones.filter(sesion => sesion.fechaHora.toDate().getFullYear() == this.yearFilter );
     this.sesionesDataTable = [].concat(this.sesionesDataTable);
 
   }
