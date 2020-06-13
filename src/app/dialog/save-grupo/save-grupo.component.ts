@@ -13,12 +13,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SaveGrupoComponent implements OnInit {
 
-  opcion: string;
+  tituloOpcion: string;
   grupo: Grupo = new Grupo();
+
   diasSemana: DiasSemana[] = Grupo.diasSemana;
   showCoordenadas: boolean = false;
+
   showSpinner: boolean = false;
-  selectedFile: File;
+  selectedAvatar: File;
   defaultAvatar: any;
   zoom: number = 8;
 
@@ -30,46 +32,58 @@ export class SaveGrupoComponent implements OnInit {
   constructor(private snackBar: MatSnackBar,
               private grupoService: GrupoService,
               public dialogRef: MatDialogRef<SaveGrupoComponent>, 
-              @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo, opcion: string }) { }
+              @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo, tituloOpcion: string }) { }
 
   ngOnInit(): void {
-    this.opcion = this.data.opcion;
-    this.defaultAvatar = this.data.grupo.avatarUrl;
-    if (this.data.grupo?.idGrupo) {
-      this.grupo = {...this.data.grupo};
-      this.latSesion = this.data.grupo.ubicacionSesion.latitude;
-      this.lngSesion = this.data.grupo.ubicacionSesion.longitude;
+
+    this.grupo = {...this.data.grupo};
+
+    this.defaultAvatar = this.grupo.avatarUrl;
+    this.tituloOpcion = this.data.tituloOpcion;
+
+    if(!this.defaultAvatar){
+      this.updateDefaultAvatar();
     }
-    if (this.data.grupo.avatarUrl == null) {
-        this.setAvatarProfileDefault();
+
+    if (this.grupo.idGrupo) {
+      this.latSesion = this.grupo.ubicacionSesion.latitude;
+      this.lngSesion = this.grupo.ubicacionSesion.longitude;
     }
+
   }
 
-  agregarGrupo() {
+  createGrupo() {
     this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
-    this.dialogRef.close({grupo: this.grupo, avatarFile: this.selectedFile});
+    this.grupoService.createGrupo(this.grupo).subscribe(
+      () => {
+        this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+        this.dialogRef.close();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
   }
 
   mapClicked($event: MouseEvent) {
     this.latSesion = $event.coords.lat;
     this.lngSesion = $event.coords.lng;
   }
+  
   comfirmUbicacion() {
     this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
     this.showCoordenadas = false;
   }
 
-  onFileSelected(event: any) {
-
+  onAvatarSelected(event: any) {
     const reader: FileReader = new FileReader();
-    this.selectedFile = event.target.files[0] as File;
-    reader.readAsDataURL(this.selectedFile);
+    this.selectedAvatar = event.target.files[0] as File;
+    reader.readAsDataURL(this.selectedAvatar);
     reader.onload = (event) => {
       this.defaultAvatar = event.target.result;
+      this.grupo.avatarUrl = this.defaultAvatar;
     }
   }
 
-  setAvatarProfileDefault() {
+  updateDefaultAvatar() {
     this.showSpinner = true;
     this.grupoService.getAvatarImgUrl(Grupo.defaultAvatar).subscribe(
       avatarUrl => {
