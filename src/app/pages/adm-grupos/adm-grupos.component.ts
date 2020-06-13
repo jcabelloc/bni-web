@@ -35,6 +35,7 @@ export class AdmGruposComponent implements OnInit {
     } else if(this.miembro.esAdmGrupo){
      this.grupoService.findById(this.miembro.idGrupo).subscribe(
       grupo =>{
+        this.grupos = [];
         this.grupos.push(grupo);
         this.grupos = [].concat(this.grupos);
       },
