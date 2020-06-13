@@ -55,51 +55,10 @@ export class AdmGruposComponent implements OnInit {
 
   addGrupo() {
     const dialogRef = this.dialog.open(SaveGrupoComponent, { width: '800px', data: { grupo: new Grupo(), opcion: "Nuevo" } });
-    dialogRef.afterClosed().subscribe(data => {
-      if (data?.grupo) {
-        this.grupoService.createGrupo(data?.grupo).subscribe(
-          idGrupo => {
-             if(data?.avatarFile)
-             {
-               data.grupo.idGrupo = idGrupo;
-               this.grupoService.uploadAvatar(idGrupo,data?.avatarFile).subscribe(
-                 () => this.updateGrupo(data?.grupo,"guardó"),
-                 err =>this.snackBar.open(err, '', { duration: 2000 }));
-             }else{
-              this.snackBar.open("Se guardó correctamente", '', { duration: 2000 });
-             }
-          },  
-          err => this.snackBar.open(err, '', { duration: 2000 })
-        );
-      }
-    });
   }
 
   editGrupo(grupo: Grupo) {
-    const dialogRef = this.dialog.open(SaveGrupoComponent, { width: '800px', data: { grupo: grupo, opcion: "Editar" } });
-    dialogRef.afterClosed().subscribe(data => {
-      if (data?.avatarFile) {
-        this.grupoService.uploadAvatar(data?.grupo.idGrupo, data?.avatarFile).subscribe(
-          () => this.updateGrupo(data?.grupo,"actualizó"),
-          err => this.snackBar.open(err, '', { duration: 2000 }) 
-        );
-      }else {
-        this.updateGrupo(data?.grupo,"actualizó");
-      }
-    });
-  }
-
-  updateGrupo(grupo: Grupo, mensaje: string){
-    this.grupoService.getAvatarImgUrl(grupo.idGrupo).subscribe(
-      avatarUrl => {
-        grupo.avatarUrl = avatarUrl;
-        this.grupoService.updateGrupo(grupo).subscribe(
-          () => this.snackBar.open("Se "+ mensaje +" correctamente", '', { duration: 2000 }),
-          err => this.snackBar.open(err, '', { duration: 2000 })
-        );
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    ); 
+    const dialogRef = this.dialog.open(SaveGrupoComponent, { width: '800px', data: { grupo: grupo, opcion: "Editar", editar: true } });
   }
 
   deleteGrupo(grupo: Grupo) {
