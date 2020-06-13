@@ -29,17 +29,24 @@ export class SaveGrupoComponent implements OnInit {
 
   latSesion: number;
   lngSesion: number;
+
+  editarGrupo: boolean;
   constructor(private snackBar: MatSnackBar,
               private grupoService: GrupoService,
               public dialogRef: MatDialogRef<SaveGrupoComponent>, 
-              @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo, tituloOpcion: string }) { }
+              @Inject(MAT_DIALOG_DATA) public data: { grupo: Grupo, tituloOpcion: string, editar: boolean }) { }
 
   ngOnInit(): void {
 
     this.grupo = {...this.data.grupo};
+    this.editarGrupo = false;
 
     this.defaultAvatar = this.grupo.avatarUrl;
     this.tituloOpcion = this.data.tituloOpcion;
+
+    if(this.data?.editar){
+      this.editarGrupo = true;
+    }
 
     if(!this.defaultAvatar){
       this.updateDefaultAvatar();
@@ -63,11 +70,21 @@ export class SaveGrupoComponent implements OnInit {
     );
   }
 
+  updateGrupo(){
+    this.grupoService.updateGrupo(this.grupo).subscribe(
+      () => {
+        this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+        this.dialogRef.close();
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+      );  
+  }
+
   mapClicked($event: MouseEvent) {
     this.latSesion = $event.coords.lat;
     this.lngSesion = $event.coords.lng;
   }
-  
+
   comfirmUbicacion() {
     this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
     this.showCoordenadas = false;
