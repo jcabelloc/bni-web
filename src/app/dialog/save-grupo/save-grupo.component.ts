@@ -62,22 +62,48 @@ export class SaveGrupoComponent implements OnInit {
   createGrupo() {
     this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
     this.grupoService.createGrupo(this.grupo).subscribe(
-      () => {
-        this.snackBar.open("Creado correctamente", '', { duration: 2000 });
-        this.dialogRef.close();
+      idGrupo => {
+        if (this.selectedAvatar) {
+          this.grupo.idGrupo = idGrupo;
+          this.grupoService.uploadAvatar(idGrupo, this.selectedAvatar).subscribe(
+            () => this.updateUrlAvatarGrupo(this.grupo),
+            err => this.snackBar.open(err, '', { duration: 2000})
+          );
+        }
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
     );
   }
 
   updateGrupo(){
-    this.grupoService.updateGrupo(this.grupo).subscribe(
-      () => {
-        this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
-        this.dialogRef.close();
+    if (this?.selectedAvatar) {
+      this.grupoService.uploadAvatar(this.grupo.idGrupo, this.selectedAvatar).subscribe(
+        () => this.updateUrlAvatarGrupo(this.grupo),
+        err => this.snackBar.open(err, '', { duration: 2000 }) 
+      );
+    } else {
+      this.updateUrlAvatarGrupo(this.grupo);
+    }
+  }
+
+  updateUrlAvatarGrupo(grupo: Grupo){
+    this.grupoService.getAvatarImgUrl(grupo.idGrupo).subscribe(
+      avatarUrl => {
+        grupo.avatarUrl = avatarUrl;
+        this.grupoService.updateGrupo(grupo).subscribe(
+          () => { 
+            if (this.editarGrupo) {
+              this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            } else {
+              this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+            }
+            this.dialogRef.close();
+          },
+          err => this.snackBar.open(err, 'Error al actualizar grupo', { duration: 2000 })
+        );
       },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-      );  
+      err => this.snackBar.open(err, 'No se encontró el avatar del grupo', { duration: 2000 })
+    ); 
   }
 
   mapClicked($event: MouseEvent) {
@@ -96,7 +122,6 @@ export class SaveGrupoComponent implements OnInit {
     reader.readAsDataURL(this.selectedAvatar);
     reader.onload = (event) => {
       this.defaultAvatar = event.target.result;
-      this.grupo.avatarUrl = this.defaultAvatar;
     }
   }
 
