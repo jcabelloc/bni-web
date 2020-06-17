@@ -6,8 +6,15 @@
 .mat-table
 {
     width: 100%;
-    min-width: 800px; 
+    min-width: 800px;
+    table-layout: fixed;
 }
+
+.espacio-columna {
+    Word-break: break-Word;
+    padding: 5px;
+}
+
 .scroll{
     overflow: hidden;
 }

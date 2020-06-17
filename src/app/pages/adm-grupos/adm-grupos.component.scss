@@ -17,8 +17,25 @@
 .mat-table
 {
     width: 100%;
-    min-width: 700px; 
+    min-width: 700px;
+    table-layout: fixed;
 }
+
+.espacio-columna {
+    Word-break: break-Word;
+    padding: 5px;
+}
+
+.mat-column-diaSesion {
+    Word-break: break-Word;
+    text-align: center;
+}
+
+.mat-column-horaSesion {
+    Word-break: break-Word;
+    text-align: center;
+}
+
 .container-table
 {
     width: 80%; 
