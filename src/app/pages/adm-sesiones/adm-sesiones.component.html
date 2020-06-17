@@ -45,12 +45,12 @@
 
                 <ng-container matColumnDef="direccionSesion">
                     <th mat-header-cell *matHeaderCellDef> Dirección </th>
-                    <td mat-cell *matCellDef="let element"> {{element.esVirtual? '-': element.direccion}} </td>
+                    <td mat-cell *matCellDef="let element" class="espacio-columna"> {{element.esVirtual? '-': element.direccion}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="lugarSesion">
                     <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                    <td mat-cell *matCellDef="let element"> {{element.esVirtual? '-': element.lugar}} </td>
+                    <td mat-cell *matCellDef="let element" class="espacio-columna"> {{element.esVirtual? '-': element.lugar}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ubicacionSesion">
