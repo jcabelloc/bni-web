@@ -10,5 +10,5 @@ export class Asistencia {
     referencia: Referencia;
     nombreCompletoMiembro: string;
     lugarSesion: string;
-    nombreGrupo;
+    nombreGrupo: String;
 }
