@@ -46,7 +46,18 @@
 {
     width: 100%;
     min-width: 800px;
+    table-layout: fixed;
 } 
+
+.espacio-columna {
+    Word-break: break-Word;
+    padding: 5px;
+}
+
+.mat-column-ubicacionSesion {
+    text-align: center;
+}
+
 .container-table{
     width: 90%;
     max-height: 300px;

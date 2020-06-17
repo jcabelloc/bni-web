@@ -26,7 +26,7 @@
 
                     <ng-container matColumnDef="numeroSesion">
                         <th mat-header-cell *matHeaderCellDef> Número Sesion </th>
-                        <td mat-cell *matCellDef="let element">{{element.numeroSesion}} </td>
+                        <td mat-cell *matCellDef="let element" >{{element.numeroSesion}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="fecha">
@@ -41,12 +41,12 @@
 
                     <ng-container style="text-align: center;" matColumnDef="direccionSesion">
                         <th mat-header-cell *matHeaderCellDef> Dirección </th>
-                        <td mat-cell *matCellDef="let element"> {{element.direccion}} </td>
+                        <td mat-cell *matCellDef="let element" class="espacio-columna"> {{element.direccion}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="lugarSesion">
                         <th mat-header-cell *matHeaderCellDef> Lugar </th>
-                        <td mat-cell *matCellDef="let element"> {{element.lugar}} </td>
+                        <td mat-cell *matCellDef="let element" class="espacio-columna"> {{element.lugar}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="ubicacionSesion">
