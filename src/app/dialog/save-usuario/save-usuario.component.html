@@ -71,10 +71,8 @@
     </mat-card-content>
 
     <mat-card-actions class="mat-actions">
-        <button *ngIf="!editarUsuario" mat-raised-button color="primary" class="button_save" (click)="createUsuario()"
-            [disabled]="!saveForm.form.valid"> Guardar</button>
-        <button *ngIf="editarUsuario" mat-raised-button color="primary" class="button_save" (click)="updateUsuario()"
-            [disabled]="!saveForm.form.valid"> Guardar</button>
+        <button mat-raised-button color="primary" class="button_save" (click)="editarUsuario? updateUsuario() : createUsuario()"
+            [disabled]="!saveForm.form.valid || estaPresionado"> Guardar</button>
         <button mat-raised-button color="white" class="button_cancel" [mat-dialog-close]>Cancelar</button>
     </mat-card-actions>
 
