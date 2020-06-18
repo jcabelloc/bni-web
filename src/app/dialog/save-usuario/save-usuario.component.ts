@@ -29,6 +29,7 @@ export class SaveUsuarioComponent implements OnInit {
   editPassword: boolean;
 
   nombreEstadoCuenta: string;
+  estaPresionado: boolean = false;
 
   constructor( private usuarioService: UsuarioService,
               public dialogRef: MatDialogRef<SaveUsuarioComponent>, 
@@ -103,21 +104,24 @@ export class SaveUsuarioComponent implements OnInit {
     
   }
 
-  createUsuario() { 
-    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
-      () => {
-        if (this.selectedAvatar) {
-          this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
-            () => this.updateUrlAvatarUsuario(this.usuario),
-            err => this.snackBar.open(err, '', { duration: 2000})
-          );
-        } else {
-          this.snackBar.open("Creado correctamente", '', { duration: 2000 });
-          this.dialogRef.close();
-        }
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
+  createUsuario() {
+    this.estaPresionado = true;
+    if (this.estaPresionado) {
+      this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
+        () => {
+          if (this.selectedAvatar) {
+            this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
+              () => this.updateUrlAvatarUsuario(this.usuario),
+              err => this.snackBar.open(err, '', { duration: 2000})
+            );
+          } else {
+            this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+            this.dialogRef.close();
+          }
+        },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
+    }
   }
 
   initDefaultData(){
@@ -139,18 +143,21 @@ export class SaveUsuarioComponent implements OnInit {
     if (this.password == undefined){
       this.password = "";
     }
-    if (this?.selectedAvatar) {
-      this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
-        () => this.updateUrlAvatarUsuario(this.usuario),
-        err => this.snackBar.open(err, '', { duration: 2000 }) 
-      );
-    } else {
-      this.usuarioService.updateUsuario(this.usuario,this.usuario.uid,this.password).subscribe(
-        () => {
-          this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
-          this.dialogRef.close();
-        }
-      );
+    this.estaPresionado = true;
+    if (this.estaPresionado){
+      if (this.selectedAvatar) {
+        this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
+          () => this.updateUrlAvatarUsuario(this.usuario),
+          err => this.snackBar.open(err, '', { duration: 2000 }) 
+        );
+      } else {
+        this.usuarioService.updateUsuario(this.usuario,this.usuario.uid,this.password).subscribe(
+          () => {
+            this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            this.dialogRef.close();
+          }
+        );
+      }
     }
   }
 

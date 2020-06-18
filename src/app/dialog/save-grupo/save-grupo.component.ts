@@ -31,6 +31,7 @@ export class SaveGrupoComponent implements OnInit {
   lngSesion: number;
 
   editarGrupo: boolean;
+  estaPresionado: boolean = false;
   constructor(private snackBar: MatSnackBar,
               private grupoService: GrupoService,
               public dialogRef: MatDialogRef<SaveGrupoComponent>, 
@@ -60,29 +61,43 @@ export class SaveGrupoComponent implements OnInit {
   }
 
   createGrupo() {
-    this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
-    this.grupoService.createGrupo(this.grupo).subscribe(
-      idGrupo => {
-        if (this.selectedAvatar) {
-          this.grupo.idGrupo = idGrupo;
-          this.grupoService.uploadAvatar(idGrupo, this.selectedAvatar).subscribe(
-            () => this.updateUrlAvatarGrupo(this.grupo),
-            err => this.snackBar.open(err, '', { duration: 2000})
-          );
-        }
-      },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-    );
+    this.estaPresionado = true;
+    if (this.estaPresionado) {
+      this.grupo.ubicacionSesion = new firebase.firestore.GeoPoint(this.latSesion,this.lngSesion);
+      this.grupoService.createGrupo(this.grupo).subscribe(
+        idGrupo => {
+          if (this.selectedAvatar) {
+            this.grupo.idGrupo = idGrupo;
+            this.grupoService.uploadAvatar(idGrupo, this.selectedAvatar).subscribe(
+              () => this.updateUrlAvatarGrupo(this.grupo),
+              err => this.snackBar.open(err, '', { duration: 2000})
+            );
+          } else {
+            this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+            this.dialogRef.close();
+          }
+        },
+        err => this.snackBar.open(err, '', { duration: 2000 })
+      );
+    }
   }
 
   updateGrupo(){
-    if (this?.selectedAvatar) {
-      this.grupoService.uploadAvatar(this.grupo.idGrupo, this.selectedAvatar).subscribe(
-        () => this.updateUrlAvatarGrupo(this.grupo),
-        err => this.snackBar.open(err, '', { duration: 2000 }) 
-      );
-    } else {
-      this.updateUrlAvatarGrupo(this.grupo);
+    this.estaPresionado = true;
+    if (this.estaPresionado) {
+      if (this.selectedAvatar) {
+        this.grupoService.uploadAvatar(this.grupo.idGrupo, this.selectedAvatar).subscribe(
+          () => this.updateUrlAvatarGrupo(this.grupo),
+          err => this.snackBar.open(err, '', { duration: 2000 }) 
+        );
+      } else {
+        this.grupoService.updateGrupo(this.grupo).subscribe(
+          () => {
+            this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            this.dialogRef.close();
+          }
+        );
+      }
     }
   }
 
@@ -133,7 +148,7 @@ export class SaveGrupoComponent implements OnInit {
         this.showSpinner = false;
       },
       err => {
-        this.snackBar.open("No se encontró la foto prederminada", '', { duration: 2000 });
+        this.snackBar.open("No se encontró la foto predeterminada", '', { duration: 2000 });
         this.showSpinner = false;
       }
     );
