@@ -14,7 +14,8 @@ export const updateUsuarioOnUpdateMiembro = functions.firestore
                     db.doc(documentSnapshot.ref.path).set({
                         nombres: updatedMiembro?.nombres,
                         apellidos: updatedMiembro?.apellidos,
-                        avatarUrl: updatedMiembro?.avatarUrl
+                        avatarUrl: updatedMiembro?.avatarUrl,
+                        email: updatedMiembro?.email
                     }, { merge: true });
                 });
             });
