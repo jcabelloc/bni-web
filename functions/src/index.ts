@@ -75,3 +75,18 @@ export const updateMiembroOnUpdateUsuario = functions.firestore
         }, { merge: true });
         return 0;
     });
+
+export const updateMiembroOnUpdateGrupo = functions.firestore
+    .document('grupos/{idGrupo}')
+    .onUpdate((change, context) => {
+        const updatedGrupo = change.after.data();
+        db.collection('miembros').where('idGrupo', '==', context.params.idGrupo).get()
+            .then((querySnapshot: any[]) => {
+                querySnapshot.forEach(documentSnapshot => {
+                    db.doc(documentSnapshot.ref.path).set({
+                        nombreGrupo: updatedGrupo?.nombre
+                    }, { merge: true });
+                });
+            });
+        return 0;
+    });
