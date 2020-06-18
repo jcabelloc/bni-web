@@ -48,8 +48,13 @@
 .mat-table
 {
     width: 100%;
-    min-width: 200px; 
+    min-width: 200px;
+    table-layout: fixed;
 }
 
+.espacio-columna {
+    Word-break: break-Word;
+    padding: 5px;
+}
 
 
