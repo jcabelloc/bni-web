@@ -69,6 +69,9 @@ export class SaveGrupoComponent implements OnInit {
             () => this.updateUrlAvatarGrupo(this.grupo),
             err => this.snackBar.open(err, '', { duration: 2000})
           );
+        } else {
+          this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+          this.dialogRef.close();
         }
       },
       err => this.snackBar.open(err, '', { duration: 2000 })
@@ -76,13 +79,18 @@ export class SaveGrupoComponent implements OnInit {
   }
 
   updateGrupo(){
-    if (this?.selectedAvatar) {
+    if (this.selectedAvatar) {
       this.grupoService.uploadAvatar(this.grupo.idGrupo, this.selectedAvatar).subscribe(
         () => this.updateUrlAvatarGrupo(this.grupo),
         err => this.snackBar.open(err, '', { duration: 2000 }) 
       );
     } else {
-      this.updateUrlAvatarGrupo(this.grupo);
+      this.grupoService.updateGrupo(this.grupo).subscribe(
+        () => {
+          this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+          this.dialogRef.close();
+        }
+      );
     }
   }
 
@@ -133,7 +141,7 @@ export class SaveGrupoComponent implements OnInit {
         this.showSpinner = false;
       },
       err => {
-        this.snackBar.open("No se encontró la foto prederminada", '', { duration: 2000 });
+        this.snackBar.open("No se encontró la foto predeterminada", '', { duration: 2000 });
         this.showSpinner = false;
       }
     );
