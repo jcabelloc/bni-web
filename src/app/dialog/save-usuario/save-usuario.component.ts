@@ -77,7 +77,6 @@ export class SaveUsuarioComponent implements OnInit {
     reader.readAsDataURL(this.selectedAvatar);
     reader.onload = (event) => {
       this.defaultAvatar = event.target.result;
-      this.usuario.avatarUrl = this.defaultAvatar;
     }
   }
 
@@ -104,21 +103,21 @@ export class SaveUsuarioComponent implements OnInit {
     
   }
 
-  createUsuario(){
-
-    if( this?.usuario?.nombres ){
-      this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
-        () => {
+  createUsuario() { 
+    this.usuarioService.createUsuario(this.usuario, this.password).subscribe(
+      () => {
+        if (this.selectedAvatar) {
+          this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
+            () => this.updateUrlAvatarUsuario(this.usuario),
+            err => this.snackBar.open(err, '', { duration: 2000})
+          );
+        } else {
           this.snackBar.open("Creado correctamente", '', { duration: 2000 });
           this.dialogRef.close();
-        },
-        err => this.snackBar.open(err, '', { duration: 2000 })
-        );  
-    } else {
-      this.snackBar.open("Debe ingresar los datos del usuario", '', { duration: 2000 });
-    }
-    
-    
+        }
+      },
+      err => this.snackBar.open(err, '', { duration: 2000 })
+    );
   }
 
   initDefaultData(){
@@ -137,19 +136,42 @@ export class SaveUsuarioComponent implements OnInit {
   }
 
   updateUsuario(){
-
     if (this.password == undefined){
       this.password = "";
     }
+    if (this?.selectedAvatar) {
+      this.usuarioService.uploadAvatar(this.usuario.idMiembro, this.selectedAvatar).subscribe(
+        () => this.updateUrlAvatarUsuario(this.usuario),
+        err => this.snackBar.open(err, '', { duration: 2000 }) 
+      );
+    } else {
+      this.usuarioService.updateUsuario(this.usuario,this.usuario.uid,this.password).subscribe(
+        () => {
+          this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+          this.dialogRef.close();
+        }
+      );
+    }
+  }
 
-    this.usuarioService.updateUsuario(this.usuario, this.usuario.uid, this.password).subscribe(
-      () => {
-        this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
-        this.dialogRef.close();
+  updateUrlAvatarUsuario(usuario: Usuario){
+    this.usuarioService.getAvatarImgUrl(usuario.idMiembro).subscribe(
+      avatarUrl => {
+        usuario.avatarUrl = avatarUrl;
+        this.usuarioService.updateUsuario(usuario, usuario.uid, this.password).subscribe(
+          () => { 
+            if (this.editarUsuario) {
+              this.snackBar.open("Se actualizó correctamente", '', { duration: 2000 });
+            } else {
+              this.snackBar.open("Creado correctamente", '', { duration: 2000 });
+            }
+            this.dialogRef.close();
+          },
+          err => this.snackBar.open(err, 'Error al actualizar usuario', { duration: 2000 })
+        );
       },
-      err => this.snackBar.open(err, '', { duration: 2000 })
-      );  
-    
+      err => this.snackBar.open(err, 'No se encontró el avatar del usuario', { duration: 2000 })
+    ); 
   }
 
   changeAccountStatus(event: MatSlideToggleChange){
@@ -159,5 +181,4 @@ export class SaveUsuarioComponent implements OnInit {
       this.nombreEstadoCuenta = "Inactivo";
     }
   }
-
 }

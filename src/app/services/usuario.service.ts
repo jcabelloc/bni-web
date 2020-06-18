@@ -42,4 +42,11 @@ export class UsuarioService {
   updateUsuario(usuario: Usuario, idUsuario: string, passwordNuevo: string) : Observable<void>{
     return from(this.usuariosCollection.doc(idUsuario).update({ ...usuario, passwordInicial: passwordNuevo }));
   }
+
+  uploadAvatar(idMiembro: string, file: File): Observable<any> {
+    const filePath = "avatar_miembros/" + idMiembro;
+    this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+    return from(task);
+  }
 }
