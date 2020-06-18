@@ -90,3 +90,18 @@ export const updateMiembroOnUpdateGrupo = functions.firestore
             });
         return 0;
     });
+
+export const updateAsistenciaOnUpdateGrupo = functions.firestore
+    .document('grupos/{idGrupo}')
+    .onUpdate((change, context) => {
+        const updatedGrupo = change.after.data();
+        db.collection('asistencias').where('idGrupo', '==', context.params.idGrupo).get()
+            .then((querySnapshot: any[]) => {
+                querySnapshot.forEach(documentSnapshot => {
+                    db.doc(documentSnapshot.ref.path).set({
+                        nombreGrupo: updatedGrupo?.nombre
+                    }, { merge: true });
+                });
+            });
+        return 0;
+    });
