@@ -14,7 +14,8 @@ export const updateUsuarioOnUpdateMiembro = functions.firestore
                     db.doc(documentSnapshot.ref.path).set({
                         nombres: updatedMiembro?.nombres,
                         apellidos: updatedMiembro?.apellidos,
-                        avatarUrl: updatedMiembro?.avatarUrl
+                        avatarUrl: updatedMiembro?.avatarUrl,
+                        email: updatedMiembro?.email
                     }, { merge: true });
                 });
             });
@@ -81,6 +82,21 @@ export const updateMiembroOnUpdateGrupo = functions.firestore
     .onUpdate((change, context) => {
         const updatedGrupo = change.after.data();
         db.collection('miembros').where('idGrupo', '==', context.params.idGrupo).get()
+            .then((querySnapshot: any[]) => {
+                querySnapshot.forEach(documentSnapshot => {
+                    db.doc(documentSnapshot.ref.path).set({
+                        nombreGrupo: updatedGrupo?.nombre
+                    }, { merge: true });
+                });
+            });
+        return 0;
+    });
+
+export const updateAsistenciaOnUpdateGrupo = functions.firestore
+    .document('grupos/{idGrupo}')
+    .onUpdate((change, context) => {
+        const updatedGrupo = change.after.data();
+        db.collection('asistencias').where('idGrupo', '==', context.params.idGrupo).get()
             .then((querySnapshot: any[]) => {
                 querySnapshot.forEach(documentSnapshot => {
                     db.doc(documentSnapshot.ref.path).set({
